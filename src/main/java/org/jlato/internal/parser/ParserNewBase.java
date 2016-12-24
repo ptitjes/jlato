@@ -19,174 +19,446 @@
 
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.bu.decl.*;
-import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.bu.stmt.SStmt;
-import org.jlato.internal.bu.type.SType;
-import org.jlato.parser.ParseException;
+import org.jlato.internal.parser.all.*;
+
+import java.io.Reader;
+import java.util.*;
+
 
 /**
  * @author Didier Villevalois
  */
 public abstract class ParserNewBase extends ParserBase {
 
-	@Override
-	protected BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException {
-		return parseCompilationUnit();
-	}
+	private static final boolean CACHE_STATS = false;
+	private static final boolean MERGE_STATS = false;
+	private static final boolean MERGE = true;
+	private static final boolean INCREMENTAL_MERGE = true;
+
+	private boolean forceLL = true;
+
+	protected abstract Grammar initializeGrammar();
+
+	private final Grammar grammar = initializeGrammar();
+
+	private final Map<Integer, Map<Integer, CachedAutomaton>> automata = new HashMap<Integer, Map<Integer, CachedAutomaton>>();
+
+	private CallStack callStack = CallStack.EMPTY;
 
 	@Override
-	protected BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parsePackageDecl());
+	protected void reset(Reader reader) {
+		super.reset(reader);
+		currentPredictions = new LinkedList<Integer>();
+		callStack = CallStack.EMPTY;
 	}
 
-	@Override
-	protected BUTree<SImportDecl> parseImportDeclEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseImportDecl());
+	public void clearStats() {
+		cacheMiss = 0;
+		cacheHits = 0;
+		fullLL = 0;
 	}
 
-	@Override
-	protected BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseTypeDecl());
+	public void printStats() {
+		if (CACHE_STATS) {
+			System.out.println("DFA Cache - Hits: " + cacheHits + ", Misses: " + cacheMiss + ", FullLL: " + fullLL);
+			for (Map.Entry<Integer, PredictionState> entry : perChoicePointStackSensitiveStates.entrySet()) {
+				System.out.println(entry.getKey());
+				PredictionState state = entry.getValue();
+				System.out.println(state);
+				for (Configuration c : state.configurations) {
+					System.out.println("  " + c);
+				}
+			}
+		}
 	}
 
-	@Override
-	protected BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind kind) throws ParseException {
-		return wrapWithPrologAndEpilog(parseClassOrInterfaceBodyDecl(kind));
+	private List<Integer> currentPredictions;
+
+	protected void pushCallStack(Grammar.NonTerminal ntCall) {
+		if (forceLL) return;
+
+		GrammarState state = ntCall.end();
+		callStack = callStack.push(state);
 	}
 
-	@Override
-	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseAnnotationTypeBodyDecl());
+	protected void popCallStack() {
+		if (forceLL) return;
+
+		callStack.pop(new CallStackReader() {
+			@Override
+			public void handleNext(GrammarState head, CallStack tail) {
+				callStack = tail;
+			}
+		});
 	}
 
-	@Override
-	protected BUTree<SNodeList> parseModifiersEntry() throws ParseException {
-		return parseModifiers();
+	protected int predict(int choicePoint) {
+		return sllPredict(choicePoint);
 	}
 
-	@Override
-	protected BUTree<SNodeList> parseAnnotationsEntry() throws ParseException {
-		return parseAnnotations();
+	private int sllPredict(int choicePoint) {
+		PredictionState current;
+
+		Map<Integer, CachedAutomaton> perChoicePointAutomata = automata.get(entryPoint);
+		if (perChoicePointAutomata == null) {
+			perChoicePointAutomata = new HashMap<Integer, CachedAutomaton>();
+			automata.put(entryPoint, perChoicePointAutomata);
+		}
+
+		// TODO Generate data for the number of choice points and number of alternative predictions
+		// TODO Pre-initialize automaton with there final states and the shared error state
+		CachedAutomaton automaton = perChoicePointAutomata.get(choicePoint);
+
+		if (automaton == null) {
+			current = makeStartState(choicePoint, CallStack.WILDCARD);
+			cacheMiss++;
+
+			automaton = new CachedAutomaton(current);
+			perChoicePointAutomata.put(choicePoint, automaton);
+		} else {
+			current = automaton.initialState;
+			cacheHits++;
+		}
+
+		int index = 0;
+		while (true) {
+			Token token = getToken(index++);
+
+			PredictionState next = current.transitionFor(token);
+
+			if (CACHE_STATS) {
+				if (next == null) cacheMiss++;
+				else cacheHits++;
+			}
+
+			if (next == null) {
+				Set<Configuration> configurations = targetConfigurations(current, token);
+				next = new PredictionState(configurations, true, true, forceLL);
+
+				// TODO Reuse a unique error state if closure of configurations is the empty set
+				// TODO Reuse a unique final state for prediction if prediction is done
+				next = automaton.addState(next);
+				current.setTransitionFor(token, next);
+			}
+
+			if (next.configurations.isEmpty()) return -1;
+			if (next.prediction != -1) return next.prediction;
+
+			if (next.stackSensitive) {
+				if (forceLL) throw new IllegalStateException();
+
+				if (CACHE_STATS) {
+					perChoicePointStackSensitiveStates.put(choicePoint, next);
+				}
+				return llPredict(choicePoint);
+			}
+
+			current = next;
+		}
 	}
 
-	@Override
-	protected BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException {
-		run();
-		BUTree<SNodeList> modifiers = parseModifiers();
-		return wrapWithPrologAndEpilog(parseMethodDecl(modifiers));
+	private int cacheHits, cacheMiss, fullLL;
+	private Map<Integer, PredictionState> perChoicePointStackSensitiveStates = new HashMap<Integer, PredictionState>();
+
+	private int llPredict(int choicePoint) {
+		PredictionState current = makeStartState(choicePoint, callStack);
+		fullLL++;
+
+		int index = 0;
+		while (true) {
+			Token token = getToken(index++);
+
+			Set<Configuration> configurations = targetConfigurations(current, token);
+			PredictionState next = new PredictionState(configurations, true, false, forceLL);
+			fullLL++;
+
+			if (next.configurations.isEmpty()) return -1;
+			if (next.prediction != -1) return next.prediction;
+
+			Collection<BitSet> conflictSets = next.getConflictSets();
+			if (ambiguousAlternatives(conflictSets)) {
+				reportAmbiguity(choicePoint, conflictSets);
+				return minimalAlternative(conflictSets);
+			}
+
+			current = next;
+		}
 	}
 
-	@Override
-	protected BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException {
-		run();
-		BUTree<SNodeList> modifiers = parseModifiers();
-		return wrapWithPrologAndEpilog(parseFieldDecl(modifiers));
+	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
+		GrammarState state = grammar.getStartState(choicePoint);
+
+		Configuration initialConfiguration = new Configuration(state, -1, callStack);
+		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
+		configurations = closure(configurations);
+
+		return new PredictionState(configurations, false, false, forceLL);
 	}
 
-	@Override
-	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException {
-		run();
-		BUTree<SNodeList> modifiers = parseModifiers();
-		return wrapWithPrologAndEpilog(parseAnnotationTypeMemberDecl(modifiers));
+	private static final boolean REPORT = true;
+
+	private void reportAmbiguity(int choicePoint, Collection<BitSet> conflictSets) {
+		if (!REPORT) return;
+
+		StringBuilder buffer = new StringBuilder();
+
+		BitSet alternatives = firstConflict(conflictSets);
+
+		Token firstToken = getToken(0);
+		buffer.append("At choice point ");
+		buffer.append(choicePoint);
+		buffer.append(" ambiguous alternatives ");
+		buffer.append(alternatives);
+		buffer.append(" at (" + firstToken.beginLine + ":" + firstToken.beginColumn + ")");
+
+		System.err.println(buffer.toString());
 	}
 
-	@Override
-	protected BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseEnumConstantDecl());
+	private static BitSet firstConflict(Collection<BitSet> conflictSets) {
+		return conflictSets.iterator().next();
 	}
 
-	@Override
-	protected BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseFormalParameter());
+	public static int minimalAlternative(Collection<BitSet> conflictSetsPerLoc) {
+		BitSet alternatives = firstConflict(conflictSetsPerLoc);
+		return alternatives.nextSetBit(0);
 	}
 
-	@Override
-	protected BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseTypeParameter());
+	private boolean ambiguousAlternatives(Collection<BitSet> conflictSetsPerLoc) {
+		BitSet predictions = null;
+		for (BitSet otherPredictions : conflictSetsPerLoc) {
+			if (otherPredictions.size() == 1) return false;
+
+			if (predictions == null) predictions = otherPredictions;
+			else if (!predictions.equals(otherPredictions)) return false;
+		}
+		return true;
 	}
 
-	@Override
-	protected BUTree<SNodeList> parseStatementsEntry() throws ParseException {
-		return parseStatements(false);
+	private Set<Configuration> targetConfigurations(PredictionState current, Token token) {
+		Set<Configuration> configurations = moveAlong(current.configurations, token);
+		if (configurations.size() == 1 || commonPrediction(configurations) != -1) return configurations;
+
+		Set<Configuration> closure = closure(configurations);
+		return closure;
 	}
 
-	@Override
-	protected BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseBlockStatement());
+	private int commonPrediction(Set<Configuration> configurations) {
+		int prediction = -1;
+		for (Configuration configuration : configurations) {
+			int aPrediction = configuration.prediction;
+			if (prediction == -1) prediction = aPrediction;
+			else if (prediction != aPrediction) return -1;
+		}
+		return prediction;
 	}
 
-	@Override
-	protected BUTree<? extends SExpr> parseExpressionEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseExpression());
+	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
+		Set<Configuration> newConfigurations = new HashSet<Configuration>();
+		for (Configuration configuration : configurations) {
+			GrammarState target = configuration.state.match(token);
+			if (target == null) continue;
+
+			Configuration newConfiguration = new Configuration(target, configuration.prediction, configuration.callStack);
+			newConfigurations.add(newConfiguration);
+		}
+		return newConfigurations;
 	}
 
-	@Override
-	protected BUTree<? extends SType> parseTypeEntry() throws ParseException {
-		run();
-		final BUTree<SNodeList> annotations = parseAnnotations();
-		return wrapWithPrologAndEpilog(parseType(annotations));
+	protected int entryPoint;
+
+	private Set<Configuration> closure(Set<Configuration> configurations) {
+		ConfigurationSetBuilder newConfigurations = newConfigurationSetBuilder();
+		HashSet<Configuration> busy = new HashSet<Configuration>(configurations.size() * 4 / 3 + 1, 3f / 4);
+		for (Configuration configuration : configurations) {
+			closureOf(configuration, newConfigurations, busy);
+		}
+		return newConfigurations.build();
 	}
 
-	@Override
-	protected BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseQualifiedName());
+	private interface ConfigurationSetBuilder {
+
+		void add(Configuration configuration);
+
+		Set<Configuration> build();
 	}
 
-	@Override
-	protected BUTree<SName> parseNameEntry() throws ParseException {
-		return wrapWithPrologAndEpilog(parseName());
+	private static ConfigurationSetBuilder newConfigurationSetBuilder() {
+		return !MERGE ? new ConfigurationSetBuilderWithoutMerge() :
+				INCREMENTAL_MERGE ?
+						new ConfigurationSetBuilderWithIncrementalMerge() :
+						new ConfigurationSetBuilderWithPostMerge();
 	}
 
-	protected <S extends STree> BUTree<S> wrapWithPrologAndEpilog(BUTree<S> tree) throws ParseException {
-		parseEpilog();
-		return dressWithPrologAndEpilog(tree);
+	private void closureOf(final Configuration configuration,
+	                       final ConfigurationSetBuilder newConfigurations,
+	                       final Set<Configuration> busy) {
+		if (busy.contains(configuration)) return;
+		else busy.add(configuration);
+
+		final GrammarState state = configuration.state;
+		final CallStack callStack = configuration.callStack;
+		final int prediction = configuration.prediction;
+
+		// TODO Avoid this when return from non-terminal call ??
+		newConfigurations.add(configuration);
+
+		// Return from non-terminal call
+		if (state.end) {
+			// SLL wildcard call stack
+			if (callStack == CallStack.WILDCARD) {
+				int nonTerminal = state.nonTerminal;
+
+				// End states
+				Set<GrammarState> useEndStates = grammar.getUseEndStates(nonTerminal);
+				if (useEndStates != null) {
+					for (GrammarState useEndState : useEndStates) {
+						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
+						closureOf(newConfiguration, newConfigurations, busy);
+					}
+				}
+
+				// Specific end states for the entry point
+				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminal);
+				if (useEndStates != null) {
+					for (GrammarState useEndState : useEndStates) {
+						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
+						closureOf(newConfiguration, newConfigurations, busy);
+					}
+				}
+			} else {
+
+				// Using inner class closure
+//				callStack.pop(new CallStackReader() {
+//					@Override
+//					public void handleNext(GrammarState head, CallStack tail) {
+//						Configuration newConfiguration = new Configuration(head, prediction, tail);
+//						closureOf(newConfiguration, newConfigurations, busy);
+//					}
+//				});
+
+				// Unrolled code without inner class closure
+				if (callStack.kind == CallStack.Kind.WILDCARD || callStack.kind == CallStack.Kind.EMPTY) return;
+				if (callStack.kind == CallStack.Kind.PUSH) {
+					CallStack.Push push = (CallStack.Push) callStack;
+
+					Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
+					closureOf(newConfiguration, newConfigurations, busy);
+				} else {
+					CallStack.Merge merge = (CallStack.Merge) callStack;
+					// Stacks in a merge are Push stacks by construction
+					for (CallStack pushStack : merge.stacks) {
+						CallStack.Push push = (CallStack.Push) pushStack;
+
+						Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
+						closureOf(newConfiguration, newConfigurations, busy);
+					}
+				}
+			}
+		} else {
+			// Handle choice transitions
+			for (Map.Entry<Integer, GrammarState> entry : state.choiceTransitions.entrySet()) {
+				int realPrediction = prediction == -1 ? entry.getKey() : prediction;
+
+				Configuration newConfiguration = new Configuration(entry.getValue(), realPrediction, callStack);
+				closureOf(newConfiguration, newConfigurations, busy);
+			}
+			// Handle non-terminal call
+			for (Map.Entry<Integer, GrammarState> entry : state.nonTerminalTransitions.entrySet()) {
+				GrammarState target = entry.getValue();
+				if (target == null) continue;
+
+				Integer symbol = entry.getKey();
+				GrammarState start = grammar.getStartState(symbol);
+
+				Configuration newConfiguration = new Configuration(start, prediction, callStack.push(target));
+				closureOf(newConfiguration, newConfigurations, busy);
+			}
+		}
 	}
 
-	protected abstract BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException;
+	private static class ConfigurationSetBuilderWithoutMerge implements ConfigurationSetBuilder {
+		HashSet<Configuration> configurations = new HashSet<Configuration>();
 
-	protected abstract BUTree<SPackageDecl> parsePackageDecl() throws ParseException;
+		public void add(Configuration configuration) {
+			configurations.add(configuration);
+		}
 
-	protected abstract BUTree<SImportDecl> parseImportDecl() throws ParseException;
+		public Set<Configuration> build() {
+			return configurations;
+		}
+	}
 
-	protected abstract BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException;
+	private static class ConfigurationSetBuilderWithPostMerge implements ConfigurationSetBuilder {
+		HashSet<Configuration> configurations = new HashSet<Configuration>();
 
-	protected abstract BUTree<? extends SMemberDecl> parseClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+		public void add(Configuration configuration) {
+			configurations.add(configuration);
+		}
 
-	protected abstract BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException;
+		public Set<Configuration> build() {
+			return merge(configurations);
+		}
 
-	protected abstract BUTree<SNodeList> parseModifiers() throws ParseException;
+		private Set<Configuration> merge(Set<Configuration> configurations) {
+			int previousSize = configurations.size();
+			Map<StatePredictionPair, CallStack> perStatePredictionCallStack = new HashMap<StatePredictionPair, CallStack>();
+			for (Configuration configuration : configurations) {
+				StatePredictionPair key = new StatePredictionPair(configuration.state, configuration.prediction);
 
-	protected abstract BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException;
+				CallStack stack = perStatePredictionCallStack.get(key);
+				perStatePredictionCallStack.put(key, stack == null ? configuration.callStack : stack.merge(configuration.callStack));
+			}
 
-	protected abstract BUTree<SFieldDecl> parseFieldDecl(BUTree<SNodeList> modifiers) throws ParseException;
+			configurations.clear();
+			for (Map.Entry<StatePredictionPair, CallStack> entry : perStatePredictionCallStack.entrySet()) {
+				StatePredictionPair key = entry.getKey();
+				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
+			}
 
-	protected abstract BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException;
+			if (MERGE_STATS) {
+				int newSize = configurations.size();
+				if (previousSize > newSize) {
+					System.out.println("Was: " + previousSize + " - Now is: " + newSize + " - Saved: " + (previousSize - newSize));
+				}
+			}
+			return configurations;
+		}
+	}
 
-	protected abstract BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException;
+	private static class ConfigurationSetBuilderWithIncrementalMerge implements ConfigurationSetBuilder {
+		Map<StatePredictionPair, CallStack> perStatePredictionCallStack = new HashMap<StatePredictionPair, CallStack>();
 
-	protected abstract BUTree<SFormalParameter> parseFormalParameter() throws ParseException;
+		public void add(Configuration configuration) {
+			StatePredictionPair key = new StatePredictionPair(configuration.state, configuration.prediction);
 
-	protected abstract BUTree<STypeParameter> parseTypeParameter() throws ParseException;
+			CallStack stack = perStatePredictionCallStack.get(key);
 
-	protected abstract BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException;
+			if (MERGE_STATS) {
+				added++;
+				if (stack != null) saved++;
+			}
 
-	protected abstract BUTree<? extends SStmt> parseBlockStatement() throws ParseException;
+			CallStack mergedStack = stack == null ? configuration.callStack : stack.merge(configuration.callStack);
+			perStatePredictionCallStack.put(key, mergedStack);
+		}
 
-	protected abstract BUTree<? extends SExpr> parseExpression() throws ParseException;
+		private int added = 0;
+		private int saved = 0;
 
-	protected abstract BUTree<SNodeList> parseAnnotations() throws ParseException;
+		public Set<Configuration> build() {
+			HashSet<Configuration> configurations = new HashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
+			for (Map.Entry<StatePredictionPair, CallStack> entry : perStatePredictionCallStack.entrySet()) {
+				StatePredictionPair key = entry.getKey();
+				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
+			}
 
-	protected abstract BUTree<? extends SType> parseType(BUTree<SNodeList> annotations) throws ParseException;
+			if (MERGE_STATS) {
+				if (saved > 0) {
+					System.out.println("Was: " + added + " - Now is: " + (added - saved) + " - Saved: " + saved);
+				}
+			}
 
-	protected abstract BUTree<SQualifiedName> parseQualifiedName() throws ParseException;
-
-	protected abstract BUTree<SName> parseName() throws ParseException;
-
-	protected abstract void parseEpilog() throws ParseException;
+			return configurations;
+		}
+	}
 }

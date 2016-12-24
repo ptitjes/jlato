@@ -24,22 +24,15 @@ package org.jlato.parser;
  */
 public class ParserConfiguration {
 
-	public static final ParserConfiguration Default = new ParserConfiguration(false, "2");
+	public static final ParserConfiguration Default = new ParserConfiguration(false);
 
 	public final boolean preserveWhitespaces;
 
-	public final String parser;
-
-	private ParserConfiguration(boolean preserveWhitespaces, String parser) {
+	private ParserConfiguration(boolean preserveWhitespaces) {
 		this.preserveWhitespaces = preserveWhitespaces;
-		this.parser = parser;
 	}
 
 	public ParserConfiguration preserveWhitespaces(boolean preserveWhitespaces) {
-		return new ParserConfiguration(preserveWhitespaces, parser);
-	}
-
-	public ParserConfiguration setParser(String parser) {
-		return new ParserConfiguration(preserveWhitespaces, parser);
+		return new ParserConfiguration(preserveWhitespaces);
 	}
 }

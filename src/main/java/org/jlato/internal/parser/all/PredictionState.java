@@ -19,7 +19,7 @@
 
 package org.jlato.internal.parser.all;
 
-import org.jlato.internal.parser.ParserNewBase2;
+import org.jlato.internal.parser.ParserNewBase;
 import org.jlato.internal.parser.Token;
 
 import java.util.*;
@@ -41,7 +41,7 @@ public class PredictionState {
 		this.configurations = configurations;
 
 		this.stackSensitive = computeConflicts && checkStackSensitive();
-		this.prediction = (stackSensitive && forceLL) ? ParserNewBase2.minimalAlternative(getConflictSets()) :
+		this.prediction = (stackSensitive && forceLL) ? ParserNewBase.minimalAlternative(getConflictSets()) :
 				computePrediction ? commonPrediction() : -1;
 	}
 

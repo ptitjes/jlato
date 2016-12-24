@@ -26,6 +26,7 @@ import org.jlato.internal.bu.expr.*;
 import org.jlato.internal.bu.name.*;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
+import org.jlato.internal.parser.all.Grammar;
 import org.jlato.parser.ParseException;
 import org.jlato.tree.Problem.Severity;
 import org.jlato.tree.decl.ModifierKeyword;
@@ -35,12 +36,2930 @@ import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
 
 /**
- * Internal implementation of the Java parser as a recursive descent parser.
+ * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */
-public class ParserImplementation extends ParserNewBase {
+class ParserImplementation extends ParserNewBase {
 
-	protected int memoizedProductionCount() {
-		return 11;
+	protected Grammar initializeGrammar() {
+		return new JavaGrammar();
+	}
+
+	private static class JavaGrammar extends Grammar {
+
+		static final int ADDITIVE_EXPRESSION = 213;
+
+		static final int ADDITIVE_EXPRESSION_2 = 219;
+
+		static final int ADDITIVE_EXPRESSION_2_1 = 220;
+
+		static final int AND_EXPRESSION = 201;
+
+		static final int AND_EXPRESSION_2 = 204;
+
+		static final int ANNOTATED_QUALIFIED_TYPE = 66;
+
+		static final int ANNOTATION = 53;
+
+		static final int ANNOTATIONS = 17;
+
+		static final int ANNOTATIONS_1 = 324;
+
+		static final int ANNOTATIONS_ENTRY = 16;
+
+		static final int ANNOTATION_1 = 325;
+
+		static final int ANNOTATION_ELEMENT_DECL_ENTRY = 22;
+
+		static final int ANNOTATION_MEMBER_DECL_ENTRY = 12;
+
+		static final int ANNOTATION_TYPE_BODY = 87;
+
+		static final int ANNOTATION_TYPE_BODY_2 = 88;
+
+		static final int ANNOTATION_TYPE_BODY_2_1 = 89;
+
+		static final int ANNOTATION_TYPE_BODY_2_1_2 = 90;
+
+		static final int ANNOTATION_TYPE_BODY_DECL = 13;
+
+		static final int ANNOTATION_TYPE_BODY_DECL_1 = 91;
+
+		static final int ANNOTATION_TYPE_BODY_DECL_1_2_2 = 92;
+
+		static final int ANNOTATION_TYPE_DECL = 61;
+
+		static final int ANNOTATION_TYPE_MEMBER_DECL = 23;
+
+		static final int ANNOTATION_TYPE_MEMBER_DECL_6 = 94;
+
+		static final int ARGUMENTS = 85;
+
+		static final int ARGUMENTS_2 = 260;
+
+		static final int ARGUMENTS_2_1 = 261;
+
+		static final int ARGUMENTS_2_1_2_2 = 262;
+
+		static final int ARRAY_CREATION_EXPR = 243;
+
+		static final int ARRAY_CREATION_EXPR_2 = 267;
+
+		static final int ARRAY_CREATION_EXPR_4 = 268;
+
+		static final int ARRAY_CREATION_EXPR_REST = 269;
+
+		static final int ARRAY_DIMS = 93;
+
+		static final int ARRAY_DIMS_1 = 116;
+
+		static final int ARRAY_DIMS_MANDATORY = 153;
+
+		static final int ARRAY_DIMS_MANDATORY_1 = 272;
+
+		static final int ARRAY_DIM_EXPRS_MANDATORY = 270;
+
+		static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 271;
+
+		static final int ARRAY_INITIALIZER = 118;
+
+		static final int ARRAY_INITIALIZER_2 = 119;
+
+		static final int ARRAY_INITIALIZER_2_2 = 120;
+
+		static final int ARRAY_INITIALIZER_3 = 121;
+
+		static final int ASSERT_STATEMENT = 276;
+
+		static final int ASSERT_STATEMENT_3 = 290;
+
+		static final int ASSIGNMENT_EXPRESSION = 177;
+
+		static final int ASSIGNMENT_EXPRESSION_2 = 180;
+
+		static final int ASSIGNMENT_OPERATOR = 181;
+
+		static final int ASSIGNMENT_OPERATOR_1 = 191;
+
+		static final int BLOCK = 128;
+
+		static final int BLOCK_STATEMENT = 33;
+
+		static final int BLOCK_STATEMENT_1 = 291;
+
+		static final int BLOCK_STATEMENT_ENTRY = 32;
+
+		static final int BREAK_STATEMENT = 284;
+
+		static final int BREAK_STATEMENT_2 = 307;
+
+		static final int CAST_EXPRESSION = 231;
+
+		static final int CAST_EXPRESSION_3 = 236;
+
+		static final int CATCH_CLAUSE = 318;
+
+		static final int CATCH_CLAUSES = 313;
+
+		static final int CATCH_CLAUSES_1 = 317;
+
+		static final int CATCH_FORMAL_PARAMETER = 319;
+
+		static final int CATCH_FORMAL_PARAMETER_3 = 320;
+
+		static final int CATCH_FORMAL_PARAMETER_3_1 = 321;
+
+		static final int CLASS_CREATION_EXPR = 255;
+
+		static final int CLASS_CREATION_EXPR_2 = 265;
+
+		static final int CLASS_CREATION_EXPR_6 = 266;
+
+		static final int CLASS_OR_INTERFACE_BODY = 72;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECL = 11;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECLS = 83;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1 = 102;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1 = 103;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_2 = 104;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECL_1 = 105;
+
+		static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_2 = 106;
+
+		static final int CLASS_OR_INTERFACE_DECL = 59;
+
+		static final int CLASS_OR_INTERFACE_DECL_1 = 62;
+
+		static final int CLASS_OR_INTERFACE_DECL_1_1_3 = 63;
+
+		static final int CLASS_OR_INTERFACE_DECL_1_1_4 = 65;
+
+		static final int CLASS_OR_INTERFACE_DECL_1_1_5 = 67;
+
+		static final int CLASS_OR_INTERFACE_DECL_1_2_3 = 69;
+
+		static final int CLASS_OR_INTERFACE_DECL_1_2_4 = 70;
+
+		static final int COMPILATION_UNIT = 2;
+
+		static final int COMPILATION_UNIT_1 = 44;
+
+		static final int COMPILATION_UNIT_ENTRY = 1;
+
+		static final int CONDITIONAL_AND_EXPRESSION = 195;
+
+		static final int CONDITIONAL_AND_EXPRESSION_2 = 198;
+
+		static final int CONDITIONAL_EXPRESSION = 179;
+
+		static final int CONDITIONAL_EXPRESSION_2 = 193;
+
+		static final int CONDITIONAL_EXPRESSION_2_4 = 194;
+
+		static final int CONDITIONAL_OR_EXPRESSION = 192;
+
+		static final int CONDITIONAL_OR_EXPRESSION_2 = 196;
+
+		static final int CONSTRUCTOR_DECL = 108;
+
+		static final int CONSTRUCTOR_DECL_1 = 137;
+
+		static final int CONSTRUCTOR_DECL_4 = 138;
+
+		static final int CONTINUE_STATEMENT = 285;
+
+		static final int CONTINUE_STATEMENT_2 = 308;
+
+		static final int DO_STATEMENT = 282;
+
+		static final int ELEMENT_VALUE = 95;
+
+		static final int ELEMENT_VALUE_1 = 333;
+
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 334;
+
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 335;
+
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 337;
+
+		static final int ELEMENT_VALUE_LIST = 336;
+
+		static final int ELEMENT_VALUE_LIST_2 = 338;
+
+		static final int ELEMENT_VALUE_PAIR = 331;
+
+		static final int ELEMENT_VALUE_PAIR_LIST = 330;
+
+		static final int ELEMENT_VALUE_PAIR_LIST_2 = 332;
+
+		static final int EMPTY_STATEMENT = 277;
+
+		static final int ENUM_CONSTANT_DECL = 25;
+
+		static final int ENUM_CONSTANT_DECL_3 = 84;
+
+		static final int ENUM_CONSTANT_DECL_4 = 86;
+
+		static final int ENUM_CONSTANT_DECL_ENTRY = 24;
+
+		static final int ENUM_DECL = 60;
+
+		static final int ENUM_DECL_3 = 77;
+
+		static final int ENUM_DECL_5 = 78;
+
+		static final int ENUM_DECL_5_1 = 79;
+
+		static final int ENUM_DECL_5_1_2_2 = 80;
+
+		static final int ENUM_DECL_6 = 81;
+
+		static final int ENUM_DECL_7 = 82;
+
+		static final int EPILOG = 5;
+
+		static final int EQUALITY_EXPRESSION = 203;
+
+		static final int EQUALITY_EXPRESSION_2 = 206;
+
+		static final int EQUALITY_EXPRESSION_2_1 = 207;
+
+		static final int EXCLUSIVE_OR_EXPRESSION = 199;
+
+		static final int EXCLUSIVE_OR_EXPRESSION_2 = 202;
+
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION = 139;
+
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1 = 140;
+
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_1_1 = 141;
+
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1 = 143;
+
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_2 = 145;
+
+		static final int EXPRESSION = 35;
+
+		static final int EXPRESSION_1 = 176;
+
+		static final int EXPRESSION_ENTRY = 34;
+
+		static final int EXPRESSION_STATEMENT = 278;
+
+		static final int EXTENDS_LIST = 71;
+
+		static final int EXTENDS_LIST_2 = 73;
+
+		static final int EXTENDS_LIST_2_2_2 = 74;
+
+		static final int FIELD_ACCESS = 253;
+
+		static final int FIELD_DECL = 21;
+
+		static final int FIELD_DECL_ENTRY = 20;
+
+		static final int FORMAL_PARAMETER = 27;
+
+		static final int FORMAL_PARAMETERS = 124;
+
+		static final int FORMAL_PARAMETERS_2 = 129;
+
+		static final int FORMAL_PARAMETER_3 = 133;
+
+		static final int FORMAL_PARAMETER_4 = 134;
+
+		static final int FORMAL_PARAMETER_4_1_1 = 135;
+
+		static final int FORMAL_PARAMETER_ENTRY = 26;
+
+		static final int FORMAL_PARAMETER_LIST = 130;
+
+		static final int FORMAL_PARAMETER_LIST_1 = 131;
+
+		static final int FORMAL_PARAMETER_LIST_1_2_2 = 132;
+
+		static final int FOR_INIT = 300;
+
+		static final int FOR_INIT_1 = 304;
+
+		static final int FOR_STATEMENT = 283;
+
+		static final int FOR_STATEMENT_3 = 298;
+
+		static final int FOR_STATEMENT_3_2_1 = 299;
+
+		static final int FOR_STATEMENT_3_2_3 = 301;
+
+		static final int FOR_STATEMENT_3_2_5 = 302;
+
+		static final int FOR_UPDATE = 303;
+
+		static final int IF_STATEMENT = 280;
+
+		static final int IF_STATEMENT_6 = 297;
+
+		static final int IMPLEMENTS_LIST = 68;
+
+		static final int IMPLEMENTS_LIST_2 = 75;
+
+		static final int IMPLEMENTS_LIST_2_2_2 = 76;
+
+		static final int IMPORT_DECL = 7;
+
+		static final int IMPORT_DECLS = 45;
+
+		static final int IMPORT_DECLS_1 = 47;
+
+		static final int IMPORT_DECL_2 = 48;
+
+		static final int IMPORT_DECL_4 = 49;
+
+		static final int IMPORT_DECL_ENTRY = 6;
+
+		static final int INCLUSIVE_OR_EXPRESSION = 197;
+
+		static final int INCLUSIVE_OR_EXPRESSION_2 = 200;
+
+		static final int INFERRED_FORMAL_PARAMETER = 189;
+
+		static final int INFERRED_FORMAL_PARAMETER_LIST = 187;
+
+		static final int INFERRED_FORMAL_PARAMETER_LIST_2 = 190;
+
+		static final int INITIALIZER_DECL = 107;
+
+		static final int INSTANCE_OF_EXPRESSION = 205;
+
+		static final int INSTANCE_OF_EXPRESSION_2 = 209;
+
+		static final int LABELED_STATEMENT = 275;
+
+		static final int LAMBDA_BODY = 186;
+
+		static final int LAMBDA_BODY_1 = 188;
+
+		static final int LAMBDA_EXPRESSION = 178;
+
+		static final int LAMBDA_EXPRESSION_1 = 182;
+
+		static final int LAMBDA_EXPRESSION_WITHOUT_CAST = 184;
+
+		static final int LAMBDA_EXPRESSION_WITHOUT_CAST_1 = 185;
+
+		static final int LITERAL = 239;
+
+		static final int LITERAL_1 = 240;
+
+		static final int MARKER_ANNOTATION = 327;
+
+		static final int MEMBER_DECL_ENTRY = 10;
+
+		static final int METHOD_DECL = 19;
+
+		static final int METHOD_DECL_1 = 122;
+
+		static final int METHOD_DECL_6 = 125;
+
+		static final int METHOD_DECL_7 = 127;
+
+		static final int METHOD_DECL_ENTRY = 18;
+
+		static final int METHOD_INVOCATION = 252;
+
+		static final int METHOD_INVOCATION_1 = 259;
+
+		static final int METHOD_REFERENCE_SUFFIX = 254;
+
+		static final int METHOD_REFERENCE_SUFFIX_2 = 263;
+
+		static final int METHOD_REFERENCE_SUFFIX_3 = 264;
+
+		static final int MODIFIERS = 15;
+
+		static final int MODIFIERS_1 = 51;
+
+		static final int MODIFIERS_1_1 = 52;
+
+		static final int MODIFIERS_ENTRY = 14;
+
+		static final int MODIFIERS_NO_DEFAULT = 54;
+
+		static final int MODIFIERS_NO_DEFAULT_1 = 55;
+
+		static final int MODIFIERS_NO_DEFAULT_1_1 = 56;
+
+		static final int MULTIPLICATIVE_EXPRESSION = 218;
+
+		static final int MULTIPLICATIVE_EXPRESSION_2 = 222;
+
+		static final int MULTIPLICATIVE_EXPRESSION_2_1 = 223;
+
+		static final int NAME = 41;
+
+		static final int NAME_1 = 175;
+
+		static final int NAME_ENTRY = 40;
+
+		static final int NODE_LIST_VAR = 42;
+
+		static final int NODE_VAR = 43;
+
+		static final int NORMAL_ANNOTATION = 326;
+
+		static final int NORMAL_ANNOTATION_4 = 329;
+
+		static final int PACKAGE_DECL = 4;
+
+		static final int PACKAGE_DECL_ENTRY = 3;
+
+		static final int POSTFIX_EXPRESSION = 232;
+
+		static final int POSTFIX_EXPRESSION_2 = 234;
+
+		static final int POSTFIX_EXPRESSION_2_1 = 235;
+
+		static final int PREFIX_EXPRESSION = 225;
+
+		static final int PREFIX_EXPRESSION_1 = 228;
+
+		static final int PRIMARY_EXPRESSION = 233;
+
+		static final int PRIMARY_EXPRESSION_1 = 241;
+
+		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX = 144;
+
+		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 247;
+
+		static final int PRIMARY_NO_NEW_ARRAY = 242;
+
+		static final int PRIMARY_NO_NEW_ARRAY_2 = 245;
+
+		static final int PRIMARY_PREFIX = 244;
+
+		static final int PRIMARY_PREFIX_1 = 249;
+
+		static final int PRIMARY_PREFIX_1_3_2 = 250;
+
+		static final int PRIMARY_PREFIX_1_3_2_1_2 = 251;
+
+		static final int PRIMARY_SUFFIX = 246;
+
+		static final int PRIMARY_SUFFIX_1 = 256;
+
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 248;
+
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 257;
+
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 258;
+
+		static final int PRIMITIVE_TYPE = 151;
+
+		static final int PRIMITIVE_TYPE_1 = 172;
+
+		static final int QUALIFIED_NAME = 39;
+
+		static final int QUALIFIED_NAME_2 = 174;
+
+		static final int QUALIFIED_NAME_ENTRY = 38;
+
+		static final int QUALIFIED_TYPE = 154;
+
+		static final int QUALIFIED_TYPE_2 = 159;
+
+		static final int QUALIFIED_TYPE_3 = 161;
+
+		static final int QUALIFIED_TYPE_3_4 = 162;
+
+		static final int REFERENCE_CAST_TYPE_REST = 183;
+
+		static final int REFERENCE_CAST_TYPE_REST_1 = 237;
+
+		static final int REFERENCE_CAST_TYPE_REST_1_1 = 238;
+
+		static final int REFERENCE_TYPE = 156;
+
+		static final int REFERENCE_TYPE_1 = 157;
+
+		static final int REFERENCE_TYPE_1_2_2 = 158;
+
+		static final int RELATIONAL_EXPRESSION = 208;
+
+		static final int RELATIONAL_EXPRESSION_2 = 211;
+
+		static final int RELATIONAL_EXPRESSION_2_1 = 212;
+
+		static final int RESOURCE_SPECIFICATION = 311;
+
+		static final int RESOURCE_SPECIFICATION_3 = 322;
+
+		static final int RESOURCE_SPECIFICATION_4 = 323;
+
+		static final int RESULT_TYPE = 123;
+
+		static final int RESULT_TYPE_1 = 173;
+
+		static final int RETURN_STATEMENT = 286;
+
+		static final int RETURN_STATEMENT_2 = 309;
+
+		static final int R_S_I_G_N_E_D_S_H_I_F_T = 217;
+
+		static final int R_U_N_S_I_G_N_E_D_S_H_I_F_T = 216;
+
+		static final int SHIFT_EXPRESSION = 210;
+
+		static final int SHIFT_EXPRESSION_2 = 214;
+
+		static final int SHIFT_EXPRESSION_2_1 = 215;
+
+		static final int SINGLE_ELEMENT_ANNOTATION = 328;
+
+		static final int STATEMENT = 273;
+
+		static final int STATEMENTS = 31;
+
+		static final int STATEMENTS_1 = 146;
+
+		static final int STATEMENTS_1_1 = 147;
+
+		static final int STATEMENTS_1_1_2_1 = 148;
+
+		static final int STATEMENTS_1_1_2_2 = 149;
+
+		static final int STATEMENTS_ENTRY = 30;
+
+		static final int STATEMENT_1 = 274;
+
+		static final int STATEMENT_EXPRESSION = 293;
+
+		static final int STATEMENT_EXPRESSION_LIST = 305;
+
+		static final int STATEMENT_EXPRESSION_LIST_2 = 306;
+
+		static final int SWITCH_ENTRY = 295;
+
+		static final int SWITCH_ENTRY_1 = 296;
+
+		static final int SWITCH_STATEMENT = 279;
+
+		static final int SWITCH_STATEMENT_6 = 294;
+
+		static final int SYNCHRONIZED_STATEMENT = 288;
+
+		static final int THROWS_CLAUSE = 126;
+
+		static final int THROWS_CLAUSE_3 = 136;
+
+		static final int THROW_STATEMENT = 287;
+
+		static final int TRY_STATEMENT = 289;
+
+		static final int TRY_STATEMENT_2 = 310;
+
+		static final int TRY_STATEMENT_2_1_3 = 312;
+
+		static final int TRY_STATEMENT_2_1_4 = 314;
+
+		static final int TRY_STATEMENT_2_2_2 = 315;
+
+		static final int TRY_STATEMENT_2_2_2_1_2 = 316;
+
+		static final int TYPE = 37;
+
+		static final int TYPE_1 = 150;
+
+		static final int TYPE_1_1_2 = 152;
+
+		static final int TYPE_1_2_2 = 155;
+
+		static final int TYPE_ARGUMENT = 166;
+
+		static final int TYPE_ARGUMENTS = 142;
+
+		static final int TYPE_ARGUMENTS_2 = 163;
+
+		static final int TYPE_ARGUMENTS_OR_DIAMOND = 160;
+
+		static final int TYPE_ARGUMENTS_OR_DIAMOND_2 = 165;
+
+		static final int TYPE_ARGUMENT_2 = 168;
+
+		static final int TYPE_ARGUMENT_LIST = 164;
+
+		static final int TYPE_ARGUMENT_LIST_2_2 = 167;
+
+		static final int TYPE_BOUNDS = 99;
+
+		static final int TYPE_BOUNDS_2 = 100;
+
+		static final int TYPE_BOUNDS_2_2_2 = 101;
+
+		static final int TYPE_DECL = 9;
+
+		static final int TYPE_DECLS = 46;
+
+		static final int TYPE_DECLS_1 = 50;
+
+		static final int TYPE_DECL_1 = 57;
+
+		static final int TYPE_DECL_1_2_2 = 58;
+
+		static final int TYPE_DECL_ENTRY = 8;
+
+		static final int TYPE_ENTRY = 36;
+
+		static final int TYPE_PARAMETER = 29;
+
+		static final int TYPE_PARAMETERS = 64;
+
+		static final int TYPE_PARAMETERS_2 = 96;
+
+		static final int TYPE_PARAMETERS_2_2_2 = 97;
+
+		static final int TYPE_PARAMETER_3 = 98;
+
+		static final int TYPE_PARAMETER_ENTRY = 28;
+
+		static final int UNARY_EXPRESSION = 221;
+
+		static final int UNARY_EXPRESSION_1 = 224;
+
+		static final int UNARY_EXPRESSION_1_2_1 = 226;
+
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS = 227;
+
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1 = 229;
+
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1_1_1 = 230;
+
+		static final int VARIABLE_DECL = 110;
+
+		static final int VARIABLE_DECLARATOR = 111;
+
+		static final int VARIABLE_DECLARATORS = 109;
+
+		static final int VARIABLE_DECLARATORS_2 = 112;
+
+		static final int VARIABLE_DECLARATOR_2 = 114;
+
+		static final int VARIABLE_DECLARATOR_ID = 113;
+
+		static final int VARIABLE_DECL_EXPRESSION = 292;
+
+		static final int VARIABLE_INITIALIZER = 115;
+
+		static final int VARIABLE_INITIALIZER_1 = 117;
+
+		static final int WHILE_STATEMENT = 281;
+
+		static final int WILDCARD = 169;
+
+		static final int WILDCARD_2 = 170;
+
+		static final int WILDCARD_2_1 = 171;
+
+		static final NonTerminal CompilationUnitEntry_1 = nonTerminal("CompilationUnitEntry_1", COMPILATION_UNIT);
+
+		static final Sequence CompilationUnitEntry = sequence("CompilationUnitEntry", CompilationUnitEntry_1);
+
+		static final NonTerminal PackageDeclEntry_1 = nonTerminal("PackageDeclEntry_1", PACKAGE_DECL);
+
+		static final NonTerminal PackageDeclEntry_2 = nonTerminal("PackageDeclEntry_2", EPILOG);
+
+		static final Sequence PackageDeclEntry = sequence("PackageDeclEntry", PackageDeclEntry_1, PackageDeclEntry_2);
+
+		static final NonTerminal ImportDeclEntry_1 = nonTerminal("ImportDeclEntry_1", IMPORT_DECL);
+
+		static final NonTerminal ImportDeclEntry_2 = nonTerminal("ImportDeclEntry_2", EPILOG);
+
+		static final Sequence ImportDeclEntry = sequence("ImportDeclEntry", ImportDeclEntry_1, ImportDeclEntry_2);
+
+		static final NonTerminal TypeDeclEntry_1 = nonTerminal("TypeDeclEntry_1", TYPE_DECL);
+
+		static final NonTerminal TypeDeclEntry_2 = nonTerminal("TypeDeclEntry_2", EPILOG);
+
+		static final Sequence TypeDeclEntry = sequence("TypeDeclEntry", TypeDeclEntry_1, TypeDeclEntry_2);
+
+		static final NonTerminal MemberDeclEntry_1 = nonTerminal("MemberDeclEntry_1", CLASS_OR_INTERFACE_BODY_DECL);
+
+		static final NonTerminal MemberDeclEntry_2 = nonTerminal("MemberDeclEntry_2", EPILOG);
+
+		static final Sequence MemberDeclEntry = sequence("MemberDeclEntry", MemberDeclEntry_1, MemberDeclEntry_2);
+
+		static final NonTerminal AnnotationMemberDeclEntry_1 = nonTerminal("AnnotationMemberDeclEntry_1", ANNOTATION_TYPE_BODY_DECL);
+
+		static final NonTerminal AnnotationMemberDeclEntry_2 = nonTerminal("AnnotationMemberDeclEntry_2", EPILOG);
+
+		static final Sequence AnnotationMemberDeclEntry = sequence("AnnotationMemberDeclEntry", AnnotationMemberDeclEntry_1, AnnotationMemberDeclEntry_2);
+
+		static final NonTerminal ModifiersEntry_1 = nonTerminal("ModifiersEntry_1", MODIFIERS);
+
+		static final NonTerminal ModifiersEntry_2 = nonTerminal("ModifiersEntry_2", EPILOG);
+
+		static final Sequence ModifiersEntry = sequence("ModifiersEntry", ModifiersEntry_1, ModifiersEntry_2);
+
+		static final NonTerminal AnnotationsEntry_1 = nonTerminal("AnnotationsEntry_1", ANNOTATIONS);
+
+		static final NonTerminal AnnotationsEntry_2 = nonTerminal("AnnotationsEntry_2", EPILOG);
+
+		static final Sequence AnnotationsEntry = sequence("AnnotationsEntry", AnnotationsEntry_1, AnnotationsEntry_2);
+
+		static final NonTerminal MethodDeclEntry_1 = nonTerminal("MethodDeclEntry_1", MODIFIERS);
+
+		static final NonTerminal MethodDeclEntry_2 = nonTerminal("MethodDeclEntry_2", METHOD_DECL);
+
+		static final NonTerminal MethodDeclEntry_3 = nonTerminal("MethodDeclEntry_3", EPILOG);
+
+		static final Sequence MethodDeclEntry = sequence("MethodDeclEntry", MethodDeclEntry_1, MethodDeclEntry_2, MethodDeclEntry_3);
+
+		static final NonTerminal FieldDeclEntry_1 = nonTerminal("FieldDeclEntry_1", MODIFIERS);
+
+		static final NonTerminal FieldDeclEntry_2 = nonTerminal("FieldDeclEntry_2", FIELD_DECL);
+
+		static final NonTerminal FieldDeclEntry_3 = nonTerminal("FieldDeclEntry_3", EPILOG);
+
+		static final Sequence FieldDeclEntry = sequence("FieldDeclEntry", FieldDeclEntry_1, FieldDeclEntry_2, FieldDeclEntry_3);
+
+		static final NonTerminal AnnotationElementDeclEntry_1 = nonTerminal("AnnotationElementDeclEntry_1", MODIFIERS);
+
+		static final NonTerminal AnnotationElementDeclEntry_2 = nonTerminal("AnnotationElementDeclEntry_2", ANNOTATION_TYPE_MEMBER_DECL);
+
+		static final NonTerminal AnnotationElementDeclEntry_3 = nonTerminal("AnnotationElementDeclEntry_3", EPILOG);
+
+		static final Sequence AnnotationElementDeclEntry = sequence("AnnotationElementDeclEntry", AnnotationElementDeclEntry_1, AnnotationElementDeclEntry_2, AnnotationElementDeclEntry_3);
+
+		static final NonTerminal EnumConstantDeclEntry_1 = nonTerminal("EnumConstantDeclEntry_1", ENUM_CONSTANT_DECL);
+
+		static final NonTerminal EnumConstantDeclEntry_2 = nonTerminal("EnumConstantDeclEntry_2", EPILOG);
+
+		static final Sequence EnumConstantDeclEntry = sequence("EnumConstantDeclEntry", EnumConstantDeclEntry_1, EnumConstantDeclEntry_2);
+
+		static final NonTerminal FormalParameterEntry_1 = nonTerminal("FormalParameterEntry_1", FORMAL_PARAMETER);
+
+		static final NonTerminal FormalParameterEntry_2 = nonTerminal("FormalParameterEntry_2", EPILOG);
+
+		static final Sequence FormalParameterEntry = sequence("FormalParameterEntry", FormalParameterEntry_1, FormalParameterEntry_2);
+
+		static final NonTerminal TypeParameterEntry_1 = nonTerminal("TypeParameterEntry_1", TYPE_PARAMETER);
+
+		static final NonTerminal TypeParameterEntry_2 = nonTerminal("TypeParameterEntry_2", EPILOG);
+
+		static final Sequence TypeParameterEntry = sequence("TypeParameterEntry", TypeParameterEntry_1, TypeParameterEntry_2);
+
+		static final NonTerminal StatementsEntry_1 = nonTerminal("StatementsEntry_1", STATEMENTS);
+
+		static final NonTerminal StatementsEntry_2 = nonTerminal("StatementsEntry_2", EPILOG);
+
+		static final Sequence StatementsEntry = sequence("StatementsEntry", StatementsEntry_1, StatementsEntry_2);
+
+		static final NonTerminal BlockStatementEntry_1 = nonTerminal("BlockStatementEntry_1", BLOCK_STATEMENT);
+
+		static final NonTerminal BlockStatementEntry_2 = nonTerminal("BlockStatementEntry_2", EPILOG);
+
+		static final Sequence BlockStatementEntry = sequence("BlockStatementEntry", BlockStatementEntry_1, BlockStatementEntry_2);
+
+		static final NonTerminal ExpressionEntry_1 = nonTerminal("ExpressionEntry_1", EXPRESSION);
+
+		static final NonTerminal ExpressionEntry_2 = nonTerminal("ExpressionEntry_2", EPILOG);
+
+		static final Sequence ExpressionEntry = sequence("ExpressionEntry", ExpressionEntry_1, ExpressionEntry_2);
+
+		static final NonTerminal TypeEntry_1 = nonTerminal("TypeEntry_1", ANNOTATIONS);
+
+		static final NonTerminal TypeEntry_2 = nonTerminal("TypeEntry_2", TYPE);
+
+		static final NonTerminal TypeEntry_3 = nonTerminal("TypeEntry_3", EPILOG);
+
+		static final Sequence TypeEntry = sequence("TypeEntry", TypeEntry_1, TypeEntry_2, TypeEntry_3);
+
+		static final NonTerminal QualifiedNameEntry_1 = nonTerminal("QualifiedNameEntry_1", QUALIFIED_NAME);
+
+		static final NonTerminal QualifiedNameEntry_2 = nonTerminal("QualifiedNameEntry_2", EPILOG);
+
+		static final Sequence QualifiedNameEntry = sequence("QualifiedNameEntry", QualifiedNameEntry_1, QualifiedNameEntry_2);
+
+		static final NonTerminal NameEntry_1 = nonTerminal("NameEntry_1", NAME);
+
+		static final NonTerminal NameEntry_2 = nonTerminal("NameEntry_2", EPILOG);
+
+		static final Sequence NameEntry = sequence("NameEntry", NameEntry_1, NameEntry_2);
+
+		static final Sequence Epilog = sequence("Epilog", terminal("Epilog_1", TokenType.EOF));
+
+		static final Sequence NodeListVar = sequence("NodeListVar", terminal("NodeListVar_1", TokenType.NODE_LIST_VARIABLE));
+
+		static final Sequence NodeVar = sequence("NodeVar", terminal("NodeVar_1", TokenType.NODE_VARIABLE));
+
+		static final NonTerminal CompilationUnit_1_1 = nonTerminal("CompilationUnit_1_1", PACKAGE_DECL);
+
+		static final ZeroOrOne CompilationUnit_1 = zeroOrOne("CompilationUnit_1", CompilationUnit_1_1);
+
+		static final NonTerminal CompilationUnit_2 = nonTerminal("CompilationUnit_2", IMPORT_DECLS);
+
+		static final NonTerminal CompilationUnit_3 = nonTerminal("CompilationUnit_3", TYPE_DECLS);
+
+		static final NonTerminal CompilationUnit_4 = nonTerminal("CompilationUnit_4", EPILOG);
+
+		static final Sequence CompilationUnit = sequence("CompilationUnit", CompilationUnit_1, CompilationUnit_2, CompilationUnit_3, CompilationUnit_4);
+
+		static final NonTerminal PackageDecl_1 = nonTerminal("PackageDecl_1", ANNOTATIONS);
+
+		static final NonTerminal PackageDecl_3 = nonTerminal("PackageDecl_3", QUALIFIED_NAME);
+
+		static final Sequence PackageDecl = sequence("PackageDecl", PackageDecl_1, terminal("PackageDecl_2", TokenType.PACKAGE), PackageDecl_3, terminal("PackageDecl_4", TokenType.SEMICOLON));
+
+		static final NonTerminal ImportDecls_1_1 = nonTerminal("ImportDecls_1_1", IMPORT_DECL);
+
+		static final ZeroOrMore ImportDecls_1 = zeroOrMore("ImportDecls_1", ImportDecls_1_1);
+
+		static final Sequence ImportDecls = sequence("ImportDecls", ImportDecls_1);
+
+		static final ZeroOrOne ImportDecl_2 = zeroOrOne("ImportDecl_2", terminal("ImportDecl_2_1", TokenType.STATIC));
+
+		static final NonTerminal ImportDecl_3 = nonTerminal("ImportDecl_3", QUALIFIED_NAME);
+
+		static final ZeroOrOne ImportDecl_4 = zeroOrOne("ImportDecl_4", sequence("ImportDecl_4", terminal("ImportDecl_4_1", TokenType.DOT), terminal("ImportDecl_4_2", TokenType.STAR)));
+
+		static final Sequence ImportDecl = sequence("ImportDecl", terminal("ImportDecl_1", TokenType.IMPORT), ImportDecl_2, ImportDecl_3, ImportDecl_4, terminal("ImportDecl_5", TokenType.SEMICOLON));
+
+		static final NonTerminal TypeDecls_1_1 = nonTerminal("TypeDecls_1_1", TYPE_DECL);
+
+		static final ZeroOrMore TypeDecls_1 = zeroOrMore("TypeDecls_1", TypeDecls_1_1);
+
+		static final Sequence TypeDecls = sequence("TypeDecls", TypeDecls_1);
+
+		static final NonTerminal Modifiers_1_1_13_1 = nonTerminal("Modifiers_1_1_13_1", ANNOTATION);
+
+		static final Choice Modifiers_1_1 = choice("Modifiers_1_1", sequence("Modifiers_1_1_1", terminal("Modifiers_1_1_1_1", TokenType.PUBLIC)), sequence("Modifiers_1_1_2", terminal("Modifiers_1_1_2_1", TokenType.PROTECTED)), sequence("Modifiers_1_1_3", terminal("Modifiers_1_1_3_1", TokenType.PRIVATE)), sequence("Modifiers_1_1_4", terminal("Modifiers_1_1_4_1", TokenType.ABSTRACT)), sequence("Modifiers_1_1_5", terminal("Modifiers_1_1_5_1", TokenType.DEFAULT)), sequence("Modifiers_1_1_6", terminal("Modifiers_1_1_6_1", TokenType.STATIC)), sequence("Modifiers_1_1_7", terminal("Modifiers_1_1_7_1", TokenType.FINAL)), sequence("Modifiers_1_1_8", terminal("Modifiers_1_1_8_1", TokenType.TRANSIENT)), sequence("Modifiers_1_1_9", terminal("Modifiers_1_1_9_1", TokenType.VOLATILE)), sequence("Modifiers_1_1_10", terminal("Modifiers_1_1_10_1", TokenType.SYNCHRONIZED)), sequence("Modifiers_1_1_11", terminal("Modifiers_1_1_11_1", TokenType.NATIVE)), sequence("Modifiers_1_1_12", terminal("Modifiers_1_1_12_1", TokenType.STRICTFP)), sequence("Modifiers_1_1_13", Modifiers_1_1_13_1));
+
+		static final ZeroOrMore Modifiers_1 = zeroOrMore("Modifiers_1", Modifiers_1_1);
+
+		static final Sequence Modifiers = sequence("Modifiers", Modifiers_1);
+
+		static final NonTerminal ModifiersNoDefault_1_1_12_1 = nonTerminal("ModifiersNoDefault_1_1_12_1", ANNOTATION);
+
+		static final Choice ModifiersNoDefault_1_1 = choice("ModifiersNoDefault_1_1", sequence("ModifiersNoDefault_1_1_1", terminal("ModifiersNoDefault_1_1_1_1", TokenType.PUBLIC)), sequence("ModifiersNoDefault_1_1_2", terminal("ModifiersNoDefault_1_1_2_1", TokenType.PROTECTED)), sequence("ModifiersNoDefault_1_1_3", terminal("ModifiersNoDefault_1_1_3_1", TokenType.PRIVATE)), sequence("ModifiersNoDefault_1_1_4", terminal("ModifiersNoDefault_1_1_4_1", TokenType.ABSTRACT)), sequence("ModifiersNoDefault_1_1_5", terminal("ModifiersNoDefault_1_1_5_1", TokenType.STATIC)), sequence("ModifiersNoDefault_1_1_6", terminal("ModifiersNoDefault_1_1_6_1", TokenType.FINAL)), sequence("ModifiersNoDefault_1_1_7", terminal("ModifiersNoDefault_1_1_7_1", TokenType.TRANSIENT)), sequence("ModifiersNoDefault_1_1_8", terminal("ModifiersNoDefault_1_1_8_1", TokenType.VOLATILE)), sequence("ModifiersNoDefault_1_1_9", terminal("ModifiersNoDefault_1_1_9_1", TokenType.SYNCHRONIZED)), sequence("ModifiersNoDefault_1_1_10", terminal("ModifiersNoDefault_1_1_10_1", TokenType.NATIVE)), sequence("ModifiersNoDefault_1_1_11", terminal("ModifiersNoDefault_1_1_11_1", TokenType.STRICTFP)), sequence("ModifiersNoDefault_1_1_12", ModifiersNoDefault_1_1_12_1));
+
+		static final ZeroOrMore ModifiersNoDefault_1 = zeroOrMore("ModifiersNoDefault_1", ModifiersNoDefault_1_1);
+
+		static final Sequence ModifiersNoDefault = sequence("ModifiersNoDefault", ModifiersNoDefault_1);
+
+		static final NonTerminal TypeDecl_1_2_1 = nonTerminal("TypeDecl_1_2_1", MODIFIERS);
+
+		static final NonTerminal TypeDecl_1_2_2_1 = nonTerminal("TypeDecl_1_2_2_1", CLASS_OR_INTERFACE_DECL);
+
+		static final NonTerminal TypeDecl_1_2_2_2 = nonTerminal("TypeDecl_1_2_2_2", ENUM_DECL);
+
+		static final NonTerminal TypeDecl_1_2_2_3 = nonTerminal("TypeDecl_1_2_2_3", ANNOTATION_TYPE_DECL);
+
+		static final Choice TypeDecl_1_2_2 = choice("TypeDecl_1_2_2", TypeDecl_1_2_2_1, TypeDecl_1_2_2_2, TypeDecl_1_2_2_3);
+
+		static final Choice TypeDecl_1 = choice("TypeDecl_1", sequence("TypeDecl_1_1", terminal("TypeDecl_1_1_1", TokenType.SEMICOLON)), sequence("TypeDecl_1_2", TypeDecl_1_2_1, TypeDecl_1_2_2));
+
+		static final Sequence TypeDecl = sequence("TypeDecl", TypeDecl_1);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_1_2 = nonTerminal("ClassOrInterfaceDecl_1_1_2", NAME);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_1_3_1 = nonTerminal("ClassOrInterfaceDecl_1_1_3_1", TYPE_PARAMETERS);
+
+		static final ZeroOrOne ClassOrInterfaceDecl_1_1_3 = zeroOrOne("ClassOrInterfaceDecl_1_1_3", ClassOrInterfaceDecl_1_1_3_1);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_1_4_2 = nonTerminal("ClassOrInterfaceDecl_1_1_4_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final ZeroOrOne ClassOrInterfaceDecl_1_1_4 = zeroOrOne("ClassOrInterfaceDecl_1_1_4", sequence("ClassOrInterfaceDecl_1_1_4", terminal("ClassOrInterfaceDecl_1_1_4_1", TokenType.EXTENDS), ClassOrInterfaceDecl_1_1_4_2));
+
+		static final NonTerminal ClassOrInterfaceDecl_1_1_5_1 = nonTerminal("ClassOrInterfaceDecl_1_1_5_1", IMPLEMENTS_LIST);
+
+		static final ZeroOrOne ClassOrInterfaceDecl_1_1_5 = zeroOrOne("ClassOrInterfaceDecl_1_1_5", ClassOrInterfaceDecl_1_1_5_1);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_2_2 = nonTerminal("ClassOrInterfaceDecl_1_2_2", NAME);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_2_3_1 = nonTerminal("ClassOrInterfaceDecl_1_2_3_1", TYPE_PARAMETERS);
+
+		static final ZeroOrOne ClassOrInterfaceDecl_1_2_3 = zeroOrOne("ClassOrInterfaceDecl_1_2_3", ClassOrInterfaceDecl_1_2_3_1);
+
+		static final NonTerminal ClassOrInterfaceDecl_1_2_4_1 = nonTerminal("ClassOrInterfaceDecl_1_2_4_1", EXTENDS_LIST);
+
+		static final ZeroOrOne ClassOrInterfaceDecl_1_2_4 = zeroOrOne("ClassOrInterfaceDecl_1_2_4", ClassOrInterfaceDecl_1_2_4_1);
+
+		static final Choice ClassOrInterfaceDecl_1 = choice("ClassOrInterfaceDecl_1", sequence("ClassOrInterfaceDecl_1_1", terminal("ClassOrInterfaceDecl_1_1_1", TokenType.CLASS), ClassOrInterfaceDecl_1_1_2, ClassOrInterfaceDecl_1_1_3, ClassOrInterfaceDecl_1_1_4, ClassOrInterfaceDecl_1_1_5), sequence("ClassOrInterfaceDecl_1_2", terminal("ClassOrInterfaceDecl_1_2_1", TokenType.INTERFACE), ClassOrInterfaceDecl_1_2_2, ClassOrInterfaceDecl_1_2_3, ClassOrInterfaceDecl_1_2_4));
+
+		static final NonTerminal ClassOrInterfaceDecl_2 = nonTerminal("ClassOrInterfaceDecl_2", CLASS_OR_INTERFACE_BODY);
+
+		static final Sequence ClassOrInterfaceDecl = sequence("ClassOrInterfaceDecl", ClassOrInterfaceDecl_1, ClassOrInterfaceDecl_2);
+
+		static final NonTerminal ExtendsList_2_1_1 = nonTerminal("ExtendsList_2_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal ExtendsList_2_2_1 = nonTerminal("ExtendsList_2_2_1", ANNOTATED_QUALIFIED_TYPE);
+
+		static final NonTerminal ExtendsList_2_2_2_2 = nonTerminal("ExtendsList_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final ZeroOrMore ExtendsList_2_2_2 = zeroOrMore("ExtendsList_2_2_2", sequence("ExtendsList_2_2_2", terminal("ExtendsList_2_2_2_1", TokenType.COMMA), ExtendsList_2_2_2_2));
+
+		static final Choice ExtendsList_2 = choice("ExtendsList_2", sequence("ExtendsList_2_1", ExtendsList_2_1_1), sequence("ExtendsList_2_2", ExtendsList_2_2_1, ExtendsList_2_2_2));
+
+		static final Sequence ExtendsList = sequence("ExtendsList", terminal("ExtendsList_1", TokenType.EXTENDS), ExtendsList_2);
+
+		static final NonTerminal ImplementsList_2_1_1 = nonTerminal("ImplementsList_2_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal ImplementsList_2_2_1 = nonTerminal("ImplementsList_2_2_1", ANNOTATED_QUALIFIED_TYPE);
+
+		static final NonTerminal ImplementsList_2_2_2_2 = nonTerminal("ImplementsList_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final ZeroOrMore ImplementsList_2_2_2 = zeroOrMore("ImplementsList_2_2_2", sequence("ImplementsList_2_2_2", terminal("ImplementsList_2_2_2_1", TokenType.COMMA), ImplementsList_2_2_2_2));
+
+		static final Choice ImplementsList_2 = choice("ImplementsList_2", sequence("ImplementsList_2_1", ImplementsList_2_1_1), sequence("ImplementsList_2_2", ImplementsList_2_2_1, ImplementsList_2_2_2));
+
+		static final Sequence ImplementsList = sequence("ImplementsList", terminal("ImplementsList_1", TokenType.IMPLEMENTS), ImplementsList_2);
+
+		static final NonTerminal EnumDecl_2 = nonTerminal("EnumDecl_2", NAME);
+
+		static final NonTerminal EnumDecl_3_1 = nonTerminal("EnumDecl_3_1", IMPLEMENTS_LIST);
+
+		static final ZeroOrOne EnumDecl_3 = zeroOrOne("EnumDecl_3", EnumDecl_3_1);
+
+		static final NonTerminal EnumDecl_5_1_1_1 = nonTerminal("EnumDecl_5_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal EnumDecl_5_1_2_1 = nonTerminal("EnumDecl_5_1_2_1", ENUM_CONSTANT_DECL);
+
+		static final NonTerminal EnumDecl_5_1_2_2_2 = nonTerminal("EnumDecl_5_1_2_2_2", ENUM_CONSTANT_DECL);
+
+		static final ZeroOrMore EnumDecl_5_1_2_2 = zeroOrMore("EnumDecl_5_1_2_2", sequence("EnumDecl_5_1_2_2", terminal("EnumDecl_5_1_2_2_1", TokenType.COMMA), EnumDecl_5_1_2_2_2));
+
+		static final Choice EnumDecl_5_1 = choice("EnumDecl_5_1", sequence("EnumDecl_5_1_1", EnumDecl_5_1_1_1), sequence("EnumDecl_5_1_2", EnumDecl_5_1_2_1, EnumDecl_5_1_2_2));
+
+		static final ZeroOrOne EnumDecl_5 = zeroOrOne("EnumDecl_5", EnumDecl_5_1);
+
+		static final ZeroOrOne EnumDecl_6 = zeroOrOne("EnumDecl_6", terminal("EnumDecl_6_1", TokenType.COMMA));
+
+		static final NonTerminal EnumDecl_7_2 = nonTerminal("EnumDecl_7_2", CLASS_OR_INTERFACE_BODY_DECLS);
+
+		static final ZeroOrOne EnumDecl_7 = zeroOrOne("EnumDecl_7", sequence("EnumDecl_7", terminal("EnumDecl_7_1", TokenType.SEMICOLON), EnumDecl_7_2));
+
+		static final Sequence EnumDecl = sequence("EnumDecl", terminal("EnumDecl_1", TokenType.ENUM), EnumDecl_2, EnumDecl_3, terminal("EnumDecl_4", TokenType.LBRACE), EnumDecl_5, EnumDecl_6, EnumDecl_7, terminal("EnumDecl_8", TokenType.RBRACE));
+
+		static final NonTerminal EnumConstantDecl_1 = nonTerminal("EnumConstantDecl_1", MODIFIERS);
+
+		static final NonTerminal EnumConstantDecl_2 = nonTerminal("EnumConstantDecl_2", NAME);
+
+		static final NonTerminal EnumConstantDecl_3_1 = nonTerminal("EnumConstantDecl_3_1", ARGUMENTS);
+
+		static final ZeroOrOne EnumConstantDecl_3 = zeroOrOne("EnumConstantDecl_3", EnumConstantDecl_3_1);
+
+		static final NonTerminal EnumConstantDecl_4_1 = nonTerminal("EnumConstantDecl_4_1", CLASS_OR_INTERFACE_BODY);
+
+		static final ZeroOrOne EnumConstantDecl_4 = zeroOrOne("EnumConstantDecl_4", EnumConstantDecl_4_1);
+
+		static final Sequence EnumConstantDecl = sequence("EnumConstantDecl", EnumConstantDecl_1, EnumConstantDecl_2, EnumConstantDecl_3, EnumConstantDecl_4);
+
+		static final NonTerminal AnnotationTypeDecl_3 = nonTerminal("AnnotationTypeDecl_3", NAME);
+
+		static final NonTerminal AnnotationTypeDecl_4 = nonTerminal("AnnotationTypeDecl_4", ANNOTATION_TYPE_BODY);
+
+		static final Sequence AnnotationTypeDecl = sequence("AnnotationTypeDecl", terminal("AnnotationTypeDecl_1", TokenType.AT), terminal("AnnotationTypeDecl_2", TokenType.INTERFACE), AnnotationTypeDecl_3, AnnotationTypeDecl_4);
+
+		static final NonTerminal AnnotationTypeBody_2_1_1_1 = nonTerminal("AnnotationTypeBody_2_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal AnnotationTypeBody_2_1_2_1 = nonTerminal("AnnotationTypeBody_2_1_2_1", ANNOTATION_TYPE_BODY_DECL);
+
+		static final OneOrMore AnnotationTypeBody_2_1_2 = oneOrMore("AnnotationTypeBody_2_1_2", AnnotationTypeBody_2_1_2_1);
+
+		static final Choice AnnotationTypeBody_2_1 = choice("AnnotationTypeBody_2_1", sequence("AnnotationTypeBody_2_1_1", AnnotationTypeBody_2_1_1_1), AnnotationTypeBody_2_1_2);
+
+		static final ZeroOrOne AnnotationTypeBody_2 = zeroOrOne("AnnotationTypeBody_2", AnnotationTypeBody_2_1);
+
+		static final Sequence AnnotationTypeBody = sequence("AnnotationTypeBody", terminal("AnnotationTypeBody_1", TokenType.LBRACE), AnnotationTypeBody_2, terminal("AnnotationTypeBody_3", TokenType.RBRACE));
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_1 = nonTerminal("AnnotationTypeBodyDecl_1_2_1", MODIFIERS);
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_1 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_1", ANNOTATION_TYPE_MEMBER_DECL);
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_2 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_2", CLASS_OR_INTERFACE_DECL);
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_3 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_3", ENUM_DECL);
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_4 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_4", ANNOTATION_TYPE_DECL);
+
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_5 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_5", FIELD_DECL);
+
+		static final Choice AnnotationTypeBodyDecl_1_2_2 = choice("AnnotationTypeBodyDecl_1_2_2", AnnotationTypeBodyDecl_1_2_2_1, AnnotationTypeBodyDecl_1_2_2_2, AnnotationTypeBodyDecl_1_2_2_3, AnnotationTypeBodyDecl_1_2_2_4, AnnotationTypeBodyDecl_1_2_2_5);
+
+		static final Choice AnnotationTypeBodyDecl_1 = choice("AnnotationTypeBodyDecl_1", sequence("AnnotationTypeBodyDecl_1_1", terminal("AnnotationTypeBodyDecl_1_1_1", TokenType.SEMICOLON)), sequence("AnnotationTypeBodyDecl_1_2", AnnotationTypeBodyDecl_1_2_1, AnnotationTypeBodyDecl_1_2_2));
+
+		static final Sequence AnnotationTypeBodyDecl = sequence("AnnotationTypeBodyDecl", AnnotationTypeBodyDecl_1);
+
+		static final NonTerminal AnnotationTypeMemberDecl_1 = nonTerminal("AnnotationTypeMemberDecl_1", TYPE);
+
+		static final NonTerminal AnnotationTypeMemberDecl_2 = nonTerminal("AnnotationTypeMemberDecl_2", NAME);
+
+		static final NonTerminal AnnotationTypeMemberDecl_5 = nonTerminal("AnnotationTypeMemberDecl_5", ARRAY_DIMS);
+
+		static final NonTerminal AnnotationTypeMemberDecl_6_2 = nonTerminal("AnnotationTypeMemberDecl_6_2", ELEMENT_VALUE);
+
+		static final ZeroOrOne AnnotationTypeMemberDecl_6 = zeroOrOne("AnnotationTypeMemberDecl_6", sequence("AnnotationTypeMemberDecl_6", terminal("AnnotationTypeMemberDecl_6_1", TokenType.DEFAULT), AnnotationTypeMemberDecl_6_2));
+
+		static final Sequence AnnotationTypeMemberDecl = sequence("AnnotationTypeMemberDecl", AnnotationTypeMemberDecl_1, AnnotationTypeMemberDecl_2, terminal("AnnotationTypeMemberDecl_3", TokenType.LPAREN), terminal("AnnotationTypeMemberDecl_4", TokenType.RPAREN), AnnotationTypeMemberDecl_5, AnnotationTypeMemberDecl_6, terminal("AnnotationTypeMemberDecl_7", TokenType.SEMICOLON));
+
+		static final NonTerminal TypeParameters_2_1_1 = nonTerminal("TypeParameters_2_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal TypeParameters_2_2_1 = nonTerminal("TypeParameters_2_2_1", TYPE_PARAMETER);
+
+		static final NonTerminal TypeParameters_2_2_2_2 = nonTerminal("TypeParameters_2_2_2_2", TYPE_PARAMETER);
+
+		static final ZeroOrMore TypeParameters_2_2_2 = zeroOrMore("TypeParameters_2_2_2", sequence("TypeParameters_2_2_2", terminal("TypeParameters_2_2_2_1", TokenType.COMMA), TypeParameters_2_2_2_2));
+
+		static final Choice TypeParameters_2 = choice("TypeParameters_2", sequence("TypeParameters_2_1", TypeParameters_2_1_1), sequence("TypeParameters_2_2", TypeParameters_2_2_1, TypeParameters_2_2_2));
+
+		static final Sequence TypeParameters = sequence("TypeParameters", terminal("TypeParameters_1", TokenType.LT), TypeParameters_2, terminal("TypeParameters_3", TokenType.GT));
+
+		static final NonTerminal TypeParameter_1 = nonTerminal("TypeParameter_1", ANNOTATIONS);
+
+		static final NonTerminal TypeParameter_2 = nonTerminal("TypeParameter_2", NAME);
+
+		static final NonTerminal TypeParameter_3_1 = nonTerminal("TypeParameter_3_1", TYPE_BOUNDS);
+
+		static final ZeroOrOne TypeParameter_3 = zeroOrOne("TypeParameter_3", TypeParameter_3_1);
+
+		static final Sequence TypeParameter = sequence("TypeParameter", TypeParameter_1, TypeParameter_2, TypeParameter_3);
+
+		static final NonTerminal TypeBounds_2_1_1 = nonTerminal("TypeBounds_2_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal TypeBounds_2_2_1 = nonTerminal("TypeBounds_2_2_1", ANNOTATED_QUALIFIED_TYPE);
+
+		static final NonTerminal TypeBounds_2_2_2_2 = nonTerminal("TypeBounds_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final ZeroOrMore TypeBounds_2_2_2 = zeroOrMore("TypeBounds_2_2_2", sequence("TypeBounds_2_2_2", terminal("TypeBounds_2_2_2_1", TokenType.BIT_AND), TypeBounds_2_2_2_2));
+
+		static final Choice TypeBounds_2 = choice("TypeBounds_2", sequence("TypeBounds_2_1", TypeBounds_2_1_1), sequence("TypeBounds_2_2", TypeBounds_2_2_1, TypeBounds_2_2_2));
+
+		static final Sequence TypeBounds = sequence("TypeBounds", terminal("TypeBounds_1", TokenType.EXTENDS), TypeBounds_2);
+
+		static final NonTerminal ClassOrInterfaceBody_2 = nonTerminal("ClassOrInterfaceBody_2", CLASS_OR_INTERFACE_BODY_DECLS);
+
+		static final Sequence ClassOrInterfaceBody = sequence("ClassOrInterfaceBody", terminal("ClassOrInterfaceBody_1", TokenType.LBRACE), ClassOrInterfaceBody_2, terminal("ClassOrInterfaceBody_3", TokenType.RBRACE));
+
+		static final NonTerminal ClassOrInterfaceBodyDecls_1_1_1_1 = nonTerminal("ClassOrInterfaceBodyDecls_1_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal ClassOrInterfaceBodyDecls_1_1_2_1 = nonTerminal("ClassOrInterfaceBodyDecls_1_1_2_1", CLASS_OR_INTERFACE_BODY_DECL);
+
+		static final OneOrMore ClassOrInterfaceBodyDecls_1_1_2 = oneOrMore("ClassOrInterfaceBodyDecls_1_1_2", ClassOrInterfaceBodyDecls_1_1_2_1);
+
+		static final Choice ClassOrInterfaceBodyDecls_1_1 = choice("ClassOrInterfaceBodyDecls_1_1", sequence("ClassOrInterfaceBodyDecls_1_1_1", ClassOrInterfaceBodyDecls_1_1_1_1), ClassOrInterfaceBodyDecls_1_1_2);
+
+		static final ZeroOrOne ClassOrInterfaceBodyDecls_1 = zeroOrOne("ClassOrInterfaceBodyDecls_1", ClassOrInterfaceBodyDecls_1_1);
+
+		static final Sequence ClassOrInterfaceBodyDecls = sequence("ClassOrInterfaceBodyDecls", ClassOrInterfaceBodyDecls_1);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_1 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_1", MODIFIERS);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_1_1 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_1_1", INITIALIZER_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_2 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_2", CLASS_OR_INTERFACE_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_3 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_3", ENUM_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_4 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_4", ANNOTATION_TYPE_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_5_1 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_5_1", CONSTRUCTOR_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_6_1 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_6_1", FIELD_DECL);
+
+		static final NonTerminal ClassOrInterfaceBodyDecl_1_2_2_7 = nonTerminal("ClassOrInterfaceBodyDecl_1_2_2_7", METHOD_DECL);
+
+		static final Choice ClassOrInterfaceBodyDecl_1_2_2 = choice("ClassOrInterfaceBodyDecl_1_2_2", sequence("ClassOrInterfaceBodyDecl_1_2_2_1", ClassOrInterfaceBodyDecl_1_2_2_1_1), ClassOrInterfaceBodyDecl_1_2_2_2, ClassOrInterfaceBodyDecl_1_2_2_3, ClassOrInterfaceBodyDecl_1_2_2_4, sequence("ClassOrInterfaceBodyDecl_1_2_2_5", ClassOrInterfaceBodyDecl_1_2_2_5_1), sequence("ClassOrInterfaceBodyDecl_1_2_2_6", ClassOrInterfaceBodyDecl_1_2_2_6_1), ClassOrInterfaceBodyDecl_1_2_2_7);
+
+		static final Choice ClassOrInterfaceBodyDecl_1 = choice("ClassOrInterfaceBodyDecl_1", sequence("ClassOrInterfaceBodyDecl_1_1", terminal("ClassOrInterfaceBodyDecl_1_1_1", TokenType.SEMICOLON)), sequence("ClassOrInterfaceBodyDecl_1_2", ClassOrInterfaceBodyDecl_1_2_1, ClassOrInterfaceBodyDecl_1_2_2));
+
+		static final Sequence ClassOrInterfaceBodyDecl = sequence("ClassOrInterfaceBodyDecl", ClassOrInterfaceBodyDecl_1);
+
+		static final NonTerminal FieldDecl_1 = nonTerminal("FieldDecl_1", TYPE);
+
+		static final NonTerminal FieldDecl_2 = nonTerminal("FieldDecl_2", VARIABLE_DECLARATORS);
+
+		static final Sequence FieldDecl = sequence("FieldDecl", FieldDecl_1, FieldDecl_2, terminal("FieldDecl_3", TokenType.SEMICOLON));
+
+		static final NonTerminal VariableDecl_1 = nonTerminal("VariableDecl_1", TYPE);
+
+		static final NonTerminal VariableDecl_2 = nonTerminal("VariableDecl_2", VARIABLE_DECLARATORS);
+
+		static final Sequence VariableDecl = sequence("VariableDecl", VariableDecl_1, VariableDecl_2);
+
+		static final NonTerminal VariableDeclarators_1 = nonTerminal("VariableDeclarators_1", VARIABLE_DECLARATOR);
+
+		static final NonTerminal VariableDeclarators_2_2 = nonTerminal("VariableDeclarators_2_2", VARIABLE_DECLARATOR);
+
+		static final ZeroOrMore VariableDeclarators_2 = zeroOrMore("VariableDeclarators_2", sequence("VariableDeclarators_2", terminal("VariableDeclarators_2_1", TokenType.COMMA), VariableDeclarators_2_2));
+
+		static final Sequence VariableDeclarators = sequence("VariableDeclarators", VariableDeclarators_1, VariableDeclarators_2);
+
+		static final NonTerminal VariableDeclarator_1 = nonTerminal("VariableDeclarator_1", VARIABLE_DECLARATOR_ID);
+
+		static final NonTerminal VariableDeclarator_2_2 = nonTerminal("VariableDeclarator_2_2", VARIABLE_INITIALIZER);
+
+		static final ZeroOrOne VariableDeclarator_2 = zeroOrOne("VariableDeclarator_2", sequence("VariableDeclarator_2", terminal("VariableDeclarator_2_1", TokenType.ASSIGN), VariableDeclarator_2_2));
+
+		static final Sequence VariableDeclarator = sequence("VariableDeclarator", VariableDeclarator_1, VariableDeclarator_2);
+
+		static final NonTerminal VariableDeclaratorId_1 = nonTerminal("VariableDeclaratorId_1", NAME);
+
+		static final NonTerminal VariableDeclaratorId_2 = nonTerminal("VariableDeclaratorId_2", ARRAY_DIMS);
+
+		static final Sequence VariableDeclaratorId = sequence("VariableDeclaratorId", VariableDeclaratorId_1, VariableDeclaratorId_2);
+
+		static final NonTerminal ArrayDims_1_1 = nonTerminal("ArrayDims_1_1", ANNOTATIONS);
+
+		static final ZeroOrMore ArrayDims_1 = zeroOrMore("ArrayDims_1", sequence("ArrayDims_1", ArrayDims_1_1, terminal("ArrayDims_1_2", TokenType.LBRACKET), terminal("ArrayDims_1_3", TokenType.RBRACKET)));
+
+		static final Sequence ArrayDims = sequence("ArrayDims", ArrayDims_1);
+
+		static final NonTerminal VariableInitializer_1_1 = nonTerminal("VariableInitializer_1_1", ARRAY_INITIALIZER);
+
+		static final NonTerminal VariableInitializer_1_2 = nonTerminal("VariableInitializer_1_2", EXPRESSION);
+
+		static final Choice VariableInitializer_1 = choice("VariableInitializer_1", VariableInitializer_1_1, VariableInitializer_1_2);
+
+		static final Sequence VariableInitializer = sequence("VariableInitializer", VariableInitializer_1);
+
+		static final NonTerminal ArrayInitializer_2_1 = nonTerminal("ArrayInitializer_2_1", VARIABLE_INITIALIZER);
+
+		static final NonTerminal ArrayInitializer_2_2_2 = nonTerminal("ArrayInitializer_2_2_2", VARIABLE_INITIALIZER);
+
+		static final ZeroOrMore ArrayInitializer_2_2 = zeroOrMore("ArrayInitializer_2_2", sequence("ArrayInitializer_2_2", terminal("ArrayInitializer_2_2_1", TokenType.COMMA), ArrayInitializer_2_2_2));
+
+		static final ZeroOrOne ArrayInitializer_2 = zeroOrOne("ArrayInitializer_2", sequence("ArrayInitializer_2", ArrayInitializer_2_1, ArrayInitializer_2_2));
+
+		static final ZeroOrOne ArrayInitializer_3 = zeroOrOne("ArrayInitializer_3", terminal("ArrayInitializer_3_1", TokenType.COMMA));
+
+		static final Sequence ArrayInitializer = sequence("ArrayInitializer", terminal("ArrayInitializer_1", TokenType.LBRACE), ArrayInitializer_2, ArrayInitializer_3, terminal("ArrayInitializer_4", TokenType.RBRACE));
+
+		static final NonTerminal MethodDecl_1_1 = nonTerminal("MethodDecl_1_1", TYPE_PARAMETERS);
+
+		static final NonTerminal MethodDecl_1_2 = nonTerminal("MethodDecl_1_2", ANNOTATIONS);
+
+		static final ZeroOrOne MethodDecl_1 = zeroOrOne("MethodDecl_1", sequence("MethodDecl_1", MethodDecl_1_1, MethodDecl_1_2));
+
+		static final NonTerminal MethodDecl_2 = nonTerminal("MethodDecl_2", RESULT_TYPE);
+
+		static final NonTerminal MethodDecl_3 = nonTerminal("MethodDecl_3", NAME);
+
+		static final NonTerminal MethodDecl_4 = nonTerminal("MethodDecl_4", FORMAL_PARAMETERS);
+
+		static final NonTerminal MethodDecl_5 = nonTerminal("MethodDecl_5", ARRAY_DIMS);
+
+		static final NonTerminal MethodDecl_6_1 = nonTerminal("MethodDecl_6_1", THROWS_CLAUSE);
+
+		static final ZeroOrOne MethodDecl_6 = zeroOrOne("MethodDecl_6", MethodDecl_6_1);
+
+		static final NonTerminal MethodDecl_7_1 = nonTerminal("MethodDecl_7_1", BLOCK);
+
+		static final Choice MethodDecl_7 = choice("MethodDecl_7", MethodDecl_7_1, sequence("MethodDecl_7_2", terminal("MethodDecl_7_2_1", TokenType.SEMICOLON)));
+
+		static final Sequence MethodDecl = sequence("MethodDecl", MethodDecl_1, MethodDecl_2, MethodDecl_3, MethodDecl_4, MethodDecl_5, MethodDecl_6, MethodDecl_7);
+
+		static final NonTerminal FormalParameters_2_1 = nonTerminal("FormalParameters_2_1", FORMAL_PARAMETER_LIST);
+
+		static final ZeroOrOne FormalParameters_2 = zeroOrOne("FormalParameters_2", FormalParameters_2_1);
+
+		static final Sequence FormalParameters = sequence("FormalParameters", terminal("FormalParameters_1", TokenType.LPAREN), FormalParameters_2, terminal("FormalParameters_3", TokenType.RPAREN));
+
+		static final NonTerminal FormalParameterList_1_1_1 = nonTerminal("FormalParameterList_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal FormalParameterList_1_2_1 = nonTerminal("FormalParameterList_1_2_1", FORMAL_PARAMETER);
+
+		static final NonTerminal FormalParameterList_1_2_2_2 = nonTerminal("FormalParameterList_1_2_2_2", FORMAL_PARAMETER);
+
+		static final ZeroOrMore FormalParameterList_1_2_2 = zeroOrMore("FormalParameterList_1_2_2", sequence("FormalParameterList_1_2_2", terminal("FormalParameterList_1_2_2_1", TokenType.COMMA), FormalParameterList_1_2_2_2));
+
+		static final Choice FormalParameterList_1 = choice("FormalParameterList_1", sequence("FormalParameterList_1_1", FormalParameterList_1_1_1), sequence("FormalParameterList_1_2", FormalParameterList_1_2_1, FormalParameterList_1_2_2));
+
+		static final Sequence FormalParameterList = sequence("FormalParameterList", FormalParameterList_1);
+
+		static final NonTerminal FormalParameter_1 = nonTerminal("FormalParameter_1", MODIFIERS);
+
+		static final NonTerminal FormalParameter_2 = nonTerminal("FormalParameter_2", TYPE);
+
+		static final NonTerminal FormalParameter_3_1 = nonTerminal("FormalParameter_3_1", ANNOTATIONS);
+
+		static final ZeroOrOne FormalParameter_3 = zeroOrOne("FormalParameter_3", sequence("FormalParameter_3", FormalParameter_3_1, terminal("FormalParameter_3_2", TokenType.ELLIPSIS)));
+
+		static final NonTerminal FormalParameter_4_1_1_1 = nonTerminal("FormalParameter_4_1_1_1", NAME);
+
+		static final ZeroOrOne FormalParameter_4_1_1 = zeroOrOne("FormalParameter_4_1_1", sequence("FormalParameter_4_1_1", FormalParameter_4_1_1_1, terminal("FormalParameter_4_1_1_2", TokenType.DOT)));
+
+		static final NonTerminal FormalParameter_4_2 = nonTerminal("FormalParameter_4_2", VARIABLE_DECLARATOR_ID);
+
+		static final Choice FormalParameter_4 = choice("FormalParameter_4", sequence("FormalParameter_4_1", FormalParameter_4_1_1, terminal("FormalParameter_4_1_2", TokenType.THIS)), FormalParameter_4_2);
+
+		static final Sequence FormalParameter = sequence("FormalParameter", FormalParameter_1, FormalParameter_2, FormalParameter_3, FormalParameter_4);
+
+		static final NonTerminal ThrowsClause_2 = nonTerminal("ThrowsClause_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final NonTerminal ThrowsClause_3_2 = nonTerminal("ThrowsClause_3_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final ZeroOrMore ThrowsClause_3 = zeroOrMore("ThrowsClause_3", sequence("ThrowsClause_3", terminal("ThrowsClause_3_1", TokenType.COMMA), ThrowsClause_3_2));
+
+		static final Sequence ThrowsClause = sequence("ThrowsClause", terminal("ThrowsClause_1", TokenType.THROWS), ThrowsClause_2, ThrowsClause_3);
+
+		static final NonTerminal ConstructorDecl_1_1 = nonTerminal("ConstructorDecl_1_1", TYPE_PARAMETERS);
+
+		static final ZeroOrOne ConstructorDecl_1 = zeroOrOne("ConstructorDecl_1", ConstructorDecl_1_1);
+
+		static final NonTerminal ConstructorDecl_2 = nonTerminal("ConstructorDecl_2", NAME);
+
+		static final NonTerminal ConstructorDecl_3 = nonTerminal("ConstructorDecl_3", FORMAL_PARAMETERS);
+
+		static final NonTerminal ConstructorDecl_4_1 = nonTerminal("ConstructorDecl_4_1", THROWS_CLAUSE);
+
+		static final ZeroOrOne ConstructorDecl_4 = zeroOrOne("ConstructorDecl_4", ConstructorDecl_4_1);
+
+		static final NonTerminal ConstructorDecl_6 = nonTerminal("ConstructorDecl_6", STATEMENTS);
+
+		static final Sequence ConstructorDecl = sequence("ConstructorDecl", ConstructorDecl_1, ConstructorDecl_2, ConstructorDecl_3, ConstructorDecl_4, terminal("ConstructorDecl_5", TokenType.LBRACE), ConstructorDecl_6, terminal("ConstructorDecl_7", TokenType.RBRACE));
+
+		static final NonTerminal ExplicitConstructorInvocation_1_1_1_1 = nonTerminal("ExplicitConstructorInvocation_1_1_1_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne ExplicitConstructorInvocation_1_1_1 = zeroOrOne("ExplicitConstructorInvocation_1_1_1", ExplicitConstructorInvocation_1_1_1_1);
+
+		static final NonTerminal ExplicitConstructorInvocation_1_1_3 = nonTerminal("ExplicitConstructorInvocation_1_1_3", ARGUMENTS);
+
+		static final NonTerminal ExplicitConstructorInvocation_1_2_1_1 = nonTerminal("ExplicitConstructorInvocation_1_2_1_1", PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX);
+
+		static final ZeroOrOne ExplicitConstructorInvocation_1_2_1 = zeroOrOne("ExplicitConstructorInvocation_1_2_1", sequence("ExplicitConstructorInvocation_1_2_1", ExplicitConstructorInvocation_1_2_1_1, terminal("ExplicitConstructorInvocation_1_2_1_2", TokenType.DOT)));
+
+		static final NonTerminal ExplicitConstructorInvocation_1_2_2_1 = nonTerminal("ExplicitConstructorInvocation_1_2_2_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne ExplicitConstructorInvocation_1_2_2 = zeroOrOne("ExplicitConstructorInvocation_1_2_2", ExplicitConstructorInvocation_1_2_2_1);
+
+		static final NonTerminal ExplicitConstructorInvocation_1_2_4 = nonTerminal("ExplicitConstructorInvocation_1_2_4", ARGUMENTS);
+
+		static final Choice ExplicitConstructorInvocation_1 = choice("ExplicitConstructorInvocation_1", sequence("ExplicitConstructorInvocation_1_1", ExplicitConstructorInvocation_1_1_1, terminal("ExplicitConstructorInvocation_1_1_2", TokenType.THIS), ExplicitConstructorInvocation_1_1_3, terminal("ExplicitConstructorInvocation_1_1_4", TokenType.SEMICOLON)), sequence("ExplicitConstructorInvocation_1_2", ExplicitConstructorInvocation_1_2_1, ExplicitConstructorInvocation_1_2_2, terminal("ExplicitConstructorInvocation_1_2_3", TokenType.SUPER), ExplicitConstructorInvocation_1_2_4, terminal("ExplicitConstructorInvocation_1_2_5", TokenType.SEMICOLON)));
+
+		static final Sequence ExplicitConstructorInvocation = sequence("ExplicitConstructorInvocation", ExplicitConstructorInvocation_1);
+
+		static final NonTerminal Statements_1_1_1_1 = nonTerminal("Statements_1_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal Statements_1_1_2_1_1 = nonTerminal("Statements_1_1_2_1_1", EXPLICIT_CONSTRUCTOR_INVOCATION);
+
+		static final ZeroOrOne Statements_1_1_2_1 = zeroOrOne("Statements_1_1_2_1", Statements_1_1_2_1_1);
+
+		static final NonTerminal Statements_1_1_2_2_1 = nonTerminal("Statements_1_1_2_2_1", BLOCK_STATEMENT);
+
+		static final ZeroOrMore Statements_1_1_2_2 = zeroOrMore("Statements_1_1_2_2", Statements_1_1_2_2_1);
+
+		static final Choice Statements_1_1 = choice("Statements_1_1", sequence("Statements_1_1_1", Statements_1_1_1_1), sequence("Statements_1_1_2", Statements_1_1_2_1, Statements_1_1_2_2));
+
+		static final ZeroOrOne Statements_1 = zeroOrOne("Statements_1", Statements_1_1);
+
+		static final Sequence Statements = sequence("Statements", Statements_1);
+
+		static final NonTerminal InitializerDecl_1 = nonTerminal("InitializerDecl_1", BLOCK);
+
+		static final Sequence InitializerDecl = sequence("InitializerDecl", InitializerDecl_1);
+
+		static final NonTerminal Type_1_1_1 = nonTerminal("Type_1_1_1", PRIMITIVE_TYPE);
+
+		static final NonTerminal Type_1_1_2_1 = nonTerminal("Type_1_1_2_1", ARRAY_DIMS_MANDATORY);
+
+		static final ZeroOrOne Type_1_1_2 = zeroOrOne("Type_1_1_2", Type_1_1_2_1);
+
+		static final NonTerminal Type_1_2_1 = nonTerminal("Type_1_2_1", QUALIFIED_TYPE);
+
+		static final NonTerminal Type_1_2_2_1 = nonTerminal("Type_1_2_2_1", ARRAY_DIMS_MANDATORY);
+
+		static final ZeroOrOne Type_1_2_2 = zeroOrOne("Type_1_2_2", Type_1_2_2_1);
+
+		static final Choice Type_1 = choice("Type_1", sequence("Type_1_1", Type_1_1_1, Type_1_1_2), sequence("Type_1_2", Type_1_2_1, Type_1_2_2));
+
+		static final Sequence Type = sequence("Type", Type_1);
+
+		static final NonTerminal ReferenceType_1_1_1 = nonTerminal("ReferenceType_1_1_1", PRIMITIVE_TYPE);
+
+		static final NonTerminal ReferenceType_1_1_2 = nonTerminal("ReferenceType_1_1_2", ARRAY_DIMS_MANDATORY);
+
+		static final NonTerminal ReferenceType_1_2_1 = nonTerminal("ReferenceType_1_2_1", QUALIFIED_TYPE);
+
+		static final NonTerminal ReferenceType_1_2_2_1 = nonTerminal("ReferenceType_1_2_2_1", ARRAY_DIMS_MANDATORY);
+
+		static final ZeroOrOne ReferenceType_1_2_2 = zeroOrOne("ReferenceType_1_2_2", ReferenceType_1_2_2_1);
+
+		static final Choice ReferenceType_1 = choice("ReferenceType_1", sequence("ReferenceType_1_1", ReferenceType_1_1_1, ReferenceType_1_1_2), sequence("ReferenceType_1_2", ReferenceType_1_2_1, ReferenceType_1_2_2));
+
+		static final Sequence ReferenceType = sequence("ReferenceType", ReferenceType_1);
+
+		static final NonTerminal QualifiedType_1 = nonTerminal("QualifiedType_1", NAME);
+
+		static final NonTerminal QualifiedType_2_1 = nonTerminal("QualifiedType_2_1", TYPE_ARGUMENTS_OR_DIAMOND);
+
+		static final ZeroOrOne QualifiedType_2 = zeroOrOne("QualifiedType_2", QualifiedType_2_1);
+
+		static final NonTerminal QualifiedType_3_2 = nonTerminal("QualifiedType_3_2", ANNOTATIONS);
+
+		static final NonTerminal QualifiedType_3_3 = nonTerminal("QualifiedType_3_3", NAME);
+
+		static final NonTerminal QualifiedType_3_4_1 = nonTerminal("QualifiedType_3_4_1", TYPE_ARGUMENTS_OR_DIAMOND);
+
+		static final ZeroOrOne QualifiedType_3_4 = zeroOrOne("QualifiedType_3_4", QualifiedType_3_4_1);
+
+		static final ZeroOrMore QualifiedType_3 = zeroOrMore("QualifiedType_3", sequence("QualifiedType_3", terminal("QualifiedType_3_1", TokenType.DOT), QualifiedType_3_2, QualifiedType_3_3, QualifiedType_3_4));
+
+		static final Sequence QualifiedType = sequence("QualifiedType", QualifiedType_1, QualifiedType_2, QualifiedType_3);
+
+		static final NonTerminal TypeArguments_2_1 = nonTerminal("TypeArguments_2_1", TYPE_ARGUMENT_LIST);
+
+		static final ZeroOrOne TypeArguments_2 = zeroOrOne("TypeArguments_2", TypeArguments_2_1);
+
+		static final Sequence TypeArguments = sequence("TypeArguments", terminal("TypeArguments_1", TokenType.LT), TypeArguments_2, terminal("TypeArguments_3", TokenType.GT));
+
+		static final NonTerminal TypeArgumentsOrDiamond_2_1 = nonTerminal("TypeArgumentsOrDiamond_2_1", TYPE_ARGUMENT_LIST);
+
+		static final ZeroOrOne TypeArgumentsOrDiamond_2 = zeroOrOne("TypeArgumentsOrDiamond_2", TypeArgumentsOrDiamond_2_1);
+
+		static final Sequence TypeArgumentsOrDiamond = sequence("TypeArgumentsOrDiamond", terminal("TypeArgumentsOrDiamond_1", TokenType.LT), TypeArgumentsOrDiamond_2, terminal("TypeArgumentsOrDiamond_3", TokenType.GT));
+
+		static final NonTerminal TypeArgumentList_1_1 = nonTerminal("TypeArgumentList_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal TypeArgumentList_2_1 = nonTerminal("TypeArgumentList_2_1", TYPE_ARGUMENT);
+
+		static final NonTerminal TypeArgumentList_2_2_2 = nonTerminal("TypeArgumentList_2_2_2", TYPE_ARGUMENT);
+
+		static final ZeroOrMore TypeArgumentList_2_2 = zeroOrMore("TypeArgumentList_2_2", sequence("TypeArgumentList_2_2", terminal("TypeArgumentList_2_2_1", TokenType.COMMA), TypeArgumentList_2_2_2));
+
+		static final Choice TypeArgumentList = choice("TypeArgumentList", sequence("TypeArgumentList_1", TypeArgumentList_1_1), sequence("TypeArgumentList_2", TypeArgumentList_2_1, TypeArgumentList_2_2));
+
+		static final NonTerminal TypeArgument_1 = nonTerminal("TypeArgument_1", ANNOTATIONS);
+
+		static final NonTerminal TypeArgument_2_1 = nonTerminal("TypeArgument_2_1", REFERENCE_TYPE);
+
+		static final NonTerminal TypeArgument_2_2 = nonTerminal("TypeArgument_2_2", WILDCARD);
+
+		static final Choice TypeArgument_2 = choice("TypeArgument_2", TypeArgument_2_1, TypeArgument_2_2);
+
+		static final Sequence TypeArgument = sequence("TypeArgument", TypeArgument_1, TypeArgument_2);
+
+		static final NonTerminal Wildcard_2_1_1_2 = nonTerminal("Wildcard_2_1_1_2", ANNOTATIONS);
+
+		static final NonTerminal Wildcard_2_1_1_3 = nonTerminal("Wildcard_2_1_1_3", REFERENCE_TYPE);
+
+		static final NonTerminal Wildcard_2_1_2_2 = nonTerminal("Wildcard_2_1_2_2", ANNOTATIONS);
+
+		static final NonTerminal Wildcard_2_1_2_3 = nonTerminal("Wildcard_2_1_2_3", REFERENCE_TYPE);
+
+		static final Choice Wildcard_2_1 = choice("Wildcard_2_1", sequence("Wildcard_2_1_1", terminal("Wildcard_2_1_1_1", TokenType.EXTENDS), Wildcard_2_1_1_2, Wildcard_2_1_1_3), sequence("Wildcard_2_1_2", terminal("Wildcard_2_1_2_1", TokenType.SUPER), Wildcard_2_1_2_2, Wildcard_2_1_2_3));
+
+		static final ZeroOrOne Wildcard_2 = zeroOrOne("Wildcard_2", Wildcard_2_1);
+
+		static final Sequence Wildcard = sequence("Wildcard", terminal("Wildcard_1", TokenType.HOOK), Wildcard_2);
+
+		static final Choice PrimitiveType_1 = choice("PrimitiveType_1", sequence("PrimitiveType_1_1", terminal("PrimitiveType_1_1_1", TokenType.BOOLEAN)), sequence("PrimitiveType_1_2", terminal("PrimitiveType_1_2_1", TokenType.CHAR)), sequence("PrimitiveType_1_3", terminal("PrimitiveType_1_3_1", TokenType.BYTE)), sequence("PrimitiveType_1_4", terminal("PrimitiveType_1_4_1", TokenType.SHORT)), sequence("PrimitiveType_1_5", terminal("PrimitiveType_1_5_1", TokenType.INT)), sequence("PrimitiveType_1_6", terminal("PrimitiveType_1_6_1", TokenType.LONG)), sequence("PrimitiveType_1_7", terminal("PrimitiveType_1_7_1", TokenType.FLOAT)), sequence("PrimitiveType_1_8", terminal("PrimitiveType_1_8_1", TokenType.DOUBLE)));
+
+		static final Sequence PrimitiveType = sequence("PrimitiveType", PrimitiveType_1);
+
+		static final NonTerminal ResultType_1_2 = nonTerminal("ResultType_1_2", TYPE);
+
+		static final Choice ResultType_1 = choice("ResultType_1", sequence("ResultType_1_1", terminal("ResultType_1_1_1", TokenType.VOID)), ResultType_1_2);
+
+		static final Sequence ResultType = sequence("ResultType", ResultType_1);
+
+		static final NonTerminal AnnotatedQualifiedType_1 = nonTerminal("AnnotatedQualifiedType_1", ANNOTATIONS);
+
+		static final NonTerminal AnnotatedQualifiedType_2 = nonTerminal("AnnotatedQualifiedType_2", QUALIFIED_TYPE);
+
+		static final Sequence AnnotatedQualifiedType = sequence("AnnotatedQualifiedType", AnnotatedQualifiedType_1, AnnotatedQualifiedType_2);
+
+		static final NonTerminal QualifiedName_1 = nonTerminal("QualifiedName_1", NAME);
+
+		static final NonTerminal QualifiedName_2_2 = nonTerminal("QualifiedName_2_2", NAME);
+
+		static final ZeroOrMore QualifiedName_2 = zeroOrMore("QualifiedName_2", sequence("QualifiedName_2", terminal("QualifiedName_2_1", TokenType.DOT), QualifiedName_2_2));
+
+		static final Sequence QualifiedName = sequence("QualifiedName", QualifiedName_1, QualifiedName_2);
+
+		static final NonTerminal Name_1_1_1 = nonTerminal("Name_1_1_1", NODE_VAR);
+
+		static final Choice Name_1 = choice("Name_1", sequence("Name_1_1", Name_1_1_1), sequence("Name_1_2", terminal("Name_1_2_1", TokenType.IDENTIFIER)));
+
+		static final Sequence Name = sequence("Name", Name_1);
+
+		static final NonTerminal Expression_1_1 = nonTerminal("Expression_1_1", ASSIGNMENT_EXPRESSION);
+
+		static final NonTerminal Expression_1_2 = nonTerminal("Expression_1_2", LAMBDA_EXPRESSION);
+
+		static final Choice Expression_1 = choice("Expression_1", Expression_1_1, Expression_1_2);
+
+		static final Sequence Expression = sequence("Expression", Expression_1);
+
+		static final NonTerminal AssignmentExpression_1 = nonTerminal("AssignmentExpression_1", CONDITIONAL_EXPRESSION);
+
+		static final NonTerminal AssignmentExpression_2_1 = nonTerminal("AssignmentExpression_2_1", ASSIGNMENT_OPERATOR);
+
+		static final NonTerminal AssignmentExpression_2_2 = nonTerminal("AssignmentExpression_2_2", EXPRESSION);
+
+		static final ZeroOrOne AssignmentExpression_2 = zeroOrOne("AssignmentExpression_2", sequence("AssignmentExpression_2", AssignmentExpression_2_1, AssignmentExpression_2_2));
+
+		static final Sequence AssignmentExpression = sequence("AssignmentExpression", AssignmentExpression_1, AssignmentExpression_2);
+
+		static final NonTerminal LambdaExpression_1_1_2 = nonTerminal("LambdaExpression_1_1_2", ANNOTATIONS);
+
+		static final NonTerminal LambdaExpression_1_1_3 = nonTerminal("LambdaExpression_1_1_3", REFERENCE_TYPE);
+
+		static final NonTerminal LambdaExpression_1_1_4 = nonTerminal("LambdaExpression_1_1_4", REFERENCE_CAST_TYPE_REST);
+
+		static final NonTerminal LambdaExpression_1_1_6 = nonTerminal("LambdaExpression_1_1_6", LAMBDA_EXPRESSION);
+
+		static final NonTerminal LambdaExpression_1_2 = nonTerminal("LambdaExpression_1_2", LAMBDA_EXPRESSION_WITHOUT_CAST);
+
+		static final Choice LambdaExpression_1 = choice("LambdaExpression_1", sequence("LambdaExpression_1_1", terminal("LambdaExpression_1_1_1", TokenType.LPAREN), LambdaExpression_1_1_2, LambdaExpression_1_1_3, LambdaExpression_1_1_4, terminal("LambdaExpression_1_1_5", TokenType.RPAREN), LambdaExpression_1_1_6), LambdaExpression_1_2);
+
+		static final Sequence LambdaExpression = sequence("LambdaExpression", LambdaExpression_1);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_1_1 = nonTerminal("LambdaExpressionWithoutCast_1_1_1", NAME);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_1_3 = nonTerminal("LambdaExpressionWithoutCast_1_1_3", LAMBDA_BODY);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_2_4 = nonTerminal("LambdaExpressionWithoutCast_1_2_4", LAMBDA_BODY);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_3_2 = nonTerminal("LambdaExpressionWithoutCast_1_3_2", INFERRED_FORMAL_PARAMETER_LIST);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_3_5 = nonTerminal("LambdaExpressionWithoutCast_1_3_5", LAMBDA_BODY);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_4_2 = nonTerminal("LambdaExpressionWithoutCast_1_4_2", FORMAL_PARAMETER_LIST);
+
+		static final NonTerminal LambdaExpressionWithoutCast_1_4_5 = nonTerminal("LambdaExpressionWithoutCast_1_4_5", LAMBDA_BODY);
+
+		static final Choice LambdaExpressionWithoutCast_1 = choice("LambdaExpressionWithoutCast_1", sequence("LambdaExpressionWithoutCast_1_1", LambdaExpressionWithoutCast_1_1_1, terminal("LambdaExpressionWithoutCast_1_1_2", TokenType.ARROW), LambdaExpressionWithoutCast_1_1_3), sequence("LambdaExpressionWithoutCast_1_2", terminal("LambdaExpressionWithoutCast_1_2_1", TokenType.LPAREN), terminal("LambdaExpressionWithoutCast_1_2_2", TokenType.RPAREN), terminal("LambdaExpressionWithoutCast_1_2_3", TokenType.ARROW), LambdaExpressionWithoutCast_1_2_4), sequence("LambdaExpressionWithoutCast_1_3", terminal("LambdaExpressionWithoutCast_1_3_1", TokenType.LPAREN), LambdaExpressionWithoutCast_1_3_2, terminal("LambdaExpressionWithoutCast_1_3_3", TokenType.RPAREN), terminal("LambdaExpressionWithoutCast_1_3_4", TokenType.ARROW), LambdaExpressionWithoutCast_1_3_5), sequence("LambdaExpressionWithoutCast_1_4", terminal("LambdaExpressionWithoutCast_1_4_1", TokenType.LPAREN), LambdaExpressionWithoutCast_1_4_2, terminal("LambdaExpressionWithoutCast_1_4_3", TokenType.RPAREN), terminal("LambdaExpressionWithoutCast_1_4_4", TokenType.ARROW), LambdaExpressionWithoutCast_1_4_5));
+
+		static final Sequence LambdaExpressionWithoutCast = sequence("LambdaExpressionWithoutCast", LambdaExpressionWithoutCast_1);
+
+		static final NonTerminal LambdaBody_1_1_1 = nonTerminal("LambdaBody_1_1_1", EXPRESSION);
+
+		static final NonTerminal LambdaBody_1_2_1 = nonTerminal("LambdaBody_1_2_1", BLOCK);
+
+		static final Choice LambdaBody_1 = choice("LambdaBody_1", sequence("LambdaBody_1_1", LambdaBody_1_1_1), sequence("LambdaBody_1_2", LambdaBody_1_2_1));
+
+		static final Sequence LambdaBody = sequence("LambdaBody", LambdaBody_1);
+
+		static final NonTerminal InferredFormalParameterList_1 = nonTerminal("InferredFormalParameterList_1", INFERRED_FORMAL_PARAMETER);
+
+		static final NonTerminal InferredFormalParameterList_2_2 = nonTerminal("InferredFormalParameterList_2_2", INFERRED_FORMAL_PARAMETER);
+
+		static final ZeroOrMore InferredFormalParameterList_2 = zeroOrMore("InferredFormalParameterList_2", sequence("InferredFormalParameterList_2", terminal("InferredFormalParameterList_2_1", TokenType.COMMA), InferredFormalParameterList_2_2));
+
+		static final Sequence InferredFormalParameterList = sequence("InferredFormalParameterList", InferredFormalParameterList_1, InferredFormalParameterList_2);
+
+		static final NonTerminal InferredFormalParameter_1 = nonTerminal("InferredFormalParameter_1", NAME);
+
+		static final Sequence InferredFormalParameter = sequence("InferredFormalParameter", InferredFormalParameter_1);
+
+		static final Choice AssignmentOperator_1 = choice("AssignmentOperator_1", sequence("AssignmentOperator_1_1", terminal("AssignmentOperator_1_1_1", TokenType.ASSIGN)), sequence("AssignmentOperator_1_2", terminal("AssignmentOperator_1_2_1", TokenType.STARASSIGN)), sequence("AssignmentOperator_1_3", terminal("AssignmentOperator_1_3_1", TokenType.SLASHASSIGN)), sequence("AssignmentOperator_1_4", terminal("AssignmentOperator_1_4_1", TokenType.REMASSIGN)), sequence("AssignmentOperator_1_5", terminal("AssignmentOperator_1_5_1", TokenType.PLUSASSIGN)), sequence("AssignmentOperator_1_6", terminal("AssignmentOperator_1_6_1", TokenType.MINUSASSIGN)), sequence("AssignmentOperator_1_7", terminal("AssignmentOperator_1_7_1", TokenType.LSHIFTASSIGN)), sequence("AssignmentOperator_1_8", terminal("AssignmentOperator_1_8_1", TokenType.RSIGNEDSHIFTASSIGN)), sequence("AssignmentOperator_1_9", terminal("AssignmentOperator_1_9_1", TokenType.RUNSIGNEDSHIFTASSIGN)), sequence("AssignmentOperator_1_10", terminal("AssignmentOperator_1_10_1", TokenType.ANDASSIGN)), sequence("AssignmentOperator_1_11", terminal("AssignmentOperator_1_11_1", TokenType.XORASSIGN)), sequence("AssignmentOperator_1_12", terminal("AssignmentOperator_1_12_1", TokenType.ORASSIGN)));
+
+		static final Sequence AssignmentOperator = sequence("AssignmentOperator", AssignmentOperator_1);
+
+		static final NonTerminal ConditionalExpression_1 = nonTerminal("ConditionalExpression_1", CONDITIONAL_OR_EXPRESSION);
+
+		static final NonTerminal ConditionalExpression_2_2 = nonTerminal("ConditionalExpression_2_2", EXPRESSION);
+
+		static final NonTerminal ConditionalExpression_2_4_1 = nonTerminal("ConditionalExpression_2_4_1", CONDITIONAL_EXPRESSION);
+
+		static final NonTerminal ConditionalExpression_2_4_2 = nonTerminal("ConditionalExpression_2_4_2", LAMBDA_EXPRESSION);
+
+		static final Choice ConditionalExpression_2_4 = choice("ConditionalExpression_2_4", ConditionalExpression_2_4_1, ConditionalExpression_2_4_2);
+
+		static final ZeroOrOne ConditionalExpression_2 = zeroOrOne("ConditionalExpression_2", sequence("ConditionalExpression_2", terminal("ConditionalExpression_2_1", TokenType.HOOK), ConditionalExpression_2_2, terminal("ConditionalExpression_2_3", TokenType.COLON), ConditionalExpression_2_4));
+
+		static final Sequence ConditionalExpression = sequence("ConditionalExpression", ConditionalExpression_1, ConditionalExpression_2);
+
+		static final NonTerminal ConditionalOrExpression_1 = nonTerminal("ConditionalOrExpression_1", CONDITIONAL_AND_EXPRESSION);
+
+		static final NonTerminal ConditionalOrExpression_2_2 = nonTerminal("ConditionalOrExpression_2_2", CONDITIONAL_AND_EXPRESSION);
+
+		static final ZeroOrMore ConditionalOrExpression_2 = zeroOrMore("ConditionalOrExpression_2", sequence("ConditionalOrExpression_2", terminal("ConditionalOrExpression_2_1", TokenType.SC_OR), ConditionalOrExpression_2_2));
+
+		static final Sequence ConditionalOrExpression = sequence("ConditionalOrExpression", ConditionalOrExpression_1, ConditionalOrExpression_2);
+
+		static final NonTerminal ConditionalAndExpression_1 = nonTerminal("ConditionalAndExpression_1", INCLUSIVE_OR_EXPRESSION);
+
+		static final NonTerminal ConditionalAndExpression_2_2 = nonTerminal("ConditionalAndExpression_2_2", INCLUSIVE_OR_EXPRESSION);
+
+		static final ZeroOrMore ConditionalAndExpression_2 = zeroOrMore("ConditionalAndExpression_2", sequence("ConditionalAndExpression_2", terminal("ConditionalAndExpression_2_1", TokenType.SC_AND), ConditionalAndExpression_2_2));
+
+		static final Sequence ConditionalAndExpression = sequence("ConditionalAndExpression", ConditionalAndExpression_1, ConditionalAndExpression_2);
+
+		static final NonTerminal InclusiveOrExpression_1 = nonTerminal("InclusiveOrExpression_1", EXCLUSIVE_OR_EXPRESSION);
+
+		static final NonTerminal InclusiveOrExpression_2_2 = nonTerminal("InclusiveOrExpression_2_2", EXCLUSIVE_OR_EXPRESSION);
+
+		static final ZeroOrMore InclusiveOrExpression_2 = zeroOrMore("InclusiveOrExpression_2", sequence("InclusiveOrExpression_2", terminal("InclusiveOrExpression_2_1", TokenType.BIT_OR), InclusiveOrExpression_2_2));
+
+		static final Sequence InclusiveOrExpression = sequence("InclusiveOrExpression", InclusiveOrExpression_1, InclusiveOrExpression_2);
+
+		static final NonTerminal ExclusiveOrExpression_1 = nonTerminal("ExclusiveOrExpression_1", AND_EXPRESSION);
+
+		static final NonTerminal ExclusiveOrExpression_2_2 = nonTerminal("ExclusiveOrExpression_2_2", AND_EXPRESSION);
+
+		static final ZeroOrMore ExclusiveOrExpression_2 = zeroOrMore("ExclusiveOrExpression_2", sequence("ExclusiveOrExpression_2", terminal("ExclusiveOrExpression_2_1", TokenType.XOR), ExclusiveOrExpression_2_2));
+
+		static final Sequence ExclusiveOrExpression = sequence("ExclusiveOrExpression", ExclusiveOrExpression_1, ExclusiveOrExpression_2);
+
+		static final NonTerminal AndExpression_1 = nonTerminal("AndExpression_1", EQUALITY_EXPRESSION);
+
+		static final NonTerminal AndExpression_2_2 = nonTerminal("AndExpression_2_2", EQUALITY_EXPRESSION);
+
+		static final ZeroOrMore AndExpression_2 = zeroOrMore("AndExpression_2", sequence("AndExpression_2", terminal("AndExpression_2_1", TokenType.BIT_AND), AndExpression_2_2));
+
+		static final Sequence AndExpression = sequence("AndExpression", AndExpression_1, AndExpression_2);
+
+		static final NonTerminal EqualityExpression_1 = nonTerminal("EqualityExpression_1", INSTANCE_OF_EXPRESSION);
+
+		static final Choice EqualityExpression_2_1 = choice("EqualityExpression_2_1", sequence("EqualityExpression_2_1_1", terminal("EqualityExpression_2_1_1_1", TokenType.EQ)), sequence("EqualityExpression_2_1_2", terminal("EqualityExpression_2_1_2_1", TokenType.NE)));
+
+		static final NonTerminal EqualityExpression_2_2 = nonTerminal("EqualityExpression_2_2", INSTANCE_OF_EXPRESSION);
+
+		static final ZeroOrMore EqualityExpression_2 = zeroOrMore("EqualityExpression_2", sequence("EqualityExpression_2", EqualityExpression_2_1, EqualityExpression_2_2));
+
+		static final Sequence EqualityExpression = sequence("EqualityExpression", EqualityExpression_1, EqualityExpression_2);
+
+		static final NonTerminal InstanceOfExpression_1 = nonTerminal("InstanceOfExpression_1", RELATIONAL_EXPRESSION);
+
+		static final NonTerminal InstanceOfExpression_2_2 = nonTerminal("InstanceOfExpression_2_2", ANNOTATIONS);
+
+		static final NonTerminal InstanceOfExpression_2_3 = nonTerminal("InstanceOfExpression_2_3", TYPE);
+
+		static final ZeroOrOne InstanceOfExpression_2 = zeroOrOne("InstanceOfExpression_2", sequence("InstanceOfExpression_2", terminal("InstanceOfExpression_2_1", TokenType.INSTANCEOF), InstanceOfExpression_2_2, InstanceOfExpression_2_3));
+
+		static final Sequence InstanceOfExpression = sequence("InstanceOfExpression", InstanceOfExpression_1, InstanceOfExpression_2);
+
+		static final NonTerminal RelationalExpression_1 = nonTerminal("RelationalExpression_1", SHIFT_EXPRESSION);
+
+		static final Choice RelationalExpression_2_1 = choice("RelationalExpression_2_1", sequence("RelationalExpression_2_1_1", terminal("RelationalExpression_2_1_1_1", TokenType.LT)), sequence("RelationalExpression_2_1_2", terminal("RelationalExpression_2_1_2_1", TokenType.GT)), sequence("RelationalExpression_2_1_3", terminal("RelationalExpression_2_1_3_1", TokenType.LE)), sequence("RelationalExpression_2_1_4", terminal("RelationalExpression_2_1_4_1", TokenType.GE)));
+
+		static final NonTerminal RelationalExpression_2_2 = nonTerminal("RelationalExpression_2_2", SHIFT_EXPRESSION);
+
+		static final ZeroOrMore RelationalExpression_2 = zeroOrMore("RelationalExpression_2", sequence("RelationalExpression_2", RelationalExpression_2_1, RelationalExpression_2_2));
+
+		static final Sequence RelationalExpression = sequence("RelationalExpression", RelationalExpression_1, RelationalExpression_2);
+
+		static final NonTerminal ShiftExpression_1 = nonTerminal("ShiftExpression_1", ADDITIVE_EXPRESSION);
+
+		static final NonTerminal ShiftExpression_2_1_2_1 = nonTerminal("ShiftExpression_2_1_2_1", R_U_N_S_I_G_N_E_D_S_H_I_F_T);
+
+		static final NonTerminal ShiftExpression_2_1_3_1 = nonTerminal("ShiftExpression_2_1_3_1", R_S_I_G_N_E_D_S_H_I_F_T);
+
+		static final Choice ShiftExpression_2_1 = choice("ShiftExpression_2_1", sequence("ShiftExpression_2_1_1", terminal("ShiftExpression_2_1_1_1", TokenType.LSHIFT)), sequence("ShiftExpression_2_1_2", ShiftExpression_2_1_2_1), sequence("ShiftExpression_2_1_3", ShiftExpression_2_1_3_1));
+
+		static final NonTerminal ShiftExpression_2_2 = nonTerminal("ShiftExpression_2_2", ADDITIVE_EXPRESSION);
+
+		static final ZeroOrMore ShiftExpression_2 = zeroOrMore("ShiftExpression_2", sequence("ShiftExpression_2", ShiftExpression_2_1, ShiftExpression_2_2));
+
+		static final Sequence ShiftExpression = sequence("ShiftExpression", ShiftExpression_1, ShiftExpression_2);
+
+		static final NonTerminal AdditiveExpression_1 = nonTerminal("AdditiveExpression_1", MULTIPLICATIVE_EXPRESSION);
+
+		static final Choice AdditiveExpression_2_1 = choice("AdditiveExpression_2_1", sequence("AdditiveExpression_2_1_1", terminal("AdditiveExpression_2_1_1_1", TokenType.PLUS)), sequence("AdditiveExpression_2_1_2", terminal("AdditiveExpression_2_1_2_1", TokenType.MINUS)));
+
+		static final NonTerminal AdditiveExpression_2_2 = nonTerminal("AdditiveExpression_2_2", MULTIPLICATIVE_EXPRESSION);
+
+		static final ZeroOrMore AdditiveExpression_2 = zeroOrMore("AdditiveExpression_2", sequence("AdditiveExpression_2", AdditiveExpression_2_1, AdditiveExpression_2_2));
+
+		static final Sequence AdditiveExpression = sequence("AdditiveExpression", AdditiveExpression_1, AdditiveExpression_2);
+
+		static final NonTerminal MultiplicativeExpression_1 = nonTerminal("MultiplicativeExpression_1", UNARY_EXPRESSION);
+
+		static final Choice MultiplicativeExpression_2_1 = choice("MultiplicativeExpression_2_1", sequence("MultiplicativeExpression_2_1_1", terminal("MultiplicativeExpression_2_1_1_1", TokenType.STAR)), sequence("MultiplicativeExpression_2_1_2", terminal("MultiplicativeExpression_2_1_2_1", TokenType.SLASH)), sequence("MultiplicativeExpression_2_1_3", terminal("MultiplicativeExpression_2_1_3_1", TokenType.REM)));
+
+		static final NonTerminal MultiplicativeExpression_2_2 = nonTerminal("MultiplicativeExpression_2_2", UNARY_EXPRESSION);
+
+		static final ZeroOrMore MultiplicativeExpression_2 = zeroOrMore("MultiplicativeExpression_2", sequence("MultiplicativeExpression_2", MultiplicativeExpression_2_1, MultiplicativeExpression_2_2));
+
+		static final Sequence MultiplicativeExpression = sequence("MultiplicativeExpression", MultiplicativeExpression_1, MultiplicativeExpression_2);
+
+		static final NonTerminal UnaryExpression_1_1 = nonTerminal("UnaryExpression_1_1", PREFIX_EXPRESSION);
+
+		static final Choice UnaryExpression_1_2_1 = choice("UnaryExpression_1_2_1", sequence("UnaryExpression_1_2_1_1", terminal("UnaryExpression_1_2_1_1_1", TokenType.PLUS)), sequence("UnaryExpression_1_2_1_2", terminal("UnaryExpression_1_2_1_2_1", TokenType.MINUS)));
+
+		static final NonTerminal UnaryExpression_1_2_2 = nonTerminal("UnaryExpression_1_2_2", UNARY_EXPRESSION);
+
+		static final NonTerminal UnaryExpression_1_3 = nonTerminal("UnaryExpression_1_3", UNARY_EXPRESSION_NOT_PLUS_MINUS);
+
+		static final Choice UnaryExpression_1 = choice("UnaryExpression_1", UnaryExpression_1_1, sequence("UnaryExpression_1_2", UnaryExpression_1_2_1, UnaryExpression_1_2_2), UnaryExpression_1_3);
+
+		static final Sequence UnaryExpression = sequence("UnaryExpression", UnaryExpression_1);
+
+		static final Choice PrefixExpression_1 = choice("PrefixExpression_1", sequence("PrefixExpression_1_1", terminal("PrefixExpression_1_1_1", TokenType.INCR)), sequence("PrefixExpression_1_2", terminal("PrefixExpression_1_2_1", TokenType.DECR)));
+
+		static final NonTerminal PrefixExpression_2 = nonTerminal("PrefixExpression_2", UNARY_EXPRESSION);
+
+		static final Sequence PrefixExpression = sequence("PrefixExpression", PrefixExpression_1, PrefixExpression_2);
+
+		static final Choice UnaryExpressionNotPlusMinus_1_1_1 = choice("UnaryExpressionNotPlusMinus_1_1_1", sequence("UnaryExpressionNotPlusMinus_1_1_1_1", terminal("UnaryExpressionNotPlusMinus_1_1_1_1_1", TokenType.TILDE)), sequence("UnaryExpressionNotPlusMinus_1_1_1_2", terminal("UnaryExpressionNotPlusMinus_1_1_1_2_1", TokenType.BANG)));
+
+		static final NonTerminal UnaryExpressionNotPlusMinus_1_1_2 = nonTerminal("UnaryExpressionNotPlusMinus_1_1_2", UNARY_EXPRESSION);
+
+		static final NonTerminal UnaryExpressionNotPlusMinus_1_2 = nonTerminal("UnaryExpressionNotPlusMinus_1_2", CAST_EXPRESSION);
+
+		static final NonTerminal UnaryExpressionNotPlusMinus_1_3 = nonTerminal("UnaryExpressionNotPlusMinus_1_3", POSTFIX_EXPRESSION);
+
+		static final Choice UnaryExpressionNotPlusMinus_1 = choice("UnaryExpressionNotPlusMinus_1", sequence("UnaryExpressionNotPlusMinus_1_1", UnaryExpressionNotPlusMinus_1_1_1, UnaryExpressionNotPlusMinus_1_1_2), UnaryExpressionNotPlusMinus_1_2, UnaryExpressionNotPlusMinus_1_3);
+
+		static final Sequence UnaryExpressionNotPlusMinus = sequence("UnaryExpressionNotPlusMinus", UnaryExpressionNotPlusMinus_1);
+
+		static final NonTerminal PostfixExpression_1 = nonTerminal("PostfixExpression_1", PRIMARY_EXPRESSION);
+
+		static final Choice PostfixExpression_2_1 = choice("PostfixExpression_2_1", sequence("PostfixExpression_2_1_1", terminal("PostfixExpression_2_1_1_1", TokenType.INCR)), sequence("PostfixExpression_2_1_2", terminal("PostfixExpression_2_1_2_1", TokenType.DECR)));
+
+		static final ZeroOrOne PostfixExpression_2 = zeroOrOne("PostfixExpression_2", PostfixExpression_2_1);
+
+		static final Sequence PostfixExpression = sequence("PostfixExpression", PostfixExpression_1, PostfixExpression_2);
+
+		static final NonTerminal CastExpression_2 = nonTerminal("CastExpression_2", ANNOTATIONS);
+
+		static final NonTerminal CastExpression_3_1_1 = nonTerminal("CastExpression_3_1_1", PRIMITIVE_TYPE);
+
+		static final NonTerminal CastExpression_3_1_3 = nonTerminal("CastExpression_3_1_3", UNARY_EXPRESSION);
+
+		static final NonTerminal CastExpression_3_2_1 = nonTerminal("CastExpression_3_2_1", REFERENCE_TYPE);
+
+		static final NonTerminal CastExpression_3_2_2 = nonTerminal("CastExpression_3_2_2", REFERENCE_CAST_TYPE_REST);
+
+		static final NonTerminal CastExpression_3_2_4 = nonTerminal("CastExpression_3_2_4", UNARY_EXPRESSION_NOT_PLUS_MINUS);
+
+		static final Choice CastExpression_3 = choice("CastExpression_3", sequence("CastExpression_3_1", CastExpression_3_1_1, terminal("CastExpression_3_1_2", TokenType.RPAREN), CastExpression_3_1_3), sequence("CastExpression_3_2", CastExpression_3_2_1, CastExpression_3_2_2, terminal("CastExpression_3_2_3", TokenType.RPAREN), CastExpression_3_2_4));
+
+		static final Sequence CastExpression = sequence("CastExpression", terminal("CastExpression_1", TokenType.LPAREN), CastExpression_2, CastExpression_3);
+
+		static final NonTerminal ReferenceCastTypeRest_1_1_2 = nonTerminal("ReferenceCastTypeRest_1_1_2", ANNOTATIONS);
+
+		static final NonTerminal ReferenceCastTypeRest_1_1_3 = nonTerminal("ReferenceCastTypeRest_1_1_3", REFERENCE_TYPE);
+
+		static final OneOrMore ReferenceCastTypeRest_1_1 = oneOrMore("ReferenceCastTypeRest_1_1", sequence("ReferenceCastTypeRest_1_1", terminal("ReferenceCastTypeRest_1_1_1", TokenType.BIT_AND), ReferenceCastTypeRest_1_1_2, ReferenceCastTypeRest_1_1_3));
+
+		static final ZeroOrOne ReferenceCastTypeRest_1 = zeroOrOne("ReferenceCastTypeRest_1", ReferenceCastTypeRest_1_1);
+
+		static final Sequence ReferenceCastTypeRest = sequence("ReferenceCastTypeRest", ReferenceCastTypeRest_1);
+
+		static final Choice Literal_1 = choice("Literal_1", sequence("Literal_1_1", terminal("Literal_1_1_1", TokenType.INTEGER_LITERAL)), sequence("Literal_1_2", terminal("Literal_1_2_1", TokenType.LONG_LITERAL)), sequence("Literal_1_3", terminal("Literal_1_3_1", TokenType.FLOAT_LITERAL)), sequence("Literal_1_4", terminal("Literal_1_4_1", TokenType.DOUBLE_LITERAL)), sequence("Literal_1_5", terminal("Literal_1_5_1", TokenType.CHARACTER_LITERAL)), sequence("Literal_1_6", terminal("Literal_1_6_1", TokenType.STRING_LITERAL)), sequence("Literal_1_7", terminal("Literal_1_7_1", TokenType.TRUE)), sequence("Literal_1_8", terminal("Literal_1_8_1", TokenType.FALSE)), sequence("Literal_1_9", terminal("Literal_1_9_1", TokenType.NULL)));
+
+		static final Sequence Literal = sequence("Literal", Literal_1);
+
+		static final NonTerminal PrimaryExpression_1_1 = nonTerminal("PrimaryExpression_1_1", PRIMARY_NO_NEW_ARRAY);
+
+		static final NonTerminal PrimaryExpression_1_2 = nonTerminal("PrimaryExpression_1_2", ARRAY_CREATION_EXPR);
+
+		static final Choice PrimaryExpression_1 = choice("PrimaryExpression_1", PrimaryExpression_1_1, PrimaryExpression_1_2);
+
+		static final Sequence PrimaryExpression = sequence("PrimaryExpression", PrimaryExpression_1);
+
+		static final NonTerminal PrimaryNoNewArray_1 = nonTerminal("PrimaryNoNewArray_1", PRIMARY_PREFIX);
+
+		static final NonTerminal PrimaryNoNewArray_2_1 = nonTerminal("PrimaryNoNewArray_2_1", PRIMARY_SUFFIX);
+
+		static final ZeroOrMore PrimaryNoNewArray_2 = zeroOrMore("PrimaryNoNewArray_2", PrimaryNoNewArray_2_1);
+
+		static final Sequence PrimaryNoNewArray = sequence("PrimaryNoNewArray", PrimaryNoNewArray_1, PrimaryNoNewArray_2);
+
+		static final NonTerminal PrimaryExpressionWithoutSuperSuffix_1 = nonTerminal("PrimaryExpressionWithoutSuperSuffix_1", PRIMARY_PREFIX);
+
+		static final NonTerminal PrimaryExpressionWithoutSuperSuffix_2_1 = nonTerminal("PrimaryExpressionWithoutSuperSuffix_2_1", PRIMARY_SUFFIX_WITHOUT_SUPER);
+
+		static final ZeroOrMore PrimaryExpressionWithoutSuperSuffix_2 = zeroOrMore("PrimaryExpressionWithoutSuperSuffix_2", PrimaryExpressionWithoutSuperSuffix_2_1);
+
+		static final Sequence PrimaryExpressionWithoutSuperSuffix = sequence("PrimaryExpressionWithoutSuperSuffix", PrimaryExpressionWithoutSuperSuffix_1, PrimaryExpressionWithoutSuperSuffix_2);
+
+		static final NonTerminal PrimaryPrefix_1_1 = nonTerminal("PrimaryPrefix_1_1", LITERAL);
+
+		static final NonTerminal PrimaryPrefix_1_3_2_1_2_1 = nonTerminal("PrimaryPrefix_1_3_2_1_2_1", METHOD_INVOCATION);
+
+		static final NonTerminal PrimaryPrefix_1_3_2_1_2_2 = nonTerminal("PrimaryPrefix_1_3_2_1_2_2", FIELD_ACCESS);
+
+		static final Choice PrimaryPrefix_1_3_2_1_2 = choice("PrimaryPrefix_1_3_2_1_2", PrimaryPrefix_1_3_2_1_2_1, PrimaryPrefix_1_3_2_1_2_2);
+
+		static final NonTerminal PrimaryPrefix_1_3_2_2_1 = nonTerminal("PrimaryPrefix_1_3_2_2_1", METHOD_REFERENCE_SUFFIX);
+
+		static final Choice PrimaryPrefix_1_3_2 = choice("PrimaryPrefix_1_3_2", sequence("PrimaryPrefix_1_3_2_1", terminal("PrimaryPrefix_1_3_2_1_1", TokenType.DOT), PrimaryPrefix_1_3_2_1_2), sequence("PrimaryPrefix_1_3_2_2", PrimaryPrefix_1_3_2_2_1));
+
+		static final NonTerminal PrimaryPrefix_1_4 = nonTerminal("PrimaryPrefix_1_4", CLASS_CREATION_EXPR);
+
+		static final NonTerminal PrimaryPrefix_1_5_1 = nonTerminal("PrimaryPrefix_1_5_1", RESULT_TYPE);
+
+		static final NonTerminal PrimaryPrefix_1_6_1 = nonTerminal("PrimaryPrefix_1_6_1", RESULT_TYPE);
+
+		static final NonTerminal PrimaryPrefix_1_6_2 = nonTerminal("PrimaryPrefix_1_6_2", METHOD_REFERENCE_SUFFIX);
+
+		static final NonTerminal PrimaryPrefix_1_7_1 = nonTerminal("PrimaryPrefix_1_7_1", METHOD_INVOCATION);
+
+		static final NonTerminal PrimaryPrefix_1_8_1 = nonTerminal("PrimaryPrefix_1_8_1", NAME);
+
+		static final NonTerminal PrimaryPrefix_1_9_2 = nonTerminal("PrimaryPrefix_1_9_2", EXPRESSION);
+
+		static final Choice PrimaryPrefix_1 = choice("PrimaryPrefix_1", PrimaryPrefix_1_1, sequence("PrimaryPrefix_1_2", terminal("PrimaryPrefix_1_2_1", TokenType.THIS)), sequence("PrimaryPrefix_1_3", terminal("PrimaryPrefix_1_3_1", TokenType.SUPER), PrimaryPrefix_1_3_2), PrimaryPrefix_1_4, sequence("PrimaryPrefix_1_5", PrimaryPrefix_1_5_1, terminal("PrimaryPrefix_1_5_2", TokenType.DOT), terminal("PrimaryPrefix_1_5_3", TokenType.CLASS)), sequence("PrimaryPrefix_1_6", PrimaryPrefix_1_6_1, PrimaryPrefix_1_6_2), sequence("PrimaryPrefix_1_7", PrimaryPrefix_1_7_1), sequence("PrimaryPrefix_1_8", PrimaryPrefix_1_8_1), sequence("PrimaryPrefix_1_9", terminal("PrimaryPrefix_1_9_1", TokenType.LPAREN), PrimaryPrefix_1_9_2, terminal("PrimaryPrefix_1_9_3", TokenType.RPAREN)));
+
+		static final Sequence PrimaryPrefix = sequence("PrimaryPrefix", PrimaryPrefix_1);
+
+		static final NonTerminal PrimarySuffix_1_1_1 = nonTerminal("PrimarySuffix_1_1_1", PRIMARY_SUFFIX_WITHOUT_SUPER);
+
+		static final NonTerminal PrimarySuffix_1_3 = nonTerminal("PrimarySuffix_1_3", METHOD_REFERENCE_SUFFIX);
+
+		static final Choice PrimarySuffix_1 = choice("PrimarySuffix_1", sequence("PrimarySuffix_1_1", PrimarySuffix_1_1_1), sequence("PrimarySuffix_1_2", terminal("PrimarySuffix_1_2_1", TokenType.DOT), terminal("PrimarySuffix_1_2_2", TokenType.SUPER)), PrimarySuffix_1_3);
+
+		static final Sequence PrimarySuffix = sequence("PrimarySuffix", PrimarySuffix_1);
+
+		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_2", CLASS_CREATION_EXPR);
+
+		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_3 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_3", METHOD_INVOCATION);
+
+		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_4 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_4", FIELD_ACCESS);
+
+		static final Choice PrimarySuffixWithoutSuper_1_1_2 = choice("PrimarySuffixWithoutSuper_1_1_2", sequence("PrimarySuffixWithoutSuper_1_1_2_1", terminal("PrimarySuffixWithoutSuper_1_1_2_1_1", TokenType.THIS)), PrimarySuffixWithoutSuper_1_1_2_2, PrimarySuffixWithoutSuper_1_1_2_3, PrimarySuffixWithoutSuper_1_1_2_4);
+
+		static final NonTerminal PrimarySuffixWithoutSuper_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_2_2", EXPRESSION);
+
+		static final Choice PrimarySuffixWithoutSuper_1 = choice("PrimarySuffixWithoutSuper_1", sequence("PrimarySuffixWithoutSuper_1_1", terminal("PrimarySuffixWithoutSuper_1_1_1", TokenType.DOT), PrimarySuffixWithoutSuper_1_1_2), sequence("PrimarySuffixWithoutSuper_1_2", terminal("PrimarySuffixWithoutSuper_1_2_1", TokenType.LBRACKET), PrimarySuffixWithoutSuper_1_2_2, terminal("PrimarySuffixWithoutSuper_1_2_3", TokenType.RBRACKET)));
+
+		static final Sequence PrimarySuffixWithoutSuper = sequence("PrimarySuffixWithoutSuper", PrimarySuffixWithoutSuper_1);
+
+		static final NonTerminal FieldAccess_1 = nonTerminal("FieldAccess_1", NAME);
+
+		static final Sequence FieldAccess = sequence("FieldAccess", FieldAccess_1);
+
+		static final NonTerminal MethodInvocation_1_1 = nonTerminal("MethodInvocation_1_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne MethodInvocation_1 = zeroOrOne("MethodInvocation_1", MethodInvocation_1_1);
+
+		static final NonTerminal MethodInvocation_2 = nonTerminal("MethodInvocation_2", NAME);
+
+		static final NonTerminal MethodInvocation_3 = nonTerminal("MethodInvocation_3", ARGUMENTS);
+
+		static final Sequence MethodInvocation = sequence("MethodInvocation", MethodInvocation_1, MethodInvocation_2, MethodInvocation_3);
+
+		static final NonTerminal Arguments_2_1_1_1 = nonTerminal("Arguments_2_1_1_1", NODE_LIST_VAR);
+
+		static final NonTerminal Arguments_2_1_2_1 = nonTerminal("Arguments_2_1_2_1", EXPRESSION);
+
+		static final NonTerminal Arguments_2_1_2_2_2 = nonTerminal("Arguments_2_1_2_2_2", EXPRESSION);
+
+		static final ZeroOrMore Arguments_2_1_2_2 = zeroOrMore("Arguments_2_1_2_2", sequence("Arguments_2_1_2_2", terminal("Arguments_2_1_2_2_1", TokenType.COMMA), Arguments_2_1_2_2_2));
+
+		static final Choice Arguments_2_1 = choice("Arguments_2_1", sequence("Arguments_2_1_1", Arguments_2_1_1_1), sequence("Arguments_2_1_2", Arguments_2_1_2_1, Arguments_2_1_2_2));
+
+		static final ZeroOrOne Arguments_2 = zeroOrOne("Arguments_2", Arguments_2_1);
+
+		static final Sequence Arguments = sequence("Arguments", terminal("Arguments_1", TokenType.LPAREN), Arguments_2, terminal("Arguments_3", TokenType.RPAREN));
+
+		static final NonTerminal MethodReferenceSuffix_2_1 = nonTerminal("MethodReferenceSuffix_2_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne MethodReferenceSuffix_2 = zeroOrOne("MethodReferenceSuffix_2", MethodReferenceSuffix_2_1);
+
+		static final NonTerminal MethodReferenceSuffix_3_1 = nonTerminal("MethodReferenceSuffix_3_1", NAME);
+
+		static final Choice MethodReferenceSuffix_3 = choice("MethodReferenceSuffix_3", MethodReferenceSuffix_3_1, sequence("MethodReferenceSuffix_3_2", terminal("MethodReferenceSuffix_3_2_1", TokenType.NEW)));
+
+		static final Sequence MethodReferenceSuffix = sequence("MethodReferenceSuffix", terminal("MethodReferenceSuffix_1", TokenType.DOUBLECOLON), MethodReferenceSuffix_2, MethodReferenceSuffix_3);
+
+		static final NonTerminal ClassCreationExpr_2_1 = nonTerminal("ClassCreationExpr_2_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne ClassCreationExpr_2 = zeroOrOne("ClassCreationExpr_2", ClassCreationExpr_2_1);
+
+		static final NonTerminal ClassCreationExpr_3 = nonTerminal("ClassCreationExpr_3", ANNOTATIONS);
+
+		static final NonTerminal ClassCreationExpr_4 = nonTerminal("ClassCreationExpr_4", QUALIFIED_TYPE);
+
+		static final NonTerminal ClassCreationExpr_5 = nonTerminal("ClassCreationExpr_5", ARGUMENTS);
+
+		static final NonTerminal ClassCreationExpr_6_1 = nonTerminal("ClassCreationExpr_6_1", CLASS_OR_INTERFACE_BODY);
+
+		static final ZeroOrOne ClassCreationExpr_6 = zeroOrOne("ClassCreationExpr_6", ClassCreationExpr_6_1);
+
+		static final Sequence ClassCreationExpr = sequence("ClassCreationExpr", terminal("ClassCreationExpr_1", TokenType.NEW), ClassCreationExpr_2, ClassCreationExpr_3, ClassCreationExpr_4, ClassCreationExpr_5, ClassCreationExpr_6);
+
+		static final NonTerminal ArrayCreationExpr_2_1 = nonTerminal("ArrayCreationExpr_2_1", TYPE_ARGUMENTS);
+
+		static final ZeroOrOne ArrayCreationExpr_2 = zeroOrOne("ArrayCreationExpr_2", ArrayCreationExpr_2_1);
+
+		static final NonTerminal ArrayCreationExpr_3 = nonTerminal("ArrayCreationExpr_3", ANNOTATIONS);
+
+		static final NonTerminal ArrayCreationExpr_4_1 = nonTerminal("ArrayCreationExpr_4_1", PRIMITIVE_TYPE);
+
+		static final NonTerminal ArrayCreationExpr_4_2 = nonTerminal("ArrayCreationExpr_4_2", QUALIFIED_TYPE);
+
+		static final Choice ArrayCreationExpr_4 = choice("ArrayCreationExpr_4", ArrayCreationExpr_4_1, ArrayCreationExpr_4_2);
+
+		static final NonTerminal ArrayCreationExpr_5 = nonTerminal("ArrayCreationExpr_5", ARRAY_CREATION_EXPR_REST);
+
+		static final Sequence ArrayCreationExpr = sequence("ArrayCreationExpr", terminal("ArrayCreationExpr_1", TokenType.NEW), ArrayCreationExpr_2, ArrayCreationExpr_3, ArrayCreationExpr_4, ArrayCreationExpr_5);
+
+		static final NonTerminal ArrayCreationExprRest_1_1 = nonTerminal("ArrayCreationExprRest_1_1", ARRAY_DIM_EXPRS_MANDATORY);
+
+		static final NonTerminal ArrayCreationExprRest_1_2 = nonTerminal("ArrayCreationExprRest_1_2", ARRAY_DIMS);
+
+		static final NonTerminal ArrayCreationExprRest_2_1 = nonTerminal("ArrayCreationExprRest_2_1", ARRAY_DIMS_MANDATORY);
+
+		static final NonTerminal ArrayCreationExprRest_2_2 = nonTerminal("ArrayCreationExprRest_2_2", ARRAY_INITIALIZER);
+
+		static final Choice ArrayCreationExprRest = choice("ArrayCreationExprRest", sequence("ArrayCreationExprRest_1", ArrayCreationExprRest_1_1, ArrayCreationExprRest_1_2), sequence("ArrayCreationExprRest_2", ArrayCreationExprRest_2_1, ArrayCreationExprRest_2_2));
+
+		static final NonTerminal ArrayDimExprsMandatory_1_1 = nonTerminal("ArrayDimExprsMandatory_1_1", ANNOTATIONS);
+
+		static final NonTerminal ArrayDimExprsMandatory_1_3 = nonTerminal("ArrayDimExprsMandatory_1_3", EXPRESSION);
+
+		static final OneOrMore ArrayDimExprsMandatory_1 = oneOrMore("ArrayDimExprsMandatory_1", sequence("ArrayDimExprsMandatory_1", ArrayDimExprsMandatory_1_1, terminal("ArrayDimExprsMandatory_1_2", TokenType.LBRACKET), ArrayDimExprsMandatory_1_3, terminal("ArrayDimExprsMandatory_1_4", TokenType.RBRACKET)));
+
+		static final Sequence ArrayDimExprsMandatory = sequence("ArrayDimExprsMandatory", ArrayDimExprsMandatory_1);
+
+		static final NonTerminal ArrayDimsMandatory_1_1 = nonTerminal("ArrayDimsMandatory_1_1", ANNOTATIONS);
+
+		static final OneOrMore ArrayDimsMandatory_1 = oneOrMore("ArrayDimsMandatory_1", sequence("ArrayDimsMandatory_1", ArrayDimsMandatory_1_1, terminal("ArrayDimsMandatory_1_2", TokenType.LBRACKET), terminal("ArrayDimsMandatory_1_3", TokenType.RBRACKET)));
+
+		static final Sequence ArrayDimsMandatory = sequence("ArrayDimsMandatory", ArrayDimsMandatory_1);
+
+		static final NonTerminal Statement_1_1 = nonTerminal("Statement_1_1", LABELED_STATEMENT);
+
+		static final NonTerminal Statement_1_2 = nonTerminal("Statement_1_2", ASSERT_STATEMENT);
+
+		static final NonTerminal Statement_1_3 = nonTerminal("Statement_1_3", BLOCK);
+
+		static final NonTerminal Statement_1_4 = nonTerminal("Statement_1_4", EMPTY_STATEMENT);
+
+		static final NonTerminal Statement_1_5 = nonTerminal("Statement_1_5", EXPRESSION_STATEMENT);
+
+		static final NonTerminal Statement_1_6 = nonTerminal("Statement_1_6", SWITCH_STATEMENT);
+
+		static final NonTerminal Statement_1_7 = nonTerminal("Statement_1_7", IF_STATEMENT);
+
+		static final NonTerminal Statement_1_8 = nonTerminal("Statement_1_8", WHILE_STATEMENT);
+
+		static final NonTerminal Statement_1_9 = nonTerminal("Statement_1_9", DO_STATEMENT);
+
+		static final NonTerminal Statement_1_10 = nonTerminal("Statement_1_10", FOR_STATEMENT);
+
+		static final NonTerminal Statement_1_11 = nonTerminal("Statement_1_11", BREAK_STATEMENT);
+
+		static final NonTerminal Statement_1_12 = nonTerminal("Statement_1_12", CONTINUE_STATEMENT);
+
+		static final NonTerminal Statement_1_13 = nonTerminal("Statement_1_13", RETURN_STATEMENT);
+
+		static final NonTerminal Statement_1_14 = nonTerminal("Statement_1_14", THROW_STATEMENT);
+
+		static final NonTerminal Statement_1_15 = nonTerminal("Statement_1_15", SYNCHRONIZED_STATEMENT);
+
+		static final NonTerminal Statement_1_16 = nonTerminal("Statement_1_16", TRY_STATEMENT);
+
+		static final Choice Statement_1 = choice("Statement_1", Statement_1_1, Statement_1_2, Statement_1_3, Statement_1_4, Statement_1_5, Statement_1_6, Statement_1_7, Statement_1_8, Statement_1_9, Statement_1_10, Statement_1_11, Statement_1_12, Statement_1_13, Statement_1_14, Statement_1_15, Statement_1_16);
+
+		static final Sequence Statement = sequence("Statement", Statement_1);
+
+		static final NonTerminal AssertStatement_2 = nonTerminal("AssertStatement_2", EXPRESSION);
+
+		static final NonTerminal AssertStatement_3_2 = nonTerminal("AssertStatement_3_2", EXPRESSION);
+
+		static final ZeroOrOne AssertStatement_3 = zeroOrOne("AssertStatement_3", sequence("AssertStatement_3", terminal("AssertStatement_3_1", TokenType.COLON), AssertStatement_3_2));
+
+		static final Sequence AssertStatement = sequence("AssertStatement", terminal("AssertStatement_1", TokenType.ASSERT), AssertStatement_2, AssertStatement_3, terminal("AssertStatement_4", TokenType.SEMICOLON));
+
+		static final NonTerminal LabeledStatement_1 = nonTerminal("LabeledStatement_1", NAME);
+
+		static final NonTerminal LabeledStatement_3 = nonTerminal("LabeledStatement_3", STATEMENT);
+
+		static final Sequence LabeledStatement = sequence("LabeledStatement", LabeledStatement_1, terminal("LabeledStatement_2", TokenType.COLON), LabeledStatement_3);
+
+		static final NonTerminal Block_2 = nonTerminal("Block_2", STATEMENTS);
+
+		static final Sequence Block = sequence("Block", terminal("Block_1", TokenType.LBRACE), Block_2, terminal("Block_3", TokenType.RBRACE));
+
+		static final NonTerminal BlockStatement_1_1_1 = nonTerminal("BlockStatement_1_1_1", MODIFIERS_NO_DEFAULT);
+
+		static final NonTerminal BlockStatement_1_1_2 = nonTerminal("BlockStatement_1_1_2", CLASS_OR_INTERFACE_DECL);
+
+		static final NonTerminal BlockStatement_1_2_1 = nonTerminal("BlockStatement_1_2_1", VARIABLE_DECL_EXPRESSION);
+
+		static final NonTerminal BlockStatement_1_3 = nonTerminal("BlockStatement_1_3", STATEMENT);
+
+		static final Choice BlockStatement_1 = choice("BlockStatement_1", sequence("BlockStatement_1_1", BlockStatement_1_1_1, BlockStatement_1_1_2), sequence("BlockStatement_1_2", BlockStatement_1_2_1, terminal("BlockStatement_1_2_2", TokenType.SEMICOLON)), BlockStatement_1_3);
+
+		static final Sequence BlockStatement = sequence("BlockStatement", BlockStatement_1);
+
+		static final NonTerminal VariableDeclExpression_1 = nonTerminal("VariableDeclExpression_1", MODIFIERS_NO_DEFAULT);
+
+		static final NonTerminal VariableDeclExpression_2 = nonTerminal("VariableDeclExpression_2", VARIABLE_DECL);
+
+		static final Sequence VariableDeclExpression = sequence("VariableDeclExpression", VariableDeclExpression_1, VariableDeclExpression_2);
+
+		static final Sequence EmptyStatement = sequence("EmptyStatement", terminal("EmptyStatement_1", TokenType.SEMICOLON));
+
+		static final NonTerminal ExpressionStatement_1 = nonTerminal("ExpressionStatement_1", STATEMENT_EXPRESSION);
+
+		static final Sequence ExpressionStatement = sequence("ExpressionStatement", ExpressionStatement_1, terminal("ExpressionStatement_2", TokenType.SEMICOLON));
+
+		static final NonTerminal StatementExpression_1 = nonTerminal("StatementExpression_1", EXPRESSION);
+
+		static final Sequence StatementExpression = sequence("StatementExpression", StatementExpression_1);
+
+		static final NonTerminal SwitchStatement_3 = nonTerminal("SwitchStatement_3", EXPRESSION);
+
+		static final NonTerminal SwitchStatement_6_1 = nonTerminal("SwitchStatement_6_1", SWITCH_ENTRY);
+
+		static final ZeroOrMore SwitchStatement_6 = zeroOrMore("SwitchStatement_6", SwitchStatement_6_1);
+
+		static final Sequence SwitchStatement = sequence("SwitchStatement", terminal("SwitchStatement_1", TokenType.SWITCH), terminal("SwitchStatement_2", TokenType.LPAREN), SwitchStatement_3, terminal("SwitchStatement_4", TokenType.RPAREN), terminal("SwitchStatement_5", TokenType.LBRACE), SwitchStatement_6, terminal("SwitchStatement_7", TokenType.RBRACE));
+
+		static final NonTerminal SwitchEntry_1_1_2 = nonTerminal("SwitchEntry_1_1_2", EXPRESSION);
+
+		static final Choice SwitchEntry_1 = choice("SwitchEntry_1", sequence("SwitchEntry_1_1", terminal("SwitchEntry_1_1_1", TokenType.CASE), SwitchEntry_1_1_2), terminal("SwitchEntry_1_2", TokenType.DEFAULT));
+
+		static final NonTerminal SwitchEntry_3 = nonTerminal("SwitchEntry_3", STATEMENTS);
+
+		static final Sequence SwitchEntry = sequence("SwitchEntry", SwitchEntry_1, terminal("SwitchEntry_2", TokenType.COLON), SwitchEntry_3);
+
+		static final NonTerminal IfStatement_3 = nonTerminal("IfStatement_3", EXPRESSION);
+
+		static final NonTerminal IfStatement_5 = nonTerminal("IfStatement_5", STATEMENT);
+
+		static final NonTerminal IfStatement_6_2 = nonTerminal("IfStatement_6_2", STATEMENT);
+
+		static final ZeroOrOne IfStatement_6 = zeroOrOne("IfStatement_6", sequence("IfStatement_6", terminal("IfStatement_6_1", TokenType.ELSE), IfStatement_6_2));
+
+		static final Sequence IfStatement = sequence("IfStatement", terminal("IfStatement_1", TokenType.IF), terminal("IfStatement_2", TokenType.LPAREN), IfStatement_3, terminal("IfStatement_4", TokenType.RPAREN), IfStatement_5, IfStatement_6);
+
+		static final NonTerminal WhileStatement_3 = nonTerminal("WhileStatement_3", EXPRESSION);
+
+		static final NonTerminal WhileStatement_5 = nonTerminal("WhileStatement_5", STATEMENT);
+
+		static final Sequence WhileStatement = sequence("WhileStatement", terminal("WhileStatement_1", TokenType.WHILE), terminal("WhileStatement_2", TokenType.LPAREN), WhileStatement_3, terminal("WhileStatement_4", TokenType.RPAREN), WhileStatement_5);
+
+		static final NonTerminal DoStatement_2 = nonTerminal("DoStatement_2", STATEMENT);
+
+		static final NonTerminal DoStatement_5 = nonTerminal("DoStatement_5", EXPRESSION);
+
+		static final Sequence DoStatement = sequence("DoStatement", terminal("DoStatement_1", TokenType.DO), DoStatement_2, terminal("DoStatement_3", TokenType.WHILE), terminal("DoStatement_4", TokenType.LPAREN), DoStatement_5, terminal("DoStatement_6", TokenType.RPAREN), terminal("DoStatement_7", TokenType.SEMICOLON));
+
+		static final NonTerminal ForStatement_3_1_1 = nonTerminal("ForStatement_3_1_1", VARIABLE_DECL_EXPRESSION);
+
+		static final NonTerminal ForStatement_3_1_3 = nonTerminal("ForStatement_3_1_3", EXPRESSION);
+
+		static final NonTerminal ForStatement_3_2_1_1 = nonTerminal("ForStatement_3_2_1_1", FOR_INIT);
+
+		static final ZeroOrOne ForStatement_3_2_1 = zeroOrOne("ForStatement_3_2_1", ForStatement_3_2_1_1);
+
+		static final NonTerminal ForStatement_3_2_3_1 = nonTerminal("ForStatement_3_2_3_1", EXPRESSION);
+
+		static final ZeroOrOne ForStatement_3_2_3 = zeroOrOne("ForStatement_3_2_3", ForStatement_3_2_3_1);
+
+		static final NonTerminal ForStatement_3_2_5_1 = nonTerminal("ForStatement_3_2_5_1", FOR_UPDATE);
+
+		static final ZeroOrOne ForStatement_3_2_5 = zeroOrOne("ForStatement_3_2_5", ForStatement_3_2_5_1);
+
+		static final Choice ForStatement_3 = choice("ForStatement_3", sequence("ForStatement_3_1", ForStatement_3_1_1, terminal("ForStatement_3_1_2", TokenType.COLON), ForStatement_3_1_3), sequence("ForStatement_3_2", ForStatement_3_2_1, terminal("ForStatement_3_2_2", TokenType.SEMICOLON), ForStatement_3_2_3, terminal("ForStatement_3_2_4", TokenType.SEMICOLON), ForStatement_3_2_5));
+
+		static final NonTerminal ForStatement_5 = nonTerminal("ForStatement_5", STATEMENT);
+
+		static final Sequence ForStatement = sequence("ForStatement", terminal("ForStatement_1", TokenType.FOR), terminal("ForStatement_2", TokenType.LPAREN), ForStatement_3, terminal("ForStatement_4", TokenType.RPAREN), ForStatement_5);
+
+		static final NonTerminal ForInit_1_1_1 = nonTerminal("ForInit_1_1_1", VARIABLE_DECL_EXPRESSION);
+
+		static final NonTerminal ForInit_1_2 = nonTerminal("ForInit_1_2", STATEMENT_EXPRESSION_LIST);
+
+		static final Choice ForInit_1 = choice("ForInit_1", sequence("ForInit_1_1", ForInit_1_1_1), ForInit_1_2);
+
+		static final Sequence ForInit = sequence("ForInit", ForInit_1);
+
+		static final NonTerminal StatementExpressionList_1 = nonTerminal("StatementExpressionList_1", STATEMENT_EXPRESSION);
+
+		static final NonTerminal StatementExpressionList_2_2 = nonTerminal("StatementExpressionList_2_2", STATEMENT_EXPRESSION);
+
+		static final ZeroOrMore StatementExpressionList_2 = zeroOrMore("StatementExpressionList_2", sequence("StatementExpressionList_2", terminal("StatementExpressionList_2_1", TokenType.COMMA), StatementExpressionList_2_2));
+
+		static final Sequence StatementExpressionList = sequence("StatementExpressionList", StatementExpressionList_1, StatementExpressionList_2);
+
+		static final NonTerminal ForUpdate_1 = nonTerminal("ForUpdate_1", STATEMENT_EXPRESSION_LIST);
+
+		static final Sequence ForUpdate = sequence("ForUpdate", ForUpdate_1);
+
+		static final NonTerminal BreakStatement_2_1 = nonTerminal("BreakStatement_2_1", NAME);
+
+		static final ZeroOrOne BreakStatement_2 = zeroOrOne("BreakStatement_2", BreakStatement_2_1);
+
+		static final Sequence BreakStatement = sequence("BreakStatement", terminal("BreakStatement_1", TokenType.BREAK), BreakStatement_2, terminal("BreakStatement_3", TokenType.SEMICOLON));
+
+		static final NonTerminal ContinueStatement_2_1 = nonTerminal("ContinueStatement_2_1", NAME);
+
+		static final ZeroOrOne ContinueStatement_2 = zeroOrOne("ContinueStatement_2", ContinueStatement_2_1);
+
+		static final Sequence ContinueStatement = sequence("ContinueStatement", terminal("ContinueStatement_1", TokenType.CONTINUE), ContinueStatement_2, terminal("ContinueStatement_3", TokenType.SEMICOLON));
+
+		static final NonTerminal ReturnStatement_2_1 = nonTerminal("ReturnStatement_2_1", EXPRESSION);
+
+		static final ZeroOrOne ReturnStatement_2 = zeroOrOne("ReturnStatement_2", ReturnStatement_2_1);
+
+		static final Sequence ReturnStatement = sequence("ReturnStatement", terminal("ReturnStatement_1", TokenType.RETURN), ReturnStatement_2, terminal("ReturnStatement_3", TokenType.SEMICOLON));
+
+		static final NonTerminal ThrowStatement_2 = nonTerminal("ThrowStatement_2", EXPRESSION);
+
+		static final Sequence ThrowStatement = sequence("ThrowStatement", terminal("ThrowStatement_1", TokenType.THROW), ThrowStatement_2, terminal("ThrowStatement_3", TokenType.SEMICOLON));
+
+		static final NonTerminal SynchronizedStatement_3 = nonTerminal("SynchronizedStatement_3", EXPRESSION);
+
+		static final NonTerminal SynchronizedStatement_5 = nonTerminal("SynchronizedStatement_5", BLOCK);
+
+		static final Sequence SynchronizedStatement = sequence("SynchronizedStatement", terminal("SynchronizedStatement_1", TokenType.SYNCHRONIZED), terminal("SynchronizedStatement_2", TokenType.LPAREN), SynchronizedStatement_3, terminal("SynchronizedStatement_4", TokenType.RPAREN), SynchronizedStatement_5);
+
+		static final NonTerminal TryStatement_2_1_1 = nonTerminal("TryStatement_2_1_1", RESOURCE_SPECIFICATION);
+
+		static final NonTerminal TryStatement_2_1_2 = nonTerminal("TryStatement_2_1_2", BLOCK);
+
+		static final NonTerminal TryStatement_2_1_3_1 = nonTerminal("TryStatement_2_1_3_1", CATCH_CLAUSES);
+
+		static final ZeroOrOne TryStatement_2_1_3 = zeroOrOne("TryStatement_2_1_3", TryStatement_2_1_3_1);
+
+		static final NonTerminal TryStatement_2_1_4_2 = nonTerminal("TryStatement_2_1_4_2", BLOCK);
+
+		static final ZeroOrOne TryStatement_2_1_4 = zeroOrOne("TryStatement_2_1_4", sequence("TryStatement_2_1_4", terminal("TryStatement_2_1_4_1", TokenType.FINALLY), TryStatement_2_1_4_2));
+
+		static final NonTerminal TryStatement_2_2_1 = nonTerminal("TryStatement_2_2_1", BLOCK);
+
+		static final NonTerminal TryStatement_2_2_2_1_1 = nonTerminal("TryStatement_2_2_2_1_1", CATCH_CLAUSES);
+
+		static final NonTerminal TryStatement_2_2_2_1_2_2 = nonTerminal("TryStatement_2_2_2_1_2_2", BLOCK);
+
+		static final ZeroOrOne TryStatement_2_2_2_1_2 = zeroOrOne("TryStatement_2_2_2_1_2", sequence("TryStatement_2_2_2_1_2", terminal("TryStatement_2_2_2_1_2_1", TokenType.FINALLY), TryStatement_2_2_2_1_2_2));
+
+		static final NonTerminal TryStatement_2_2_2_2_2 = nonTerminal("TryStatement_2_2_2_2_2", BLOCK);
+
+		static final Choice TryStatement_2_2_2 = choice("TryStatement_2_2_2", sequence("TryStatement_2_2_2_1", TryStatement_2_2_2_1_1, TryStatement_2_2_2_1_2), sequence("TryStatement_2_2_2_2", terminal("TryStatement_2_2_2_2_1", TokenType.FINALLY), TryStatement_2_2_2_2_2));
+
+		static final Choice TryStatement_2 = choice("TryStatement_2", sequence("TryStatement_2_1", TryStatement_2_1_1, TryStatement_2_1_2, TryStatement_2_1_3, TryStatement_2_1_4), sequence("TryStatement_2_2", TryStatement_2_2_1, TryStatement_2_2_2));
+
+		static final Sequence TryStatement = sequence("TryStatement", terminal("TryStatement_1", TokenType.TRY), TryStatement_2);
+
+		static final NonTerminal CatchClauses_1_1 = nonTerminal("CatchClauses_1_1", CATCH_CLAUSE);
+
+		static final OneOrMore CatchClauses_1 = oneOrMore("CatchClauses_1", CatchClauses_1_1);
+
+		static final Sequence CatchClauses = sequence("CatchClauses", CatchClauses_1);
+
+		static final NonTerminal CatchClause_3 = nonTerminal("CatchClause_3", CATCH_FORMAL_PARAMETER);
+
+		static final NonTerminal CatchClause_5 = nonTerminal("CatchClause_5", BLOCK);
+
+		static final Sequence CatchClause = sequence("CatchClause", terminal("CatchClause_1", TokenType.CATCH), terminal("CatchClause_2", TokenType.LPAREN), CatchClause_3, terminal("CatchClause_4", TokenType.RPAREN), CatchClause_5);
+
+		static final NonTerminal CatchFormalParameter_1 = nonTerminal("CatchFormalParameter_1", MODIFIERS);
+
+		static final NonTerminal CatchFormalParameter_2 = nonTerminal("CatchFormalParameter_2", QUALIFIED_TYPE);
+
+		static final NonTerminal CatchFormalParameter_3_1_2 = nonTerminal("CatchFormalParameter_3_1_2", ANNOTATED_QUALIFIED_TYPE);
+
+		static final OneOrMore CatchFormalParameter_3_1 = oneOrMore("CatchFormalParameter_3_1", sequence("CatchFormalParameter_3_1", terminal("CatchFormalParameter_3_1_1", TokenType.BIT_OR), CatchFormalParameter_3_1_2));
+
+		static final ZeroOrOne CatchFormalParameter_3 = zeroOrOne("CatchFormalParameter_3", CatchFormalParameter_3_1);
+
+		static final NonTerminal CatchFormalParameter_4 = nonTerminal("CatchFormalParameter_4", VARIABLE_DECLARATOR_ID);
+
+		static final Sequence CatchFormalParameter = sequence("CatchFormalParameter", CatchFormalParameter_1, CatchFormalParameter_2, CatchFormalParameter_3, CatchFormalParameter_4);
+
+		static final NonTerminal ResourceSpecification_2 = nonTerminal("ResourceSpecification_2", VARIABLE_DECL_EXPRESSION);
+
+		static final NonTerminal ResourceSpecification_3_2 = nonTerminal("ResourceSpecification_3_2", VARIABLE_DECL_EXPRESSION);
+
+		static final ZeroOrMore ResourceSpecification_3 = zeroOrMore("ResourceSpecification_3", sequence("ResourceSpecification_3", terminal("ResourceSpecification_3_1", TokenType.SEMICOLON), ResourceSpecification_3_2));
+
+		static final ZeroOrOne ResourceSpecification_4 = zeroOrOne("ResourceSpecification_4", terminal("ResourceSpecification_4_1", TokenType.SEMICOLON));
+
+		static final Sequence ResourceSpecification = sequence("ResourceSpecification", terminal("ResourceSpecification_1", TokenType.LPAREN), ResourceSpecification_2, ResourceSpecification_3, ResourceSpecification_4, terminal("ResourceSpecification_5", TokenType.RPAREN));
+
+		static final Sequence RUNSIGNEDSHIFT = sequence("RUNSIGNEDSHIFT", terminal("RUNSIGNEDSHIFT_1", TokenType.GT), terminal("RUNSIGNEDSHIFT_2", TokenType.GT), terminal("RUNSIGNEDSHIFT_3", TokenType.GT));
+
+		static final Sequence RSIGNEDSHIFT = sequence("RSIGNEDSHIFT", terminal("RSIGNEDSHIFT_1", TokenType.GT), terminal("RSIGNEDSHIFT_2", TokenType.GT));
+
+		static final NonTerminal Annotations_1_1 = nonTerminal("Annotations_1_1", ANNOTATION);
+
+		static final ZeroOrMore Annotations_1 = zeroOrMore("Annotations_1", Annotations_1_1);
+
+		static final Sequence Annotations = sequence("Annotations", Annotations_1);
+
+		static final NonTerminal Annotation_1_1 = nonTerminal("Annotation_1_1", NORMAL_ANNOTATION);
+
+		static final NonTerminal Annotation_1_2 = nonTerminal("Annotation_1_2", MARKER_ANNOTATION);
+
+		static final NonTerminal Annotation_1_3 = nonTerminal("Annotation_1_3", SINGLE_ELEMENT_ANNOTATION);
+
+		static final Choice Annotation_1 = choice("Annotation_1", Annotation_1_1, Annotation_1_2, Annotation_1_3);
+
+		static final Sequence Annotation = sequence("Annotation", Annotation_1);
+
+		static final NonTerminal NormalAnnotation_2 = nonTerminal("NormalAnnotation_2", QUALIFIED_NAME);
+
+		static final NonTerminal NormalAnnotation_4_1 = nonTerminal("NormalAnnotation_4_1", ELEMENT_VALUE_PAIR_LIST);
+
+		static final ZeroOrOne NormalAnnotation_4 = zeroOrOne("NormalAnnotation_4", NormalAnnotation_4_1);
+
+		static final Sequence NormalAnnotation = sequence("NormalAnnotation", terminal("NormalAnnotation_1", TokenType.AT), NormalAnnotation_2, terminal("NormalAnnotation_3", TokenType.LPAREN), NormalAnnotation_4, terminal("NormalAnnotation_5", TokenType.RPAREN));
+
+		static final NonTerminal MarkerAnnotation_2 = nonTerminal("MarkerAnnotation_2", QUALIFIED_NAME);
+
+		static final Sequence MarkerAnnotation = sequence("MarkerAnnotation", terminal("MarkerAnnotation_1", TokenType.AT), MarkerAnnotation_2);
+
+		static final NonTerminal SingleElementAnnotation_2 = nonTerminal("SingleElementAnnotation_2", QUALIFIED_NAME);
+
+		static final NonTerminal SingleElementAnnotation_4 = nonTerminal("SingleElementAnnotation_4", ELEMENT_VALUE);
+
+		static final Sequence SingleElementAnnotation = sequence("SingleElementAnnotation", terminal("SingleElementAnnotation_1", TokenType.AT), SingleElementAnnotation_2, terminal("SingleElementAnnotation_3", TokenType.LPAREN), SingleElementAnnotation_4, terminal("SingleElementAnnotation_5", TokenType.RPAREN));
+
+		static final NonTerminal ElementValuePairList_1 = nonTerminal("ElementValuePairList_1", ELEMENT_VALUE_PAIR);
+
+		static final NonTerminal ElementValuePairList_2_2 = nonTerminal("ElementValuePairList_2_2", ELEMENT_VALUE_PAIR);
+
+		static final ZeroOrMore ElementValuePairList_2 = zeroOrMore("ElementValuePairList_2", sequence("ElementValuePairList_2", terminal("ElementValuePairList_2_1", TokenType.COMMA), ElementValuePairList_2_2));
+
+		static final Sequence ElementValuePairList = sequence("ElementValuePairList", ElementValuePairList_1, ElementValuePairList_2);
+
+		static final NonTerminal ElementValuePair_1 = nonTerminal("ElementValuePair_1", NAME);
+
+		static final NonTerminal ElementValuePair_3 = nonTerminal("ElementValuePair_3", ELEMENT_VALUE);
+
+		static final Sequence ElementValuePair = sequence("ElementValuePair", ElementValuePair_1, terminal("ElementValuePair_2", TokenType.ASSIGN), ElementValuePair_3);
+
+		static final NonTerminal ElementValue_1_1 = nonTerminal("ElementValue_1_1", CONDITIONAL_EXPRESSION);
+
+		static final NonTerminal ElementValue_1_2 = nonTerminal("ElementValue_1_2", ELEMENT_VALUE_ARRAY_INITIALIZER);
+
+		static final NonTerminal ElementValue_1_3 = nonTerminal("ElementValue_1_3", ANNOTATION);
+
+		static final Choice ElementValue_1 = choice("ElementValue_1", ElementValue_1_1, ElementValue_1_2, ElementValue_1_3);
+
+		static final Sequence ElementValue = sequence("ElementValue", ElementValue_1);
+
+		static final NonTerminal ElementValueArrayInitializer_2_1 = nonTerminal("ElementValueArrayInitializer_2_1", ELEMENT_VALUE_LIST);
+
+		static final ZeroOrOne ElementValueArrayInitializer_2 = zeroOrOne("ElementValueArrayInitializer_2", ElementValueArrayInitializer_2_1);
+
+		static final ZeroOrOne ElementValueArrayInitializer_3 = zeroOrOne("ElementValueArrayInitializer_3", terminal("ElementValueArrayInitializer_3_1", TokenType.COMMA));
+
+		static final Sequence ElementValueArrayInitializer = sequence("ElementValueArrayInitializer", terminal("ElementValueArrayInitializer_1", TokenType.LBRACE), ElementValueArrayInitializer_2, ElementValueArrayInitializer_3, terminal("ElementValueArrayInitializer_4", TokenType.RBRACE));
+
+		static final NonTerminal ElementValueList_1 = nonTerminal("ElementValueList_1", ELEMENT_VALUE);
+
+		static final NonTerminal ElementValueList_2_2 = nonTerminal("ElementValueList_2_2", ELEMENT_VALUE);
+
+		static final ZeroOrMore ElementValueList_2 = zeroOrMore("ElementValueList_2", sequence("ElementValueList_2", terminal("ElementValueList_2_1", TokenType.COMMA), ElementValueList_2_2));
+
+		static final Sequence ElementValueList = sequence("ElementValueList", ElementValueList_1, ElementValueList_2);
+
+		protected void initializeProductions() {
+			addProduction(COMPILATION_UNIT_ENTRY, CompilationUnitEntry, true);
+			addProduction(PACKAGE_DECL_ENTRY, PackageDeclEntry, true);
+			addProduction(IMPORT_DECL_ENTRY, ImportDeclEntry, true);
+			addProduction(TYPE_DECL_ENTRY, TypeDeclEntry, true);
+			addProduction(MEMBER_DECL_ENTRY, MemberDeclEntry, true);
+			addProduction(ANNOTATION_MEMBER_DECL_ENTRY, AnnotationMemberDeclEntry, true);
+			addProduction(MODIFIERS_ENTRY, ModifiersEntry, true);
+			addProduction(ANNOTATIONS_ENTRY, AnnotationsEntry, true);
+			addProduction(METHOD_DECL_ENTRY, MethodDeclEntry, true);
+			addProduction(FIELD_DECL_ENTRY, FieldDeclEntry, true);
+			addProduction(ANNOTATION_ELEMENT_DECL_ENTRY, AnnotationElementDeclEntry, true);
+			addProduction(ENUM_CONSTANT_DECL_ENTRY, EnumConstantDeclEntry, true);
+			addProduction(FORMAL_PARAMETER_ENTRY, FormalParameterEntry, true);
+			addProduction(TYPE_PARAMETER_ENTRY, TypeParameterEntry, true);
+			addProduction(STATEMENTS_ENTRY, StatementsEntry, true);
+			addProduction(BLOCK_STATEMENT_ENTRY, BlockStatementEntry, true);
+			addProduction(EXPRESSION_ENTRY, ExpressionEntry, true);
+			addProduction(TYPE_ENTRY, TypeEntry, true);
+			addProduction(QUALIFIED_NAME_ENTRY, QualifiedNameEntry, true);
+			addProduction(NAME_ENTRY, NameEntry, true);
+			addProduction(EPILOG, Epilog, false);
+			addProduction(NODE_LIST_VAR, NodeListVar, false);
+			addProduction(NODE_VAR, NodeVar, false);
+			addProduction(COMPILATION_UNIT, CompilationUnit, false);
+			addChoicePoint(COMPILATION_UNIT_1, CompilationUnit_1);
+			addProduction(PACKAGE_DECL, PackageDecl, false);
+			addProduction(IMPORT_DECLS, ImportDecls, false);
+			addChoicePoint(IMPORT_DECLS_1, ImportDecls_1);
+			addProduction(IMPORT_DECL, ImportDecl, false);
+			addChoicePoint(IMPORT_DECL_2, ImportDecl_2);
+			addChoicePoint(IMPORT_DECL_4, ImportDecl_4);
+			addProduction(TYPE_DECLS, TypeDecls, false);
+			addChoicePoint(TYPE_DECLS_1, TypeDecls_1);
+			addProduction(MODIFIERS, Modifiers, false);
+			addChoicePoint(MODIFIERS_1, Modifiers_1);
+			addChoicePoint(MODIFIERS_1_1, Modifiers_1_1);
+			addProduction(MODIFIERS_NO_DEFAULT, ModifiersNoDefault, false);
+			addChoicePoint(MODIFIERS_NO_DEFAULT_1, ModifiersNoDefault_1);
+			addChoicePoint(MODIFIERS_NO_DEFAULT_1_1, ModifiersNoDefault_1_1);
+			addProduction(TYPE_DECL, TypeDecl, false);
+			addChoicePoint(TYPE_DECL_1, TypeDecl_1);
+			addChoicePoint(TYPE_DECL_1_2_2, TypeDecl_1_2_2);
+			addProduction(CLASS_OR_INTERFACE_DECL, ClassOrInterfaceDecl, false);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1, ClassOrInterfaceDecl_1);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1_1_3, ClassOrInterfaceDecl_1_1_3);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1_1_4, ClassOrInterfaceDecl_1_1_4);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1_1_5, ClassOrInterfaceDecl_1_1_5);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1_2_3, ClassOrInterfaceDecl_1_2_3);
+			addChoicePoint(CLASS_OR_INTERFACE_DECL_1_2_4, ClassOrInterfaceDecl_1_2_4);
+			addProduction(EXTENDS_LIST, ExtendsList, false);
+			addChoicePoint(EXTENDS_LIST_2, ExtendsList_2);
+			addChoicePoint(EXTENDS_LIST_2_2_2, ExtendsList_2_2_2);
+			addProduction(IMPLEMENTS_LIST, ImplementsList, false);
+			addChoicePoint(IMPLEMENTS_LIST_2, ImplementsList_2);
+			addChoicePoint(IMPLEMENTS_LIST_2_2_2, ImplementsList_2_2_2);
+			addProduction(ENUM_DECL, EnumDecl, false);
+			addChoicePoint(ENUM_DECL_3, EnumDecl_3);
+			addChoicePoint(ENUM_DECL_5, EnumDecl_5);
+			addChoicePoint(ENUM_DECL_5_1, EnumDecl_5_1);
+			addChoicePoint(ENUM_DECL_5_1_2_2, EnumDecl_5_1_2_2);
+			addChoicePoint(ENUM_DECL_6, EnumDecl_6);
+			addChoicePoint(ENUM_DECL_7, EnumDecl_7);
+			addProduction(ENUM_CONSTANT_DECL, EnumConstantDecl, false);
+			addChoicePoint(ENUM_CONSTANT_DECL_3, EnumConstantDecl_3);
+			addChoicePoint(ENUM_CONSTANT_DECL_4, EnumConstantDecl_4);
+			addProduction(ANNOTATION_TYPE_DECL, AnnotationTypeDecl, false);
+			addProduction(ANNOTATION_TYPE_BODY, AnnotationTypeBody, false);
+			addChoicePoint(ANNOTATION_TYPE_BODY_2, AnnotationTypeBody_2);
+			addChoicePoint(ANNOTATION_TYPE_BODY_2_1, AnnotationTypeBody_2_1);
+			addChoicePoint(ANNOTATION_TYPE_BODY_2_1_2, AnnotationTypeBody_2_1_2);
+			addProduction(ANNOTATION_TYPE_BODY_DECL, AnnotationTypeBodyDecl, false);
+			addChoicePoint(ANNOTATION_TYPE_BODY_DECL_1, AnnotationTypeBodyDecl_1);
+			addChoicePoint(ANNOTATION_TYPE_BODY_DECL_1_2_2, AnnotationTypeBodyDecl_1_2_2);
+			addProduction(ANNOTATION_TYPE_MEMBER_DECL, AnnotationTypeMemberDecl, false);
+			addChoicePoint(ANNOTATION_TYPE_MEMBER_DECL_6, AnnotationTypeMemberDecl_6);
+			addProduction(TYPE_PARAMETERS, TypeParameters, false);
+			addChoicePoint(TYPE_PARAMETERS_2, TypeParameters_2);
+			addChoicePoint(TYPE_PARAMETERS_2_2_2, TypeParameters_2_2_2);
+			addProduction(TYPE_PARAMETER, TypeParameter, false);
+			addChoicePoint(TYPE_PARAMETER_3, TypeParameter_3);
+			addProduction(TYPE_BOUNDS, TypeBounds, false);
+			addChoicePoint(TYPE_BOUNDS_2, TypeBounds_2);
+			addChoicePoint(TYPE_BOUNDS_2_2_2, TypeBounds_2_2_2);
+			addProduction(CLASS_OR_INTERFACE_BODY, ClassOrInterfaceBody, false);
+			addProduction(CLASS_OR_INTERFACE_BODY_DECLS, ClassOrInterfaceBodyDecls, false);
+			addChoicePoint(CLASS_OR_INTERFACE_BODY_DECLS_1, ClassOrInterfaceBodyDecls_1);
+			addChoicePoint(CLASS_OR_INTERFACE_BODY_DECLS_1_1, ClassOrInterfaceBodyDecls_1_1);
+			addChoicePoint(CLASS_OR_INTERFACE_BODY_DECLS_1_1_2, ClassOrInterfaceBodyDecls_1_1_2);
+			addProduction(CLASS_OR_INTERFACE_BODY_DECL, ClassOrInterfaceBodyDecl, false);
+			addChoicePoint(CLASS_OR_INTERFACE_BODY_DECL_1, ClassOrInterfaceBodyDecl_1);
+			addChoicePoint(CLASS_OR_INTERFACE_BODY_DECL_1_2_2, ClassOrInterfaceBodyDecl_1_2_2);
+			addProduction(FIELD_DECL, FieldDecl, false);
+			addProduction(VARIABLE_DECL, VariableDecl, false);
+			addProduction(VARIABLE_DECLARATORS, VariableDeclarators, false);
+			addChoicePoint(VARIABLE_DECLARATORS_2, VariableDeclarators_2);
+			addProduction(VARIABLE_DECLARATOR, VariableDeclarator, false);
+			addChoicePoint(VARIABLE_DECLARATOR_2, VariableDeclarator_2);
+			addProduction(VARIABLE_DECLARATOR_ID, VariableDeclaratorId, false);
+			addProduction(ARRAY_DIMS, ArrayDims, false);
+			addChoicePoint(ARRAY_DIMS_1, ArrayDims_1);
+			addProduction(VARIABLE_INITIALIZER, VariableInitializer, false);
+			addChoicePoint(VARIABLE_INITIALIZER_1, VariableInitializer_1);
+			addProduction(ARRAY_INITIALIZER, ArrayInitializer, false);
+			addChoicePoint(ARRAY_INITIALIZER_2, ArrayInitializer_2);
+			addChoicePoint(ARRAY_INITIALIZER_2_2, ArrayInitializer_2_2);
+			addChoicePoint(ARRAY_INITIALIZER_3, ArrayInitializer_3);
+			addProduction(METHOD_DECL, MethodDecl, false);
+			addChoicePoint(METHOD_DECL_1, MethodDecl_1);
+			addChoicePoint(METHOD_DECL_6, MethodDecl_6);
+			addChoicePoint(METHOD_DECL_7, MethodDecl_7);
+			addProduction(FORMAL_PARAMETERS, FormalParameters, false);
+			addChoicePoint(FORMAL_PARAMETERS_2, FormalParameters_2);
+			addProduction(FORMAL_PARAMETER_LIST, FormalParameterList, false);
+			addChoicePoint(FORMAL_PARAMETER_LIST_1, FormalParameterList_1);
+			addChoicePoint(FORMAL_PARAMETER_LIST_1_2_2, FormalParameterList_1_2_2);
+			addProduction(FORMAL_PARAMETER, FormalParameter, false);
+			addChoicePoint(FORMAL_PARAMETER_3, FormalParameter_3);
+			addChoicePoint(FORMAL_PARAMETER_4, FormalParameter_4);
+			addChoicePoint(FORMAL_PARAMETER_4_1_1, FormalParameter_4_1_1);
+			addProduction(THROWS_CLAUSE, ThrowsClause, false);
+			addChoicePoint(THROWS_CLAUSE_3, ThrowsClause_3);
+			addProduction(CONSTRUCTOR_DECL, ConstructorDecl, false);
+			addChoicePoint(CONSTRUCTOR_DECL_1, ConstructorDecl_1);
+			addChoicePoint(CONSTRUCTOR_DECL_4, ConstructorDecl_4);
+			addProduction(EXPLICIT_CONSTRUCTOR_INVOCATION, ExplicitConstructorInvocation, false);
+			addChoicePoint(EXPLICIT_CONSTRUCTOR_INVOCATION_1, ExplicitConstructorInvocation_1);
+			addChoicePoint(EXPLICIT_CONSTRUCTOR_INVOCATION_1_1_1, ExplicitConstructorInvocation_1_1_1);
+			addChoicePoint(EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1, ExplicitConstructorInvocation_1_2_1);
+			addChoicePoint(EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_2, ExplicitConstructorInvocation_1_2_2);
+			addProduction(STATEMENTS, Statements, false);
+			addChoicePoint(STATEMENTS_1, Statements_1);
+			addChoicePoint(STATEMENTS_1_1, Statements_1_1);
+			addChoicePoint(STATEMENTS_1_1_2_1, Statements_1_1_2_1);
+			addChoicePoint(STATEMENTS_1_1_2_2, Statements_1_1_2_2);
+			addProduction(INITIALIZER_DECL, InitializerDecl, false);
+			addProduction(TYPE, Type, false);
+			addChoicePoint(TYPE_1, Type_1);
+			addChoicePoint(TYPE_1_1_2, Type_1_1_2);
+			addChoicePoint(TYPE_1_2_2, Type_1_2_2);
+			addProduction(REFERENCE_TYPE, ReferenceType, false);
+			addChoicePoint(REFERENCE_TYPE_1, ReferenceType_1);
+			addChoicePoint(REFERENCE_TYPE_1_2_2, ReferenceType_1_2_2);
+			addProduction(QUALIFIED_TYPE, QualifiedType, false);
+			addChoicePoint(QUALIFIED_TYPE_2, QualifiedType_2);
+			addChoicePoint(QUALIFIED_TYPE_3, QualifiedType_3);
+			addChoicePoint(QUALIFIED_TYPE_3_4, QualifiedType_3_4);
+			addProduction(TYPE_ARGUMENTS, TypeArguments, false);
+			addChoicePoint(TYPE_ARGUMENTS_2, TypeArguments_2);
+			addProduction(TYPE_ARGUMENTS_OR_DIAMOND, TypeArgumentsOrDiamond, false);
+			addChoicePoint(TYPE_ARGUMENTS_OR_DIAMOND_2, TypeArgumentsOrDiamond_2);
+			addProduction(TYPE_ARGUMENT_LIST, TypeArgumentList, false);
+			addChoicePoint(TYPE_ARGUMENT_LIST, TypeArgumentList);
+			addChoicePoint(TYPE_ARGUMENT_LIST_2_2, TypeArgumentList_2_2);
+			addProduction(TYPE_ARGUMENT, TypeArgument, false);
+			addChoicePoint(TYPE_ARGUMENT_2, TypeArgument_2);
+			addProduction(WILDCARD, Wildcard, false);
+			addChoicePoint(WILDCARD_2, Wildcard_2);
+			addChoicePoint(WILDCARD_2_1, Wildcard_2_1);
+			addProduction(PRIMITIVE_TYPE, PrimitiveType, false);
+			addChoicePoint(PRIMITIVE_TYPE_1, PrimitiveType_1);
+			addProduction(RESULT_TYPE, ResultType, false);
+			addChoicePoint(RESULT_TYPE_1, ResultType_1);
+			addProduction(ANNOTATED_QUALIFIED_TYPE, AnnotatedQualifiedType, false);
+			addProduction(QUALIFIED_NAME, QualifiedName, false);
+			addChoicePoint(QUALIFIED_NAME_2, QualifiedName_2);
+			addProduction(NAME, Name, false);
+			addChoicePoint(NAME_1, Name_1);
+			addProduction(EXPRESSION, Expression, false);
+			addChoicePoint(EXPRESSION_1, Expression_1);
+			addProduction(ASSIGNMENT_EXPRESSION, AssignmentExpression, false);
+			addChoicePoint(ASSIGNMENT_EXPRESSION_2, AssignmentExpression_2);
+			addProduction(LAMBDA_EXPRESSION, LambdaExpression, false);
+			addChoicePoint(LAMBDA_EXPRESSION_1, LambdaExpression_1);
+			addProduction(LAMBDA_EXPRESSION_WITHOUT_CAST, LambdaExpressionWithoutCast, false);
+			addChoicePoint(LAMBDA_EXPRESSION_WITHOUT_CAST_1, LambdaExpressionWithoutCast_1);
+			addProduction(LAMBDA_BODY, LambdaBody, false);
+			addChoicePoint(LAMBDA_BODY_1, LambdaBody_1);
+			addProduction(INFERRED_FORMAL_PARAMETER_LIST, InferredFormalParameterList, false);
+			addChoicePoint(INFERRED_FORMAL_PARAMETER_LIST_2, InferredFormalParameterList_2);
+			addProduction(INFERRED_FORMAL_PARAMETER, InferredFormalParameter, false);
+			addProduction(ASSIGNMENT_OPERATOR, AssignmentOperator, false);
+			addChoicePoint(ASSIGNMENT_OPERATOR_1, AssignmentOperator_1);
+			addProduction(CONDITIONAL_EXPRESSION, ConditionalExpression, false);
+			addChoicePoint(CONDITIONAL_EXPRESSION_2, ConditionalExpression_2);
+			addChoicePoint(CONDITIONAL_EXPRESSION_2_4, ConditionalExpression_2_4);
+			addProduction(CONDITIONAL_OR_EXPRESSION, ConditionalOrExpression, false);
+			addChoicePoint(CONDITIONAL_OR_EXPRESSION_2, ConditionalOrExpression_2);
+			addProduction(CONDITIONAL_AND_EXPRESSION, ConditionalAndExpression, false);
+			addChoicePoint(CONDITIONAL_AND_EXPRESSION_2, ConditionalAndExpression_2);
+			addProduction(INCLUSIVE_OR_EXPRESSION, InclusiveOrExpression, false);
+			addChoicePoint(INCLUSIVE_OR_EXPRESSION_2, InclusiveOrExpression_2);
+			addProduction(EXCLUSIVE_OR_EXPRESSION, ExclusiveOrExpression, false);
+			addChoicePoint(EXCLUSIVE_OR_EXPRESSION_2, ExclusiveOrExpression_2);
+			addProduction(AND_EXPRESSION, AndExpression, false);
+			addChoicePoint(AND_EXPRESSION_2, AndExpression_2);
+			addProduction(EQUALITY_EXPRESSION, EqualityExpression, false);
+			addChoicePoint(EQUALITY_EXPRESSION_2, EqualityExpression_2);
+			addChoicePoint(EQUALITY_EXPRESSION_2_1, EqualityExpression_2_1);
+			addProduction(INSTANCE_OF_EXPRESSION, InstanceOfExpression, false);
+			addChoicePoint(INSTANCE_OF_EXPRESSION_2, InstanceOfExpression_2);
+			addProduction(RELATIONAL_EXPRESSION, RelationalExpression, false);
+			addChoicePoint(RELATIONAL_EXPRESSION_2, RelationalExpression_2);
+			addChoicePoint(RELATIONAL_EXPRESSION_2_1, RelationalExpression_2_1);
+			addProduction(SHIFT_EXPRESSION, ShiftExpression, false);
+			addChoicePoint(SHIFT_EXPRESSION_2, ShiftExpression_2);
+			addChoicePoint(SHIFT_EXPRESSION_2_1, ShiftExpression_2_1);
+			addProduction(ADDITIVE_EXPRESSION, AdditiveExpression, false);
+			addChoicePoint(ADDITIVE_EXPRESSION_2, AdditiveExpression_2);
+			addChoicePoint(ADDITIVE_EXPRESSION_2_1, AdditiveExpression_2_1);
+			addProduction(MULTIPLICATIVE_EXPRESSION, MultiplicativeExpression, false);
+			addChoicePoint(MULTIPLICATIVE_EXPRESSION_2, MultiplicativeExpression_2);
+			addChoicePoint(MULTIPLICATIVE_EXPRESSION_2_1, MultiplicativeExpression_2_1);
+			addProduction(UNARY_EXPRESSION, UnaryExpression, false);
+			addChoicePoint(UNARY_EXPRESSION_1, UnaryExpression_1);
+			addChoicePoint(UNARY_EXPRESSION_1_2_1, UnaryExpression_1_2_1);
+			addProduction(PREFIX_EXPRESSION, PrefixExpression, false);
+			addChoicePoint(PREFIX_EXPRESSION_1, PrefixExpression_1);
+			addProduction(UNARY_EXPRESSION_NOT_PLUS_MINUS, UnaryExpressionNotPlusMinus, false);
+			addChoicePoint(UNARY_EXPRESSION_NOT_PLUS_MINUS_1, UnaryExpressionNotPlusMinus_1);
+			addChoicePoint(UNARY_EXPRESSION_NOT_PLUS_MINUS_1_1_1, UnaryExpressionNotPlusMinus_1_1_1);
+			addProduction(POSTFIX_EXPRESSION, PostfixExpression, false);
+			addChoicePoint(POSTFIX_EXPRESSION_2, PostfixExpression_2);
+			addChoicePoint(POSTFIX_EXPRESSION_2_1, PostfixExpression_2_1);
+			addProduction(CAST_EXPRESSION, CastExpression, false);
+			addChoicePoint(CAST_EXPRESSION_3, CastExpression_3);
+			addProduction(REFERENCE_CAST_TYPE_REST, ReferenceCastTypeRest, false);
+			addChoicePoint(REFERENCE_CAST_TYPE_REST_1, ReferenceCastTypeRest_1);
+			addChoicePoint(REFERENCE_CAST_TYPE_REST_1_1, ReferenceCastTypeRest_1_1);
+			addProduction(LITERAL, Literal, false);
+			addChoicePoint(LITERAL_1, Literal_1);
+			addProduction(PRIMARY_EXPRESSION, PrimaryExpression, false);
+			addChoicePoint(PRIMARY_EXPRESSION_1, PrimaryExpression_1);
+			addProduction(PRIMARY_NO_NEW_ARRAY, PrimaryNoNewArray, false);
+			addChoicePoint(PRIMARY_NO_NEW_ARRAY_2, PrimaryNoNewArray_2);
+			addProduction(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX, PrimaryExpressionWithoutSuperSuffix, false);
+			addChoicePoint(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2, PrimaryExpressionWithoutSuperSuffix_2);
+			addProduction(PRIMARY_PREFIX, PrimaryPrefix, false);
+			addChoicePoint(PRIMARY_PREFIX_1, PrimaryPrefix_1);
+			addChoicePoint(PRIMARY_PREFIX_1_3_2, PrimaryPrefix_1_3_2);
+			addChoicePoint(PRIMARY_PREFIX_1_3_2_1_2, PrimaryPrefix_1_3_2_1_2);
+			addProduction(PRIMARY_SUFFIX, PrimarySuffix, false);
+			addChoicePoint(PRIMARY_SUFFIX_1, PrimarySuffix_1);
+			addProduction(PRIMARY_SUFFIX_WITHOUT_SUPER, PrimarySuffixWithoutSuper, false);
+			addChoicePoint(PRIMARY_SUFFIX_WITHOUT_SUPER_1, PrimarySuffixWithoutSuper_1);
+			addChoicePoint(PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2, PrimarySuffixWithoutSuper_1_1_2);
+			addProduction(FIELD_ACCESS, FieldAccess, false);
+			addProduction(METHOD_INVOCATION, MethodInvocation, false);
+			addChoicePoint(METHOD_INVOCATION_1, MethodInvocation_1);
+			addProduction(ARGUMENTS, Arguments, false);
+			addChoicePoint(ARGUMENTS_2, Arguments_2);
+			addChoicePoint(ARGUMENTS_2_1, Arguments_2_1);
+			addChoicePoint(ARGUMENTS_2_1_2_2, Arguments_2_1_2_2);
+			addProduction(METHOD_REFERENCE_SUFFIX, MethodReferenceSuffix, false);
+			addChoicePoint(METHOD_REFERENCE_SUFFIX_2, MethodReferenceSuffix_2);
+			addChoicePoint(METHOD_REFERENCE_SUFFIX_3, MethodReferenceSuffix_3);
+			addProduction(CLASS_CREATION_EXPR, ClassCreationExpr, false);
+			addChoicePoint(CLASS_CREATION_EXPR_2, ClassCreationExpr_2);
+			addChoicePoint(CLASS_CREATION_EXPR_6, ClassCreationExpr_6);
+			addProduction(ARRAY_CREATION_EXPR, ArrayCreationExpr, false);
+			addChoicePoint(ARRAY_CREATION_EXPR_2, ArrayCreationExpr_2);
+			addChoicePoint(ARRAY_CREATION_EXPR_4, ArrayCreationExpr_4);
+			addProduction(ARRAY_CREATION_EXPR_REST, ArrayCreationExprRest, false);
+			addChoicePoint(ARRAY_CREATION_EXPR_REST, ArrayCreationExprRest);
+			addProduction(ARRAY_DIM_EXPRS_MANDATORY, ArrayDimExprsMandatory, false);
+			addChoicePoint(ARRAY_DIM_EXPRS_MANDATORY_1, ArrayDimExprsMandatory_1);
+			addProduction(ARRAY_DIMS_MANDATORY, ArrayDimsMandatory, false);
+			addChoicePoint(ARRAY_DIMS_MANDATORY_1, ArrayDimsMandatory_1);
+			addProduction(STATEMENT, Statement, false);
+			addChoicePoint(STATEMENT_1, Statement_1);
+			addProduction(ASSERT_STATEMENT, AssertStatement, false);
+			addChoicePoint(ASSERT_STATEMENT_3, AssertStatement_3);
+			addProduction(LABELED_STATEMENT, LabeledStatement, false);
+			addProduction(BLOCK, Block, false);
+			addProduction(BLOCK_STATEMENT, BlockStatement, false);
+			addChoicePoint(BLOCK_STATEMENT_1, BlockStatement_1);
+			addProduction(VARIABLE_DECL_EXPRESSION, VariableDeclExpression, false);
+			addProduction(EMPTY_STATEMENT, EmptyStatement, false);
+			addProduction(EXPRESSION_STATEMENT, ExpressionStatement, false);
+			addProduction(STATEMENT_EXPRESSION, StatementExpression, false);
+			addProduction(SWITCH_STATEMENT, SwitchStatement, false);
+			addChoicePoint(SWITCH_STATEMENT_6, SwitchStatement_6);
+			addProduction(SWITCH_ENTRY, SwitchEntry, false);
+			addChoicePoint(SWITCH_ENTRY_1, SwitchEntry_1);
+			addProduction(IF_STATEMENT, IfStatement, false);
+			addChoicePoint(IF_STATEMENT_6, IfStatement_6);
+			addProduction(WHILE_STATEMENT, WhileStatement, false);
+			addProduction(DO_STATEMENT, DoStatement, false);
+			addProduction(FOR_STATEMENT, ForStatement, false);
+			addChoicePoint(FOR_STATEMENT_3, ForStatement_3);
+			addChoicePoint(FOR_STATEMENT_3_2_1, ForStatement_3_2_1);
+			addChoicePoint(FOR_STATEMENT_3_2_3, ForStatement_3_2_3);
+			addChoicePoint(FOR_STATEMENT_3_2_5, ForStatement_3_2_5);
+			addProduction(FOR_INIT, ForInit, false);
+			addChoicePoint(FOR_INIT_1, ForInit_1);
+			addProduction(STATEMENT_EXPRESSION_LIST, StatementExpressionList, false);
+			addChoicePoint(STATEMENT_EXPRESSION_LIST_2, StatementExpressionList_2);
+			addProduction(FOR_UPDATE, ForUpdate, false);
+			addProduction(BREAK_STATEMENT, BreakStatement, false);
+			addChoicePoint(BREAK_STATEMENT_2, BreakStatement_2);
+			addProduction(CONTINUE_STATEMENT, ContinueStatement, false);
+			addChoicePoint(CONTINUE_STATEMENT_2, ContinueStatement_2);
+			addProduction(RETURN_STATEMENT, ReturnStatement, false);
+			addChoicePoint(RETURN_STATEMENT_2, ReturnStatement_2);
+			addProduction(THROW_STATEMENT, ThrowStatement, false);
+			addProduction(SYNCHRONIZED_STATEMENT, SynchronizedStatement, false);
+			addProduction(TRY_STATEMENT, TryStatement, false);
+			addChoicePoint(TRY_STATEMENT_2, TryStatement_2);
+			addChoicePoint(TRY_STATEMENT_2_1_3, TryStatement_2_1_3);
+			addChoicePoint(TRY_STATEMENT_2_1_4, TryStatement_2_1_4);
+			addChoicePoint(TRY_STATEMENT_2_2_2, TryStatement_2_2_2);
+			addChoicePoint(TRY_STATEMENT_2_2_2_1_2, TryStatement_2_2_2_1_2);
+			addProduction(CATCH_CLAUSES, CatchClauses, false);
+			addChoicePoint(CATCH_CLAUSES_1, CatchClauses_1);
+			addProduction(CATCH_CLAUSE, CatchClause, false);
+			addProduction(CATCH_FORMAL_PARAMETER, CatchFormalParameter, false);
+			addChoicePoint(CATCH_FORMAL_PARAMETER_3, CatchFormalParameter_3);
+			addChoicePoint(CATCH_FORMAL_PARAMETER_3_1, CatchFormalParameter_3_1);
+			addProduction(RESOURCE_SPECIFICATION, ResourceSpecification, false);
+			addChoicePoint(RESOURCE_SPECIFICATION_3, ResourceSpecification_3);
+			addChoicePoint(RESOURCE_SPECIFICATION_4, ResourceSpecification_4);
+			addProduction(R_U_N_S_I_G_N_E_D_S_H_I_F_T, RUNSIGNEDSHIFT, false);
+			addProduction(R_S_I_G_N_E_D_S_H_I_F_T, RSIGNEDSHIFT, false);
+			addProduction(ANNOTATIONS, Annotations, false);
+			addChoicePoint(ANNOTATIONS_1, Annotations_1);
+			addProduction(ANNOTATION, Annotation, false);
+			addChoicePoint(ANNOTATION_1, Annotation_1);
+			addProduction(NORMAL_ANNOTATION, NormalAnnotation, false);
+			addChoicePoint(NORMAL_ANNOTATION_4, NormalAnnotation_4);
+			addProduction(MARKER_ANNOTATION, MarkerAnnotation, false);
+			addProduction(SINGLE_ELEMENT_ANNOTATION, SingleElementAnnotation, false);
+			addProduction(ELEMENT_VALUE_PAIR_LIST, ElementValuePairList, false);
+			addChoicePoint(ELEMENT_VALUE_PAIR_LIST_2, ElementValuePairList_2);
+			addProduction(ELEMENT_VALUE_PAIR, ElementValuePair, false);
+			addProduction(ELEMENT_VALUE, ElementValue, false);
+			addChoicePoint(ELEMENT_VALUE_1, ElementValue_1);
+			addProduction(ELEMENT_VALUE_ARRAY_INITIALIZER, ElementValueArrayInitializer, false);
+			addChoicePoint(ELEMENT_VALUE_ARRAY_INITIALIZER_2, ElementValueArrayInitializer_2);
+			addChoicePoint(ELEMENT_VALUE_ARRAY_INITIALIZER_3, ElementValueArrayInitializer_3);
+			addProduction(ELEMENT_VALUE_LIST, ElementValueList, false);
+			addChoicePoint(ELEMENT_VALUE_LIST_2, ElementValueList_2);
+		}
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.COMPILATION_UNIT_ENTRY; })
+		nonTerminal(ret, CompilationUnit)
+		action({ return ret; })
+	) */
+	protected BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException {
+		BUTree<SCompilationUnit> ret;
+		int __token;
+		entryPoint = JavaGrammar.COMPILATION_UNIT_ENTRY;
+		pushCallStack(JavaGrammar.CompilationUnitEntry_1);
+		ret = parseCompilationUnit();
+		popCallStack();
+		return ret;
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.PACKAGE_DECL_ENTRY; })
+		nonTerminal(ret, PackageDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException {
+		BUTree<SPackageDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.PACKAGE_DECL_ENTRY;
+		pushCallStack(JavaGrammar.PackageDeclEntry_1);
+		ret = parsePackageDecl();
+		popCallStack();
+		pushCallStack(JavaGrammar.PackageDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.IMPORT_DECL_ENTRY; })
+		nonTerminal(ret, ImportDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SImportDecl> parseImportDeclEntry() throws ParseException {
+		BUTree<SImportDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.IMPORT_DECL_ENTRY;
+		pushCallStack(JavaGrammar.ImportDeclEntry_1);
+		ret = parseImportDecl();
+		popCallStack();
+		pushCallStack(JavaGrammar.ImportDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.TYPE_DECL_ENTRY; })
+		nonTerminal(ret, TypeDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException {
+		BUTree<? extends STypeDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.TYPE_DECL_ENTRY;
+		pushCallStack(JavaGrammar.TypeDeclEntry_1);
+		ret = parseTypeDecl();
+		popCallStack();
+		pushCallStack(JavaGrammar.TypeDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.MEMBER_DECL_ENTRY; })
+		nonTerminal(ret, ClassOrInterfaceBodyDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind typeKind) throws ParseException {
+		BUTree<? extends SMemberDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.MEMBER_DECL_ENTRY;
+		pushCallStack(JavaGrammar.MemberDeclEntry_1);
+		ret = parseClassOrInterfaceBodyDecl(typeKind);
+		popCallStack();
+		pushCallStack(JavaGrammar.MemberDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.ANNOTATION_MEMBER_DECL_ENTRY; })
+		nonTerminal(ret, AnnotationTypeBodyDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException {
+		BUTree<? extends SMemberDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.ANNOTATION_MEMBER_DECL_ENTRY;
+		pushCallStack(JavaGrammar.AnnotationMemberDeclEntry_1);
+		ret = parseAnnotationTypeBodyDecl();
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationMemberDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.MODIFIERS_ENTRY; })
+		nonTerminal(ret, Modifiers)
+		nonTerminal(Epilog)
+		action({ return ret; })
+	) */
+	protected BUTree<SNodeList> parseModifiersEntry() throws ParseException {
+		BUTree<SNodeList> ret;
+		int __token;
+		entryPoint = JavaGrammar.MODIFIERS_ENTRY;
+		pushCallStack(JavaGrammar.ModifiersEntry_1);
+		ret = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.ModifiersEntry_2);
+		parseEpilog();
+		popCallStack();
+		return ret;
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.ANNOTATIONS_ENTRY; })
+		nonTerminal(ret, Annotations)
+		nonTerminal(Epilog)
+		action({ return ret; })
+	) */
+	protected BUTree<SNodeList> parseAnnotationsEntry() throws ParseException {
+		BUTree<SNodeList> ret;
+		int __token;
+		entryPoint = JavaGrammar.ANNOTATIONS_ENTRY;
+		pushCallStack(JavaGrammar.AnnotationsEntry_1);
+		ret = parseAnnotations();
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationsEntry_2);
+		parseEpilog();
+		popCallStack();
+		return ret;
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.METHOD_DECL_ENTRY; })
+		action({ run(); })
+		nonTerminal(modifiers, Modifiers)
+		nonTerminal(ret, MethodDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException {
+		BUTree<SNodeList> modifiers;
+		BUTree<SMethodDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.METHOD_DECL_ENTRY;
+		run();
+		pushCallStack(JavaGrammar.MethodDeclEntry_1);
+		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodDeclEntry_2);
+		ret = parseMethodDecl(modifiers);
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodDeclEntry_3);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.FIELD_DECL_ENTRY; })
+		action({ run(); })
+		nonTerminal(modifiers, Modifiers)
+		nonTerminal(ret, FieldDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException {
+		BUTree<SNodeList> modifiers;
+		BUTree<SFieldDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.FIELD_DECL_ENTRY;
+		run();
+		pushCallStack(JavaGrammar.FieldDeclEntry_1);
+		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.FieldDeclEntry_2);
+		ret = parseFieldDecl(modifiers);
+		popCallStack();
+		pushCallStack(JavaGrammar.FieldDeclEntry_3);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.ANNOTATION_ELEMENT_DECL_ENTRY; })
+		action({ run(); })
+		nonTerminal(modifiers, Modifiers)
+		nonTerminal(ret, AnnotationTypeMemberDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException {
+		BUTree<SNodeList> modifiers;
+		BUTree<SAnnotationMemberDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.ANNOTATION_ELEMENT_DECL_ENTRY;
+		run();
+		pushCallStack(JavaGrammar.AnnotationElementDeclEntry_1);
+		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationElementDeclEntry_2);
+		ret = parseAnnotationTypeMemberDecl(modifiers);
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationElementDeclEntry_3);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.ENUM_CONSTANT_DECL_ENTRY; })
+		nonTerminal(ret, EnumConstantDecl)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException {
+		BUTree<SEnumConstantDecl> ret;
+		int __token;
+		entryPoint = JavaGrammar.ENUM_CONSTANT_DECL_ENTRY;
+		pushCallStack(JavaGrammar.EnumConstantDeclEntry_1);
+		ret = parseEnumConstantDecl();
+		popCallStack();
+		pushCallStack(JavaGrammar.EnumConstantDeclEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.FORMAL_PARAMETER_ENTRY; })
+		nonTerminal(ret, FormalParameter)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException {
+		BUTree<SFormalParameter> ret;
+		int __token;
+		entryPoint = JavaGrammar.FORMAL_PARAMETER_ENTRY;
+		pushCallStack(JavaGrammar.FormalParameterEntry_1);
+		ret = parseFormalParameter();
+		popCallStack();
+		pushCallStack(JavaGrammar.FormalParameterEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.TYPE_PARAMETER_ENTRY; })
+		nonTerminal(ret, TypeParameter)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException {
+		BUTree<STypeParameter> ret;
+		int __token;
+		entryPoint = JavaGrammar.TYPE_PARAMETER_ENTRY;
+		pushCallStack(JavaGrammar.TypeParameterEntry_1);
+		ret = parseTypeParameter();
+		popCallStack();
+		pushCallStack(JavaGrammar.TypeParameterEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.STATEMENTS_ENTRY; })
+		nonTerminal(ret, Statements)
+		nonTerminal(Epilog)
+		action({ return ret; })
+	) */
+	protected BUTree<SNodeList> parseStatementsEntry() throws ParseException {
+		BUTree<SNodeList> ret;
+		int __token;
+		entryPoint = JavaGrammar.STATEMENTS_ENTRY;
+		pushCallStack(JavaGrammar.StatementsEntry_1);
+		ret = parseStatements(false);
+		popCallStack();
+		pushCallStack(JavaGrammar.StatementsEntry_2);
+		parseEpilog();
+		popCallStack();
+		return ret;
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.BLOCK_STATEMENT_ENTRY; })
+		nonTerminal(ret, BlockStatement)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException {
+		BUTree<? extends SStmt> ret;
+		int __token;
+		entryPoint = JavaGrammar.BLOCK_STATEMENT_ENTRY;
+		pushCallStack(JavaGrammar.BlockStatementEntry_1);
+		ret = parseBlockStatement();
+		popCallStack();
+		pushCallStack(JavaGrammar.BlockStatementEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.EXPRESSION_ENTRY; })
+		nonTerminal(ret, Expression)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends SExpr> parseExpressionEntry() throws ParseException {
+		BUTree<? extends SExpr> ret;
+		int __token;
+		entryPoint = JavaGrammar.EXPRESSION_ENTRY;
+		pushCallStack(JavaGrammar.ExpressionEntry_1);
+		ret = parseExpression();
+		popCallStack();
+		pushCallStack(JavaGrammar.ExpressionEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.TYPE_ENTRY; })
+		action({ run(); })
+		nonTerminal(annotations, Annotations)
+		nonTerminal(ret, Type)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<? extends SType> parseTypeEntry() throws ParseException {
+		BUTree<SNodeList> annotations;
+		BUTree<? extends SType> ret;
+		int __token;
+		entryPoint = JavaGrammar.TYPE_ENTRY;
+		run();
+		pushCallStack(JavaGrammar.TypeEntry_1);
+		annotations = parseAnnotations();
+		popCallStack();
+		pushCallStack(JavaGrammar.TypeEntry_2);
+		ret = parseType(annotations);
+		popCallStack();
+		pushCallStack(JavaGrammar.TypeEntry_3);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.QUALIFIED_NAME_ENTRY; })
+		nonTerminal(ret, QualifiedName)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException {
+		BUTree<SQualifiedName> ret;
+		int __token;
+		entryPoint = JavaGrammar.QUALIFIED_NAME_ENTRY;
+		pushCallStack(JavaGrammar.QualifiedNameEntry_1);
+		ret = parseQualifiedName();
+		popCallStack();
+		pushCallStack(JavaGrammar.QualifiedNameEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		action({ entryPoint = JavaGrammar.NAME_ENTRY; })
+		nonTerminal(ret, Name)
+		nonTerminal(Epilog)
+		action({ return dressWithPrologAndEpilog(ret); })
+	) */
+	protected BUTree<SName> parseNameEntry() throws ParseException {
+		BUTree<SName> ret;
+		int __token;
+		entryPoint = JavaGrammar.NAME_ENTRY;
+		pushCallStack(JavaGrammar.NameEntry_1);
+		ret = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.NameEntry_2);
+		parseEpilog();
+		popCallStack();
+		return dressWithPrologAndEpilog(ret);
+	}
+
+	/* sequence(
+		terminal(EOF)
+	) */
+	protected void parseEpilog() throws ParseException {
+		int __token;
+		parse(TokenType.EOF);
 	}
 
 	/* sequence(
@@ -49,18 +2968,9 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SNodeList> parseNodeListVar() throws ParseException {
 		Token id;
+		int __token;
 		id = parse(TokenType.NODE_LIST_VARIABLE);
 		return makeVar(id);
-	}
-
-	/* sequence(
-		terminal(id, NODE_LIST_VARIABLE)
-	) */
-	private int matchNodeListVar(int lookahead) {
-		lookahead = match(lookahead, TokenType.NODE_LIST_VARIABLE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -69,26 +2979,14 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SName> parseNodeVar() throws ParseException {
 		Token id;
+		int __token;
 		id = parse(TokenType.NODE_VARIABLE);
 		return makeVar(id);
 	}
 
 	/* sequence(
-		terminal(id, NODE_VARIABLE)
-	) */
-	private int matchNodeVar(int lookahead) {
-		lookahead = match(lookahead, TokenType.NODE_VARIABLE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		action({ run(); })
 		zeroOrOne(
-			lookAhead(
-				nonTerminal(PackageDecl)
-			)
 			nonTerminal(packageDecl, PackageDecl)
 		)
 		nonTerminal(imports, ImportDecls)
@@ -102,39 +3000,25 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> imports;
 		BUTree<SNodeList> types;
 		BUTree<SCompilationUnit> compilationUnit;
+		int __token;
 		run();
-		if (matchCompilationUnit_lookahead1(0) != -1) {
+		__token = getToken(0).kind;
+		if (predict(JavaGrammar.COMPILATION_UNIT_1) == 1) {
+			pushCallStack(JavaGrammar.CompilationUnit_1_1);
 			packageDecl = parsePackageDecl();
+			popCallStack();
 		}
+		pushCallStack(JavaGrammar.CompilationUnit_2);
 		imports = parseImportDecls();
+		popCallStack();
+		pushCallStack(JavaGrammar.CompilationUnit_3);
 		types = parseTypeDecls();
+		popCallStack();
 		compilationUnit = dress(SCompilationUnit.make(packageDecl, imports, types));
+		pushCallStack(JavaGrammar.CompilationUnit_4);
 		parseEpilog();
+		popCallStack();
 		return dressWithPrologAndEpilog(compilationUnit);
-	}
-
-	/* sequence(
-		nonTerminal(PackageDecl)
-	) */
-	private int matchCompilationUnit_lookahead1(int lookahead) {
-		lookahead = matchPackageDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(EOF)
-		terminal(EOF)
-	) */
-	protected void parseEpilog() throws ParseException {
-		if (match(0, TokenType.EOF) != -1) {
-			parse(TokenType.EOF);
-		} else if (match(0, TokenType.EOF) != -1) {
-			parse(TokenType.EOF);
-		} else {
-			throw produceParseException(TokenType.EOF);
-		}
 	}
 
 	/* sequence(
@@ -148,34 +3032,17 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SQualifiedName> name;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.PackageDecl_1);
 		annotations = parseAnnotations();
+		popCallStack();
 		parse(TokenType.PACKAGE);
+		pushCallStack(JavaGrammar.PackageDecl_3);
 		name = parseQualifiedName();
+		popCallStack();
 		parse(TokenType.SEMICOLON);
 		return dress(SPackageDecl.make(annotations, name));
-	}
-
-	/* sequence(
-		nonTerminal(annotations, Annotations)
-		terminal(PACKAGE)
-		nonTerminal(name, QualifiedName)
-		terminal(SEMICOLON)
-	) */
-	private int matchPackageDecl(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.PACKAGE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -188,9 +3055,14 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseImportDecls() throws ParseException {
 		BUTree<SNodeList> imports = emptyList();
 		BUTree<SImportDecl> importDecl = null;
-		while (match(0, TokenType.IMPORT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (__token == TokenType.IMPORT) {
+			pushCallStack(JavaGrammar.ImportDecls_1_1);
 			importDecl = parseImportDecl();
+			popCallStack();
 			imports = append(imports, importDecl);
+			__token = getToken(0).kind;
 		}
 		return imports;
 	}
@@ -215,14 +3087,19 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedName> name;
 		boolean isStatic = false;
 		boolean isAsterisk = false;
+		int __token;
 		run();
 		parse(TokenType.IMPORT);
-		if (match(0, TokenType.STATIC) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.STATIC) {
 			parse(TokenType.STATIC);
 			isStatic = true;
 		}
+		pushCallStack(JavaGrammar.ImportDecl_3);
 		name = parseQualifiedName();
-		if (match(0, TokenType.DOT) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.DOT) {
 			parse(TokenType.DOT);
 			parse(TokenType.STAR);
 			isAsterisk = true;
@@ -241,16 +3118,20 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
-		while (match(0, TokenType.SEMICOLON, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.PUBLIC, TokenType.FINAL, TokenType.NATIVE, TokenType.STRICTFP, TokenType.PROTECTED, TokenType.STATIC, TokenType.SYNCHRONIZED, TokenType.PRIVATE, TokenType.AT, TokenType.VOLATILE, TokenType.DEFAULT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86)) != 0)) {
+			pushCallStack(JavaGrammar.TypeDecls_1_1);
 			typeDecl = parseTypeDecl();
+			popCallStack();
 			types = append(types, typeDecl);
+			__token = getToken(0).kind;
 		}
 		return types;
 	}
 
 	/* sequence(
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(PUBLIC)
@@ -311,525 +3192,60 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseModifiers() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
-		while (matchModifiers_lookahead1(0) != -1) {
-			if (match(0, TokenType.PUBLIC) != -1) {
-				parse(TokenType.PUBLIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			} else if (match(0, TokenType.PROTECTED) != -1) {
-				parse(TokenType.PROTECTED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (match(0, TokenType.PRIVATE) != -1) {
-				parse(TokenType.PRIVATE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (match(0, TokenType.ABSTRACT) != -1) {
-				parse(TokenType.ABSTRACT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (match(0, TokenType.DEFAULT) != -1) {
-				parse(TokenType.DEFAULT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-			} else if (match(0, TokenType.STATIC) != -1) {
-				parse(TokenType.STATIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (match(0, TokenType.FINAL) != -1) {
-				parse(TokenType.FINAL);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (match(0, TokenType.TRANSIENT) != -1) {
-				parse(TokenType.TRANSIENT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (match(0, TokenType.VOLATILE) != -1) {
-				parse(TokenType.VOLATILE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
-				parse(TokenType.SYNCHRONIZED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (match(0, TokenType.NATIVE) != -1) {
-				parse(TokenType.NATIVE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (match(0, TokenType.STRICTFP) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.MODIFIERS_1) == 1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.Modifiers_1_1_13_1);
+				ann = parseAnnotation();
+				popCallStack();
+				modifiers = append(modifiers, ann);
+			} else if (__token == TokenType.STRICTFP) {
 				parse(TokenType.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (match(0, TokenType.AT) != -1) {
-				ann = parseAnnotation();
-				modifiers = append(modifiers, ann);
-			} else {
-				throw produceParseException(TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.NATIVE, TokenType.PUBLIC, TokenType.FINAL, TokenType.PROTECTED, TokenType.STRICTFP, TokenType.STATIC, TokenType.AT, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.VOLATILE);
-			}
+			} else if (__token == TokenType.NATIVE) {
+				parse(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				parse(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.VOLATILE) {
+				parse(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.TRANSIENT) {
+				parse(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.FINAL) {
+				parse(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.STATIC) {
+				parse(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.DEFAULT) {
+				parse(TokenType.DEFAULT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
+			} else if (__token == TokenType.ABSTRACT) {
+				parse(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.PRIVATE) {
+				parse(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.PROTECTED) {
+				parse(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PUBLIC) {
+				parse(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else
+				throw produceParseException(TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
+			__token = getToken(0).kind;
 		}
 		return modifiers;
 	}
 
 	/* sequence(
 		zeroOrMore(
-			lookAhead(2)
-			choice(
-				sequence(
-					terminal(PUBLIC)
-				)
-				sequence(
-					terminal(PROTECTED)
-				)
-				sequence(
-					terminal(PRIVATE)
-				)
-				sequence(
-					terminal(ABSTRACT)
-				)
-				sequence(
-					terminal(DEFAULT)
-				)
-				sequence(
-					terminal(STATIC)
-				)
-				sequence(
-					terminal(FINAL)
-				)
-				sequence(
-					terminal(TRANSIENT)
-				)
-				sequence(
-					terminal(VOLATILE)
-				)
-				sequence(
-					terminal(SYNCHRONIZED)
-				)
-				sequence(
-					terminal(NATIVE)
-				)
-				sequence(
-					terminal(STRICTFP)
-				)
-				sequence(
-					nonTerminal(ann, Annotation)
-				)
-			)
-		)
-	) */
-	private int matchModifiers(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 7);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchModifiers_1(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 7, -1);
-		return memoizeMatch(initialLookahead, 7, lookahead);
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(DEFAULT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiers_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchModifiers_1_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchModifiers_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(DEFAULT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiers_1_1(int lookahead) {
-		lookahead = matchModifiers_1_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(PUBLIC)
-		)
-		sequence(
-			terminal(PROTECTED)
-		)
-		sequence(
-			terminal(PRIVATE)
-		)
-		sequence(
-			terminal(ABSTRACT)
-		)
-		sequence(
-			terminal(DEFAULT)
-		)
-		sequence(
-			terminal(STATIC)
-		)
-		sequence(
-			terminal(FINAL)
-		)
-		sequence(
-			terminal(TRANSIENT)
-		)
-		sequence(
-			terminal(VOLATILE)
-		)
-		sequence(
-			terminal(SYNCHRONIZED)
-		)
-		sequence(
-			terminal(NATIVE)
-		)
-		sequence(
-			terminal(STRICTFP)
-		)
-		sequence(
-			nonTerminal(ann, Annotation)
-		)
-	) */
-	private int matchModifiers_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchModifiers_1_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_9(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_10(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_11(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_12(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiers_1_1_2_13(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(PUBLIC)
-	) */
-	private int matchModifiers_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.PUBLIC);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SYNCHRONIZED)
-	) */
-	private int matchModifiers_1_1_2_10(int lookahead) {
-		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(NATIVE)
-	) */
-	private int matchModifiers_1_1_2_11(int lookahead) {
-		lookahead = match(lookahead, TokenType.NATIVE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(STRICTFP)
-	) */
-	private int matchModifiers_1_1_2_12(int lookahead) {
-		lookahead = match(lookahead, TokenType.STRICTFP);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ann, Annotation)
-	) */
-	private int matchModifiers_1_1_2_13(int lookahead) {
-		lookahead = matchAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(PROTECTED)
-	) */
-	private int matchModifiers_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.PROTECTED);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(PRIVATE)
-	) */
-	private int matchModifiers_1_1_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.PRIVATE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ABSTRACT)
-	) */
-	private int matchModifiers_1_1_2_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.ABSTRACT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DEFAULT)
-	) */
-	private int matchModifiers_1_1_2_5(int lookahead) {
-		lookahead = match(lookahead, TokenType.DEFAULT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(STATIC)
-	) */
-	private int matchModifiers_1_1_2_6(int lookahead) {
-		lookahead = match(lookahead, TokenType.STATIC);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FINAL)
-	) */
-	private int matchModifiers_1_1_2_7(int lookahead) {
-		lookahead = match(lookahead, TokenType.FINAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(TRANSIENT)
-	) */
-	private int matchModifiers_1_1_2_8(int lookahead) {
-		lookahead = match(lookahead, TokenType.TRANSIENT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(VOLATILE)
-	) */
-	private int matchModifiers_1_1_2_9(int lookahead) {
-		lookahead = match(lookahead, TokenType.VOLATILE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(DEFAULT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiers_lookahead1(int lookahead) {
-		if (match(0, TokenType.VOLATILE) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.SYNCHRONIZED) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.NATIVE) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.AT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PUBLIC) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.FINAL) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.PROTECTED) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.STRICTFP) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.TRANSIENT) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.ABSTRACT) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.STATIC) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.DEFAULT) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.PRIVATE) != -1) {
-			return lookahead;
-		}
-		return -1;
-	}
-
-	/* sequence(
-		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(PUBLIC)
@@ -886,486 +3302,53 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
-		while (matchModifiersNoDefault_lookahead1(0) != -1) {
-			if (match(0, TokenType.PUBLIC) != -1) {
-				parse(TokenType.PUBLIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			} else if (match(0, TokenType.PROTECTED) != -1) {
-				parse(TokenType.PROTECTED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (match(0, TokenType.PRIVATE) != -1) {
-				parse(TokenType.PRIVATE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (match(0, TokenType.ABSTRACT) != -1) {
-				parse(TokenType.ABSTRACT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (match(0, TokenType.STATIC) != -1) {
-				parse(TokenType.STATIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (match(0, TokenType.FINAL) != -1) {
-				parse(TokenType.FINAL);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (match(0, TokenType.TRANSIENT) != -1) {
-				parse(TokenType.TRANSIENT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (match(0, TokenType.VOLATILE) != -1) {
-				parse(TokenType.VOLATILE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
-				parse(TokenType.SYNCHRONIZED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (match(0, TokenType.NATIVE) != -1) {
-				parse(TokenType.NATIVE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (match(0, TokenType.STRICTFP) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.ModifiersNoDefault_1_1_12_1);
+				ann = parseAnnotation();
+				popCallStack();
+				modifiers = append(modifiers, ann);
+			} else if (__token == TokenType.STRICTFP) {
 				parse(TokenType.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (match(0, TokenType.AT) != -1) {
-				ann = parseAnnotation();
-				modifiers = append(modifiers, ann);
-			} else {
-				throw produceParseException(TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.AT, TokenType.FINAL, TokenType.NATIVE, TokenType.STATIC, TokenType.SYNCHRONIZED);
-			}
+			} else if (__token == TokenType.NATIVE) {
+				parse(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				parse(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.VOLATILE) {
+				parse(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.TRANSIENT) {
+				parse(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.FINAL) {
+				parse(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.STATIC) {
+				parse(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.ABSTRACT) {
+				parse(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.PRIVATE) {
+				parse(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.PROTECTED) {
+				parse(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PUBLIC) {
+				parse(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else
+				throw produceParseException(TokenType.ABSTRACT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
+			__token = getToken(0).kind;
 		}
 		return modifiers;
-	}
-
-	/* sequence(
-		zeroOrMore(
-			lookAhead(2)
-			choice(
-				sequence(
-					terminal(PUBLIC)
-				)
-				sequence(
-					terminal(PROTECTED)
-				)
-				sequence(
-					terminal(PRIVATE)
-				)
-				sequence(
-					terminal(ABSTRACT)
-				)
-				sequence(
-					terminal(STATIC)
-				)
-				sequence(
-					terminal(FINAL)
-				)
-				sequence(
-					terminal(TRANSIENT)
-				)
-				sequence(
-					terminal(VOLATILE)
-				)
-				sequence(
-					terminal(SYNCHRONIZED)
-				)
-				sequence(
-					terminal(NATIVE)
-				)
-				sequence(
-					terminal(STRICTFP)
-				)
-				sequence(
-					nonTerminal(ann, Annotation)
-				)
-			)
-		)
-	) */
-	private int matchModifiersNoDefault(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 9);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchModifiersNoDefault_1(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 9, -1);
-		return memoizeMatch(initialLookahead, 9, lookahead);
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiersNoDefault_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchModifiersNoDefault_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiersNoDefault_1_1(int lookahead) {
-		lookahead = matchModifiersNoDefault_1_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(PUBLIC)
-		)
-		sequence(
-			terminal(PROTECTED)
-		)
-		sequence(
-			terminal(PRIVATE)
-		)
-		sequence(
-			terminal(ABSTRACT)
-		)
-		sequence(
-			terminal(STATIC)
-		)
-		sequence(
-			terminal(FINAL)
-		)
-		sequence(
-			terminal(TRANSIENT)
-		)
-		sequence(
-			terminal(VOLATILE)
-		)
-		sequence(
-			terminal(SYNCHRONIZED)
-		)
-		sequence(
-			terminal(NATIVE)
-		)
-		sequence(
-			terminal(STRICTFP)
-		)
-		sequence(
-			nonTerminal(ann, Annotation)
-		)
-	) */
-	private int matchModifiersNoDefault_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_9(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_10(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_11(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchModifiersNoDefault_1_1_2_12(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(PUBLIC)
-	) */
-	private int matchModifiersNoDefault_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.PUBLIC);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(NATIVE)
-	) */
-	private int matchModifiersNoDefault_1_1_2_10(int lookahead) {
-		lookahead = match(lookahead, TokenType.NATIVE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(STRICTFP)
-	) */
-	private int matchModifiersNoDefault_1_1_2_11(int lookahead) {
-		lookahead = match(lookahead, TokenType.STRICTFP);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ann, Annotation)
-	) */
-	private int matchModifiersNoDefault_1_1_2_12(int lookahead) {
-		lookahead = matchAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(PROTECTED)
-	) */
-	private int matchModifiersNoDefault_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.PROTECTED);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(PRIVATE)
-	) */
-	private int matchModifiersNoDefault_1_1_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.PRIVATE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ABSTRACT)
-	) */
-	private int matchModifiersNoDefault_1_1_2_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.ABSTRACT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(STATIC)
-	) */
-	private int matchModifiersNoDefault_1_1_2_5(int lookahead) {
-		lookahead = match(lookahead, TokenType.STATIC);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FINAL)
-	) */
-	private int matchModifiersNoDefault_1_1_2_6(int lookahead) {
-		lookahead = match(lookahead, TokenType.FINAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(TRANSIENT)
-	) */
-	private int matchModifiersNoDefault_1_1_2_7(int lookahead) {
-		lookahead = match(lookahead, TokenType.TRANSIENT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(VOLATILE)
-	) */
-	private int matchModifiersNoDefault_1_1_2_8(int lookahead) {
-		lookahead = match(lookahead, TokenType.VOLATILE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SYNCHRONIZED)
-	) */
-	private int matchModifiersNoDefault_1_1_2_9(int lookahead) {
-		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PUBLIC)
-			)
-			sequence(
-				terminal(PROTECTED)
-			)
-			sequence(
-				terminal(PRIVATE)
-			)
-			sequence(
-				terminal(ABSTRACT)
-			)
-			sequence(
-				terminal(STATIC)
-			)
-			sequence(
-				terminal(FINAL)
-			)
-			sequence(
-				terminal(TRANSIENT)
-			)
-			sequence(
-				terminal(VOLATILE)
-			)
-			sequence(
-				terminal(SYNCHRONIZED)
-			)
-			sequence(
-				terminal(NATIVE)
-			)
-			sequence(
-				terminal(STRICTFP)
-			)
-			sequence(
-				nonTerminal(ann, Annotation)
-			)
-		)
-	) */
-	private int matchModifiersNoDefault_lookahead1(int lookahead) {
-		if (match(0, TokenType.SYNCHRONIZED) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.VOLATILE) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.NATIVE) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.AT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PUBLIC) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.FINAL) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.PROTECTED) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.ABSTRACT) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.STRICTFP) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.TRANSIENT) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.STATIC) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.PRIVATE) != -1) {
-			return lookahead;
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -1389,24 +3372,33 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
+		int __token;
 		run();
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeDecl_1_2_1);
+			modifiers = parseModifiers();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
+				ret = parseAnnotationTypeDecl(modifiers);
+				popCallStack();
+			} else if (__token == TokenType.ENUM) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_2);
+				ret = parseEnumDecl(modifiers);
+				popCallStack();
+			} else if (__token == TokenType.CLASS || __token == TokenType.INTERFACE) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
+				ret = parseClassOrInterfaceDecl(modifiers);
+				popCallStack();
+			} else
+				throw produceParseException(TokenType.CLASS, TokenType.ENUM, TokenType.INTERFACE, TokenType.AT);
+		} else if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else if (match(0, TokenType.STATIC, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.PROTECTED, TokenType.FINAL, TokenType.NATIVE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.ABSTRACT, TokenType.AT, TokenType.PRIVATE, TokenType.TRANSIENT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE) != -1) {
-			modifiers = parseModifiers();
-			if (match(0, TokenType.INTERFACE, TokenType.CLASS) != -1) {
-				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, TokenType.ENUM) != -1) {
-				ret = parseEnumDecl(modifiers);
-			} else if (match(0, TokenType.AT) != -1) {
-				ret = parseAnnotationTypeDecl(modifiers);
-			} else {
-				throw produceParseException(TokenType.AT, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM);
-			}
-		} else {
-			throw produceParseException(TokenType.SEMICOLON, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.STRICTFP, TokenType.AT, TokenType.FINAL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.STATIC, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.CLASS, TokenType.INTERFACE, TokenType.ENUM);
-		}
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.CLASS, TokenType.DEFAULT, TokenType.ENUM, TokenType.FINAL, TokenType.INTERFACE, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT);
 		return ret;
 	}
 
@@ -1457,284 +3449,61 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> implementsClause = null;
 		BUTree<SNodeList> members;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
-		if (match(0, TokenType.CLASS) != -1) {
-			parse(TokenType.CLASS);
-			typeKind = TypeKind.Class;
-			name = parseName();
-			if (match(0, TokenType.LT) != -1) {
-				typeParams = parseTypeParameters();
-			}
-			if (match(0, TokenType.EXTENDS) != -1) {
-				parse(TokenType.EXTENDS);
-				superClassType = parseAnnotatedQualifiedType();
-			}
-			if (match(0, TokenType.IMPLEMENTS) != -1) {
-				implementsClause = parseImplementsList(typeKind, problem);
-			}
-		} else if (match(0, TokenType.INTERFACE) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.INTERFACE) {
 			parse(TokenType.INTERFACE);
 			typeKind = TypeKind.Interface;
+			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
 			name = parseName();
-			if (match(0, TokenType.LT) != -1) {
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.LT) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_3_1);
 				typeParams = parseTypeParameters();
+				popCallStack();
 			}
-			if (match(0, TokenType.EXTENDS) != -1) {
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_2_4) == 1) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_4_1);
 				extendsClause = parseExtendsList();
+				popCallStack();
 			}
-		} else {
+		} else if (__token == TokenType.CLASS) {
+			parse(TokenType.CLASS);
+			typeKind = TypeKind.Class;
+			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_2);
+			name = parseName();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.LT) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_3_1);
+				typeParams = parseTypeParameters();
+				popCallStack();
+			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.EXTENDS) {
+				parse(TokenType.EXTENDS);
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_4_2);
+				superClassType = parseAnnotatedQualifiedType();
+				popCallStack();
+			}
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_1_5) == 1) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_5_1);
+				implementsClause = parseImplementsList(typeKind, problem);
+				popCallStack();
+			}
+		} else
 			throw produceParseException(TokenType.CLASS, TokenType.INTERFACE);
-		}
+		pushCallStack(JavaGrammar.ClassOrInterfaceDecl_2);
 		members = parseClassOrInterfaceBody(typeKind);
+		popCallStack();
 		if (typeKind == TypeKind.Interface)
 			return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members)).withProblem(problem.value);
 		else {
 			return dress(SClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
 		}
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(CLASS)
-				nonTerminal(name, Name)
-				zeroOrOne(
-					nonTerminal(typeParams, TypeParameters)
-				)
-				zeroOrOne(
-					terminal(EXTENDS)
-					nonTerminal(superClassType, AnnotatedQualifiedType)
-				)
-				zeroOrOne(
-					nonTerminal(implementsClause, ImplementsList)
-				)
-			)
-			sequence(
-				terminal(INTERFACE)
-				nonTerminal(name, Name)
-				zeroOrOne(
-					nonTerminal(typeParams, TypeParameters)
-				)
-				zeroOrOne(
-					nonTerminal(extendsClause, ExtendsList)
-				)
-			)
-		)
-		nonTerminal(members, ClassOrInterfaceBody)
-	) */
-	private int matchClassOrInterfaceDecl(int lookahead) {
-		lookahead = matchClassOrInterfaceDecl_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(CLASS)
-			nonTerminal(name, Name)
-			zeroOrOne(
-				nonTerminal(typeParams, TypeParameters)
-			)
-			zeroOrOne(
-				terminal(EXTENDS)
-				nonTerminal(superClassType, AnnotatedQualifiedType)
-			)
-			zeroOrOne(
-				nonTerminal(implementsClause, ImplementsList)
-			)
-		)
-		sequence(
-			terminal(INTERFACE)
-			nonTerminal(name, Name)
-			zeroOrOne(
-				nonTerminal(typeParams, TypeParameters)
-			)
-			zeroOrOne(
-				nonTerminal(extendsClause, ExtendsList)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceDecl_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(CLASS)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			nonTerminal(typeParams, TypeParameters)
-		)
-		zeroOrOne(
-			terminal(EXTENDS)
-			nonTerminal(superClassType, AnnotatedQualifiedType)
-		)
-		zeroOrOne(
-			nonTerminal(implementsClause, ImplementsList)
-		)
-	) */
-	private int matchClassOrInterfaceDecl_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.CLASS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl_1_1_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl_1_1_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl_1_1_6(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeParams, TypeParameters)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_1_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeParams, TypeParameters)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_4_1(int lookahead) {
-		lookahead = matchTypeParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(EXTENDS)
-		nonTerminal(superClassType, AnnotatedQualifiedType)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_1_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(EXTENDS)
-		nonTerminal(superClassType, AnnotatedQualifiedType)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_5_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.EXTENDS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(implementsClause, ImplementsList)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_1_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(implementsClause, ImplementsList)
-	) */
-	private int matchClassOrInterfaceDecl_1_1_6_1(int lookahead) {
-		lookahead = matchImplementsList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(INTERFACE)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			nonTerminal(typeParams, TypeParameters)
-		)
-		zeroOrOne(
-			nonTerminal(extendsClause, ExtendsList)
-		)
-	) */
-	private int matchClassOrInterfaceDecl_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.INTERFACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl_1_2_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl_1_2_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeParams, TypeParameters)
-	) */
-	private int matchClassOrInterfaceDecl_1_2_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_2_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeParams, TypeParameters)
-	) */
-	private int matchClassOrInterfaceDecl_1_2_4_1(int lookahead) {
-		lookahead = matchTypeParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(extendsClause, ExtendsList)
-	) */
-	private int matchClassOrInterfaceDecl_1_2_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceDecl_1_2_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(extendsClause, ExtendsList)
-	) */
-	private int matchClassOrInterfaceDecl_1_2_5_1(int lookahead) {
-		lookahead = matchExtendsList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -1760,140 +3529,30 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.EXTENDS);
-		if (quotesMode && matchExtendsList_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.ExtendsList_2_2_1);
 			cit = parseAnnotatedQualifiedType();
+			popCallStack();
 			ret = append(ret, cit);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.EXTENDS_LIST_2_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.ExtendsList_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
+				popCallStack();
 				ret = append(ret, cit);
+				__token = getToken(0).kind;
 			}
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ExtendsList_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(EXTENDS)
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(cit, AnnotatedQualifiedType)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(cit, AnnotatedQualifiedType)
-				)
-			)
-		)
-	) */
-	private int matchExtendsList(int lookahead) {
-		lookahead = match(lookahead, TokenType.EXTENDS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExtendsList_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(cit, AnnotatedQualifiedType)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(cit, AnnotatedQualifiedType)
-			)
-		)
-	) */
-	private int matchExtendsList_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExtendsList_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExtendsList_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchExtendsList_2_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(cit, AnnotatedQualifiedType)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(cit, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchExtendsList_2_2(int lookahead) {
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExtendsList_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchExtendsList_2_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExtendsList_2_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchExtendsList_2_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchExtendsList_2_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchExtendsList_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -1922,142 +3581,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.IMPLEMENTS);
-		if (quotesMode && matchImplementsList_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.ImplementsList_2_2_1);
 			cit = parseAnnotatedQualifiedType();
+			popCallStack();
 			ret = append(ret, cit);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (__token == TokenType.COMMA) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.ImplementsList_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
+				popCallStack();
 				ret = append(ret, cit);
+				__token = getToken(0).kind;
 			}
 			if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
 
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ImplementsList_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(IMPLEMENTS)
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(cit, AnnotatedQualifiedType)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(cit, AnnotatedQualifiedType)
-				)
-			)
-		)
-	) */
-	private int matchImplementsList(int lookahead) {
-		lookahead = match(lookahead, TokenType.IMPLEMENTS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchImplementsList_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(cit, AnnotatedQualifiedType)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(cit, AnnotatedQualifiedType)
-			)
-		)
-	) */
-	private int matchImplementsList_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchImplementsList_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchImplementsList_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchImplementsList_2_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(cit, AnnotatedQualifiedType)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(cit, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchImplementsList_2_2(int lookahead) {
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchImplementsList_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchImplementsList_2_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchImplementsList_2_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchImplementsList_2_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchImplementsList_2_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchImplementsList_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -2077,15 +3626,6 @@ public class ParserImplementation extends ParserNewBase {
 					nonTerminal(entry, EnumConstantDecl)
 					action({ constants = append(constants, entry); })
 					zeroOrMore(
-						negativeLookAhead(
-							zeroOrOne(
-								terminal(COMMA)
-							)
-							choice(
-								terminal(SEMICOLON)
-								terminal(RBRACE)
-							)
-						)
 						terminal(COMMA)
 						nonTerminal(entry, EnumConstantDecl)
 						action({ constants = append(constants, entry); })
@@ -2112,416 +3652,52 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		BUTree<SNodeList> members = null;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
+		int __token;
 		parse(TokenType.ENUM);
+		pushCallStack(JavaGrammar.EnumDecl_2);
 		name = parseName();
-		if (match(0, TokenType.IMPLEMENTS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.IMPLEMENTS) {
+			pushCallStack(JavaGrammar.EnumDecl_3_1);
 			implementsClause = parseImplementsList(TypeKind.Enum, problem);
+			popCallStack();
 		}
 		parse(TokenType.LBRACE);
-		if (quotesMode && matchEnumDecl_lookahead1(0) != -1) {
-			constants = parseNodeListVar();
-		} else if (match(0, TokenType.PUBLIC, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.DEFAULT, TokenType.PROTECTED, TokenType.STATIC, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.FINAL, TokenType.NATIVE, TokenType.ABSTRACT, TokenType.SYNCHRONIZED, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.EnumDecl_5_1_2_1);
 			entry = parseEnumConstantDecl();
+			popCallStack();
 			constants = append(constants, entry);
-			while (matchEnumDecl_lookahead2(0) == -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.ENUM_DECL_5_1_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.EnumDecl_5_1_2_2_2);
 				entry = parseEnumConstantDecl();
+				popCallStack();
 				constants = append(constants, entry);
+				__token = getToken(0).kind;
 			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.EnumDecl_5_1_1_1);
+			constants = parseNodeListVar();
+			popCallStack();
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
+			pushCallStack(JavaGrammar.EnumDecl_7_2);
 			members = parseClassOrInterfaceBodyDecls(TypeKind.Enum);
+			popCallStack();
 		}
 		parse(TokenType.RBRACE);
 		return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value);
-	}
-
-	/* sequence(
-		terminal(ENUM)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			nonTerminal(implementsClause, ImplementsList)
-		)
-		terminal(LBRACE)
-		zeroOrOne(
-			choice(
-				sequence(
-					lookAhead({ quotesMode })
-					nonTerminal(constants, NodeListVar)
-				)
-				sequence(
-					nonTerminal(entry, EnumConstantDecl)
-					zeroOrMore(
-						negativeLookAhead(
-							zeroOrOne(
-								terminal(COMMA)
-							)
-							choice(
-								terminal(SEMICOLON)
-								terminal(RBRACE)
-							)
-						)
-						terminal(COMMA)
-						nonTerminal(entry, EnumConstantDecl)
-					)
-				)
-			)
-		)
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		zeroOrOne(
-			terminal(SEMICOLON)
-			nonTerminal(members, ClassOrInterfaceBodyDecls)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchEnumDecl(int lookahead) {
-		lookahead = match(lookahead, TokenType.ENUM);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_6(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_7(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(implementsClause, ImplementsList)
-	) */
-	private int matchEnumDecl_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(implementsClause, ImplementsList)
-	) */
-	private int matchEnumDecl_3_1(int lookahead) {
-		lookahead = matchImplementsList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(constants, NodeListVar)
-			)
-			sequence(
-				nonTerminal(entry, EnumConstantDecl)
-				zeroOrMore(
-					negativeLookAhead(
-						zeroOrOne(
-							terminal(COMMA)
-						)
-						choice(
-							terminal(SEMICOLON)
-							terminal(RBRACE)
-						)
-					)
-					terminal(COMMA)
-					nonTerminal(entry, EnumConstantDecl)
-				)
-			)
-		)
-	) */
-	private int matchEnumDecl_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(constants, NodeListVar)
-			)
-			sequence(
-				nonTerminal(entry, EnumConstantDecl)
-				zeroOrMore(
-					negativeLookAhead(
-						zeroOrOne(
-							terminal(COMMA)
-						)
-						choice(
-							terminal(SEMICOLON)
-							terminal(RBRACE)
-						)
-					)
-					terminal(COMMA)
-					nonTerminal(entry, EnumConstantDecl)
-				)
-			)
-		)
-	) */
-	private int matchEnumDecl_5_1(int lookahead) {
-		lookahead = matchEnumDecl_5_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(constants, NodeListVar)
-		)
-		sequence(
-			nonTerminal(entry, EnumConstantDecl)
-			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					choice(
-						terminal(SEMICOLON)
-						terminal(RBRACE)
-					)
-				)
-				terminal(COMMA)
-				nonTerminal(entry, EnumConstantDecl)
-			)
-		)
-	) */
-	private int matchEnumDecl_5_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_5_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchEnumDecl_5_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(constants, NodeListVar)
-	) */
-	private int matchEnumDecl_5_1_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(entry, EnumConstantDecl)
-		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(COMMA)
-				)
-				choice(
-					terminal(SEMICOLON)
-					terminal(RBRACE)
-				)
-			)
-			terminal(COMMA)
-			nonTerminal(entry, EnumConstantDecl)
-		)
-	) */
-	private int matchEnumDecl_5_1_1_2(int lookahead) {
-		lookahead = matchEnumConstantDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_5_1_1_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			choice(
-				terminal(SEMICOLON)
-				terminal(RBRACE)
-			)
-		)
-		terminal(COMMA)
-		nonTerminal(entry, EnumConstantDecl)
-	) */
-	private int matchEnumDecl_5_1_1_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_5_1_1_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchEnumDecl_5_1_1_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			choice(
-				terminal(SEMICOLON)
-				terminal(RBRACE)
-			)
-		)
-		terminal(COMMA)
-		nonTerminal(entry, EnumConstantDecl)
-	) */
-	private int matchEnumDecl_5_1_1_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumConstantDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchEnumDecl_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchEnumDecl_6_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(SEMICOLON)
-		nonTerminal(members, ClassOrInterfaceBodyDecls)
-	) */
-	private int matchEnumDecl_7(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_7_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-		nonTerminal(members, ClassOrInterfaceBodyDecls)
-	) */
-	private int matchEnumDecl_7_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecls(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchEnumDecl_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		choice(
-			terminal(SEMICOLON)
-			terminal(RBRACE)
-		)
-	) */
-	private int matchEnumDecl_lookahead2(int lookahead) {
-		lookahead = matchEnumDecl_lookahead2_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumDecl_lookahead2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchEnumDecl_lookahead2_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumDecl_lookahead2_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchEnumDecl_lookahead2_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(SEMICOLON)
-		terminal(RBRACE)
-	) */
-	private int matchEnumDecl_lookahead2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = match(lookahead, TokenType.SEMICOLON);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.RBRACE);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
@@ -2541,84 +3717,27 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
 		BUTree<SNodeList> classBody = null;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.EnumConstantDecl_1);
 		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.EnumConstantDecl_2);
 		name = parseName();
-		if (match(0, TokenType.LPAREN) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.LPAREN) {
+			pushCallStack(JavaGrammar.EnumConstantDecl_3_1);
 			args = parseArguments();
+			popCallStack();
 		}
-		if (match(0, TokenType.LBRACE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.EnumConstantDecl_4_1);
 			classBody = parseClassOrInterfaceBody(TypeKind.Class);
+			popCallStack();
 		}
 		return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody)));
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, Modifiers)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			nonTerminal(args, Arguments)
-		)
-		zeroOrOne(
-			nonTerminal(classBody, ClassOrInterfaceBody)
-		)
-	) */
-	private int matchEnumConstantDecl(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumConstantDecl_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEnumConstantDecl_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(args, Arguments)
-	) */
-	private int matchEnumConstantDecl_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumConstantDecl_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(args, Arguments)
-	) */
-	private int matchEnumConstantDecl_4_1(int lookahead) {
-		lookahead = matchArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(classBody, ClassOrInterfaceBody)
-	) */
-	private int matchEnumConstantDecl_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEnumConstantDecl_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(classBody, ClassOrInterfaceBody)
-	) */
-	private int matchEnumConstantDecl_5_1(int lookahead) {
-		lookahead = matchClassOrInterfaceBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -2631,33 +3750,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> members;
+		int __token;
 		parse(TokenType.AT);
 		parse(TokenType.INTERFACE);
+		pushCallStack(JavaGrammar.AnnotationTypeDecl_3);
 		name = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationTypeDecl_4);
 		members = parseAnnotationTypeBody();
+		popCallStack();
 		return dress(SAnnotationDecl.make(modifiers, name, members));
-	}
-
-	/* sequence(
-		terminal(AT)
-		terminal(INTERFACE)
-		nonTerminal(name, Name)
-		nonTerminal(members, AnnotationTypeBody)
-	) */
-	private int matchAnnotationTypeDecl(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.INTERFACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotationTypeBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -2680,151 +3782,24 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
+		int __token;
 		parse(TokenType.LBRACE);
-		if (quotesMode && matchAnnotationTypeBody_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.PROTECTED, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PUBLIC, TokenType.NATIVE, TokenType.DEFAULT, TokenType.FINAL, TokenType.STRICTFP, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.AT, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.FLOAT, TokenType.BYTE, TokenType.SHORT, TokenType.DOUBLE, TokenType.CHAR, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86 | 1L << TokenType.NODE_VARIABLE - 86 | 1L << TokenType.IDENTIFIER - 86)) != 0)) {
 			do {
+				pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_2_1);
 				member = parseAnnotationTypeBodyDecl();
+				popCallStack();
 				ret = append(ret, member);
-			} while (match(0, TokenType.PROTECTED, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PUBLIC, TokenType.NATIVE, TokenType.DEFAULT, TokenType.FINAL, TokenType.STRICTFP, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.AT, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.FLOAT, TokenType.BYTE, TokenType.SHORT, TokenType.DOUBLE, TokenType.CHAR, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SEMICOLON) != -1);
+				__token = getToken(0).kind;
+			} while (predict(JavaGrammar.ANNOTATION_TYPE_BODY_2_1_2) == 1);
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		parse(TokenType.RBRACE);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LBRACE)
-		zeroOrOne(
-			choice(
-				sequence(
-					lookAhead({ quotesMode })
-					nonTerminal(ret, NodeListVar)
-				)
-				oneOrMore(
-					nonTerminal(member, AnnotationTypeBodyDecl)
-				)
-			)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchAnnotationTypeBody(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotationTypeBody_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			oneOrMore(
-				nonTerminal(member, AnnotationTypeBodyDecl)
-			)
-		)
-	) */
-	private int matchAnnotationTypeBody_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBody_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			oneOrMore(
-				nonTerminal(member, AnnotationTypeBodyDecl)
-			)
-		)
-	) */
-	private int matchAnnotationTypeBody_2_1(int lookahead) {
-		lookahead = matchAnnotationTypeBody_2_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		oneOrMore(
-			nonTerminal(member, AnnotationTypeBodyDecl)
-		)
-	) */
-	private int matchAnnotationTypeBody_2_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBody_2_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotationTypeBody_2_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchAnnotationTypeBody_2_1_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		nonTerminal(member, AnnotationTypeBodyDecl)
-	) */
-	private int matchAnnotationTypeBody_2_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBody_2_1_1_2_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAnnotationTypeBody_2_1_1_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(member, AnnotationTypeBodyDecl)
-	) */
-	private int matchAnnotationTypeBody_2_1_1_2_1(int lookahead) {
-		lookahead = matchAnnotationTypeBodyDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchAnnotationTypeBody_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -2837,14 +3812,7 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(modifiers, Modifiers)
 				choice(
-					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, AnnotationTypeMemberDecl)
-					)
+					nonTerminal(ret, AnnotationTypeMemberDecl)
 					nonTerminal(ret, ClassOrInterfaceDecl)
 					nonTerminal(ret, EnumDecl)
 					nonTerminal(ret, AnnotationTypeDecl)
@@ -2857,197 +3825,48 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
+		int __token;
 		run();
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_1);
+			modifiers = parseModifiers();
+			popCallStack();
+			switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_DECL_1_2_2)) {
+				case 1:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_1);
+					ret = parseAnnotationTypeMemberDecl(modifiers);
+					popCallStack();
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_2);
+					ret = parseClassOrInterfaceDecl(modifiers);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_3);
+					ret = parseEnumDecl(modifiers);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_4);
+					ret = parseAnnotationTypeDecl(modifiers);
+					popCallStack();
+					break;
+				case 5:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_5);
+					ret = parseFieldDecl(modifiers);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
+		} else if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else if (match(0, TokenType.STATIC, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.PROTECTED, TokenType.FINAL, TokenType.NATIVE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.ABSTRACT, TokenType.AT, TokenType.PRIVATE, TokenType.TRANSIENT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.CHAR, TokenType.FLOAT, TokenType.BYTE, TokenType.LONG, TokenType.SHORT) != -1) {
-			modifiers = parseModifiers();
-			if (matchAnnotationTypeBodyDecl_lookahead1(0) != -1) {
-				ret = parseAnnotationTypeMemberDecl(modifiers);
-			} else if (match(0, TokenType.INTERFACE, TokenType.CLASS) != -1) {
-				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, TokenType.ENUM) != -1) {
-				ret = parseEnumDecl(modifiers);
-			} else if (match(0, TokenType.AT) != -1) {
-				ret = parseAnnotationTypeDecl(modifiers);
-			} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR) != -1) {
-				ret = parseFieldDecl(modifiers);
-			} else {
-				throw produceParseException(TokenType.AT, TokenType.ENUM, TokenType.BYTE, TokenType.LONG, TokenType.CHAR, TokenType.FLOAT, TokenType.INT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INTERFACE, TokenType.CLASS);
-			}
-		} else {
-			throw produceParseException(TokenType.SEMICOLON, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.STRICTFP, TokenType.AT, TokenType.FINAL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.STATIC, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.CHAR, TokenType.INT, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CLASS, TokenType.INTERFACE, TokenType.ENUM);
-		}
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(SEMICOLON)
-			)
-			sequence(
-				nonTerminal(modifiers, Modifiers)
-				choice(
-					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, AnnotationTypeMemberDecl)
-					)
-					nonTerminal(ret, ClassOrInterfaceDecl)
-					nonTerminal(ret, EnumDecl)
-					nonTerminal(ret, AnnotationTypeDecl)
-					nonTerminal(ret, FieldDecl)
-				)
-			)
-		)
-	) */
-	private int matchAnnotationTypeBodyDecl(int lookahead) {
-		lookahead = matchAnnotationTypeBodyDecl_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(SEMICOLON)
-		)
-		sequence(
-			nonTerminal(modifiers, Modifiers)
-			choice(
-				sequence(
-					lookAhead(
-						nonTerminal(Type)
-						nonTerminal(Name)
-						terminal(LPAREN)
-					)
-					nonTerminal(ret, AnnotationTypeMemberDecl)
-				)
-				nonTerminal(ret, ClassOrInterfaceDecl)
-				nonTerminal(ret, EnumDecl)
-				nonTerminal(ret, AnnotationTypeDecl)
-				nonTerminal(ret, FieldDecl)
-			)
-		)
-	) */
-	private int matchAnnotationTypeBodyDecl_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBodyDecl_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotationTypeBodyDecl_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchAnnotationTypeBodyDecl_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, Modifiers)
-		choice(
-			sequence(
-				lookAhead(
-					nonTerminal(Type)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, AnnotationTypeMemberDecl)
-			)
-			nonTerminal(ret, ClassOrInterfaceDecl)
-			nonTerminal(ret, EnumDecl)
-			nonTerminal(ret, AnnotationTypeDecl)
-			nonTerminal(ret, FieldDecl)
-		)
-	) */
-	private int matchAnnotationTypeBodyDecl_2_2(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotationTypeBodyDecl_2_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Type)
-				nonTerminal(Name)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, AnnotationTypeMemberDecl)
-		)
-		nonTerminal(ret, ClassOrInterfaceDecl)
-		nonTerminal(ret, EnumDecl)
-		nonTerminal(ret, AnnotationTypeDecl)
-		nonTerminal(ret, FieldDecl)
-	) */
-	private int matchAnnotationTypeBodyDecl_2_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBodyDecl_2_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchEnumDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotationTypeDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchFieldDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Type)
-			nonTerminal(Name)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, AnnotationTypeMemberDecl)
-	) */
-	private int matchAnnotationTypeBodyDecl_2_2_2_1(int lookahead) {
-		lookahead = matchAnnotationTypeMemberDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Type)
-		nonTerminal(Name)
-		terminal(LPAREN)
-	) */
-	private int matchAnnotationTypeBodyDecl_lookahead1(int lookahead) {
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3058,93 +3877,40 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(dims, ArrayDims)
 		zeroOrOne(
 			terminal(DEFAULT)
-			nonTerminal(val, MemberValue)
-			action({ defaultVal = optionOf(val); })
+			nonTerminal(value, ElementValue)
+			action({ defaultValue = optionOf(value); })
 		)
 		terminal(SEMICOLON)
-		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); })
+		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultValue)); })
 	) */
 	protected BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
 		BUTree<SNodeList> dims;
-		BUTree<SNodeOption> defaultVal = none();
-		BUTree<? extends SExpr> val = null;
+		BUTree<SNodeOption> defaultValue = none();
+		BUTree<? extends SExpr> value = null;
+		int __token;
+		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_1);
 		type = parseType(null);
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_2);
 		name = parseName();
+		popCallStack();
 		parse(TokenType.LPAREN);
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_5);
 		dims = parseArrayDims();
-		if (match(0, TokenType.DEFAULT) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.DEFAULT) {
 			parse(TokenType.DEFAULT);
-			val = parseMemberValue();
-			defaultVal = optionOf(val);
+			pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_6_2);
+			value = parseElementValue();
+			popCallStack();
+			defaultValue = optionOf(value);
 		}
 		parse(TokenType.SEMICOLON);
-		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal));
-	}
-
-	/* sequence(
-		nonTerminal(type, Type)
-		nonTerminal(name, Name)
-		terminal(LPAREN)
-		terminal(RPAREN)
-		nonTerminal(dims, ArrayDims)
-		zeroOrOne(
-			terminal(DEFAULT)
-			nonTerminal(val, MemberValue)
-		)
-		terminal(SEMICOLON)
-	) */
-	private int matchAnnotationTypeMemberDecl(int lookahead) {
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayDims(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotationTypeMemberDecl_6(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(DEFAULT)
-		nonTerminal(val, MemberValue)
-	) */
-	private int matchAnnotationTypeMemberDecl_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeMemberDecl_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DEFAULT)
-		nonTerminal(val, MemberValue)
-	) */
-	private int matchAnnotationTypeMemberDecl_6_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.DEFAULT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValue(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultValue));
 	}
 
 	/* sequence(
@@ -3170,145 +3936,31 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseTypeParameters() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
+		int __token;
 		parse(TokenType.LT);
-		if (quotesMode && matchTypeParameters_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.TypeParameters_2_2_1);
 			tp = parseTypeParameter();
+			popCallStack();
 			ret = append(ret, tp);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.TYPE_PARAMETERS_2_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.TypeParameters_2_2_2_2);
 				tp = parseTypeParameter();
+				popCallStack();
 				ret = append(ret, tp);
+				__token = getToken(0).kind;
 			}
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeParameters_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		parse(TokenType.GT);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LT)
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(tp, TypeParameter)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(tp, TypeParameter)
-				)
-			)
-		)
-		terminal(GT)
-	) */
-	private int matchTypeParameters(int lookahead) {
-		lookahead = match(lookahead, TokenType.LT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeParameters_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(tp, TypeParameter)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(tp, TypeParameter)
-			)
-		)
-	) */
-	private int matchTypeParameters_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeParameters_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTypeParameters_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchTypeParameters_2_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(tp, TypeParameter)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(tp, TypeParameter)
-		)
-	) */
-	private int matchTypeParameters_2_2(int lookahead) {
-		lookahead = matchTypeParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeParameters_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(tp, TypeParameter)
-	) */
-	private int matchTypeParameters_2_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeParameters_2_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchTypeParameters_2_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(tp, TypeParameter)
-	) */
-	private int matchTypeParameters_2_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchTypeParameters_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3324,54 +3976,21 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeBounds = null;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.TypeParameter_1);
 		annotations = parseAnnotations();
+		popCallStack();
+		pushCallStack(JavaGrammar.TypeParameter_2);
 		name = parseName();
-		if (match(0, TokenType.EXTENDS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (predict(JavaGrammar.TYPE_PARAMETER_3) == 1) {
+			pushCallStack(JavaGrammar.TypeParameter_3_1);
 			typeBounds = parseTypeBounds();
+			popCallStack();
 		}
 		return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds)));
-	}
-
-	/* sequence(
-		nonTerminal(annotations, Annotations)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			nonTerminal(typeBounds, TypeBounds)
-		)
-	) */
-	private int matchTypeParameter(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeParameter_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeBounds, TypeBounds)
-	) */
-	private int matchTypeParameter_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeParameter_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeBounds, TypeBounds)
-	) */
-	private int matchTypeParameter_4_1(int lookahead) {
-		lookahead = matchTypeBounds(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3397,140 +4016,30 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.EXTENDS);
-		if (quotesMode && matchTypeBounds_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.TypeBounds_2_2_1);
 			cit = parseAnnotatedQualifiedType();
+			popCallStack();
 			ret = append(ret, cit);
-			while (match(0, TokenType.BIT_AND) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.TYPE_BOUNDS_2_2_2) == 1) {
 				parse(TokenType.BIT_AND);
+				pushCallStack(JavaGrammar.TypeBounds_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
+				popCallStack();
 				ret = append(ret, cit);
+				__token = getToken(0).kind;
 			}
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeBounds_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(EXTENDS)
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(cit, AnnotatedQualifiedType)
-				zeroOrMore(
-					terminal(BIT_AND)
-					nonTerminal(cit, AnnotatedQualifiedType)
-				)
-			)
-		)
-	) */
-	private int matchTypeBounds(int lookahead) {
-		lookahead = match(lookahead, TokenType.EXTENDS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeBounds_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(cit, AnnotatedQualifiedType)
-			zeroOrMore(
-				terminal(BIT_AND)
-				nonTerminal(cit, AnnotatedQualifiedType)
-			)
-		)
-	) */
-	private int matchTypeBounds_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeBounds_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTypeBounds_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchTypeBounds_2_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(cit, AnnotatedQualifiedType)
-		zeroOrMore(
-			terminal(BIT_AND)
-			nonTerminal(cit, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchTypeBounds_2_2(int lookahead) {
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeBounds_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(BIT_AND)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchTypeBounds_2_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeBounds_2_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchTypeBounds_2_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_AND)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchTypeBounds_2_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchTypeBounds_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3542,28 +4051,13 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
+		int __token;
 		parse(TokenType.LBRACE);
+		pushCallStack(JavaGrammar.ClassOrInterfaceBody_2);
 		ret = parseClassOrInterfaceBodyDecls(typeKind);
+		popCallStack();
 		parse(TokenType.RBRACE);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LBRACE)
-		nonTerminal(ret, ClassOrInterfaceBodyDecls)
-		terminal(RBRACE)
-	) */
-	private int matchClassOrInterfaceBody(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecls(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3584,141 +4078,22 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
-		if (quotesMode && matchClassOrInterfaceBodyDecls_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.ABSTRACT, TokenType.AT, TokenType.STATIC, TokenType.PUBLIC, TokenType.DEFAULT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.PROTECTED, TokenType.LT, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.CHAR, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BYTE, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.LBRACE, TokenType.SEMICOLON) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.SEMICOLON - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
 			do {
+				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_2_1);
 				member = parseClassOrInterfaceBodyDecl(typeKind);
+				popCallStack();
 				ret = append(ret, member);
-			} while (match(0, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.ABSTRACT, TokenType.AT, TokenType.STATIC, TokenType.PUBLIC, TokenType.DEFAULT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.PROTECTED, TokenType.LT, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.CHAR, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BYTE, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.LBRACE, TokenType.SEMICOLON) != -1);
+				__token = getToken(0).kind;
+			} while (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECLS_1_1_2) == 1);
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		return ret;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			choice(
-				sequence(
-					lookAhead({ quotesMode })
-					nonTerminal(ret, NodeListVar)
-				)
-				oneOrMore(
-					nonTerminal(member, ClassOrInterfaceBodyDecl)
-				)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecls(int lookahead) {
-		lookahead = matchClassOrInterfaceBodyDecls_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			oneOrMore(
-				nonTerminal(member, ClassOrInterfaceBodyDecl)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecls_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			oneOrMore(
-				nonTerminal(member, ClassOrInterfaceBodyDecl)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1_1(int lookahead) {
-		lookahead = matchClassOrInterfaceBodyDecls_1_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		oneOrMore(
-			nonTerminal(member, ClassOrInterfaceBodyDecl)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1_1_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		nonTerminal(member, ClassOrInterfaceBodyDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_2_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(member, ClassOrInterfaceBodyDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecls_1_1_1_2_1(int lookahead) {
-		lookahead = matchClassOrInterfaceBodyDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchClassOrInterfaceBodyDecls_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -3744,32 +4119,12 @@ public class ParserImplementation extends ParserNewBase {
 					nonTerminal(ret, EnumDecl)
 					nonTerminal(ret, AnnotationTypeDecl)
 					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeParameters)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
 						nonTerminal(ret, ConstructorDecl)
 						action({
 							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 						})
 					)
 					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							zeroOrMore(
-								terminal(LBRACKET)
-								terminal(RBRACKET)
-							)
-							choice(
-								terminal(COMMA)
-								terminal(ASSIGN)
-								terminal(SEMICOLON)
-							)
-						)
 						nonTerminal(ret, FieldDecl)
 					)
 					nonTerminal(ret, MethodDecl)
@@ -3782,431 +4137,64 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		BUProblem problem = null;
+		int __token;
 		run();
-		if (match(0, TokenType.SEMICOLON) != -1) {
-			parse(TokenType.SEMICOLON);
-			ret = dress(SEmptyMemberDecl.make());
-		} else if (match(0, TokenType.STATIC, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.PROTECTED, TokenType.FINAL, TokenType.NATIVE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.ABSTRACT, TokenType.AT, TokenType.PRIVATE, TokenType.TRANSIENT, TokenType.SHORT, TokenType.BYTE, TokenType.FLOAT, TokenType.CHAR, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.INT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.LT, TokenType.VOID, TokenType.LBRACE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
+			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
 			modifiers = parseModifiers();
+			popCallStack();
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
 
-			if (match(0, TokenType.LBRACE) != -1) {
-				ret = parseInitializerDecl(modifiers);
-				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
+			switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECL_1_2_2)) {
+				case 1:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_1_1);
+					ret = parseInitializerDecl(modifiers);
+					popCallStack();
+					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 
-			} else if (match(0, TokenType.INTERFACE, TokenType.CLASS) != -1) {
-				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, TokenType.ENUM) != -1) {
-				ret = parseEnumDecl(modifiers);
-			} else if (match(0, TokenType.AT) != -1) {
-				ret = parseAnnotationTypeDecl(modifiers);
-			} else if (matchClassOrInterfaceBodyDecl_lookahead1(0) != -1) {
-				ret = parseConstructorDecl(modifiers);
-				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_2);
+					ret = parseClassOrInterfaceDecl(modifiers);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_3);
+					ret = parseEnumDecl(modifiers);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_4);
+					ret = parseAnnotationTypeDecl(modifiers);
+					popCallStack();
+					break;
+				case 5:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_5_1);
+					ret = parseConstructorDecl(modifiers);
+					popCallStack();
+					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 
-			} else if (matchClassOrInterfaceBodyDecl_lookahead2(0) != -1) {
-				ret = parseFieldDecl(modifiers);
-			} else if (match(0, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.BYTE, TokenType.FLOAT, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.VOID) != -1) {
-				ret = parseMethodDecl(modifiers);
-			} else {
-				throw produceParseException(TokenType.AT, TokenType.ENUM, TokenType.LBRACE, TokenType.LT, TokenType.VOID, TokenType.BYTE, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INTERFACE, TokenType.CLASS);
+					break;
+				case 6:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_6_1);
+					ret = parseFieldDecl(modifiers);
+					popCallStack();
+					break;
+				case 7:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_7);
+					ret = parseMethodDecl(modifiers);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 			}
-		} else {
-			throw produceParseException(TokenType.SEMICOLON, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.STRICTFP, TokenType.AT, TokenType.FINAL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.STATIC, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.CLASS, TokenType.INTERFACE, TokenType.LT, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.DOUBLE, TokenType.BYTE, TokenType.FLOAT, TokenType.SHORT, TokenType.LONG, TokenType.INT, TokenType.BOOLEAN, TokenType.ENUM, TokenType.LBRACE);
-		}
+		} else if (__token == TokenType.SEMICOLON) {
+			parse(TokenType.SEMICOLON);
+			ret = dress(SEmptyMemberDecl.make());
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOID, TokenType.VOLATILE, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret.withProblem(problem);
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(SEMICOLON)
-			)
-			sequence(
-				nonTerminal(modifiers, Modifiers)
-				choice(
-					sequence(
-						nonTerminal(ret, InitializerDecl)
-					)
-					nonTerminal(ret, ClassOrInterfaceDecl)
-					nonTerminal(ret, EnumDecl)
-					nonTerminal(ret, AnnotationTypeDecl)
-					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeParameters)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, ConstructorDecl)
-					)
-					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							zeroOrMore(
-								terminal(LBRACKET)
-								terminal(RBRACKET)
-							)
-							choice(
-								terminal(COMMA)
-								terminal(ASSIGN)
-								terminal(SEMICOLON)
-							)
-						)
-						nonTerminal(ret, FieldDecl)
-					)
-					nonTerminal(ret, MethodDecl)
-				)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecl(int lookahead) {
-		lookahead = matchClassOrInterfaceBodyDecl_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(SEMICOLON)
-		)
-		sequence(
-			nonTerminal(modifiers, Modifiers)
-			choice(
-				sequence(
-					nonTerminal(ret, InitializerDecl)
-				)
-				nonTerminal(ret, ClassOrInterfaceDecl)
-				nonTerminal(ret, EnumDecl)
-				nonTerminal(ret, AnnotationTypeDecl)
-				sequence(
-					lookAhead(
-						zeroOrOne(
-							nonTerminal(TypeParameters)
-						)
-						nonTerminal(Name)
-						terminal(LPAREN)
-					)
-					nonTerminal(ret, ConstructorDecl)
-				)
-				sequence(
-					lookAhead(
-						nonTerminal(Type)
-						nonTerminal(Name)
-						zeroOrMore(
-							terminal(LBRACKET)
-							terminal(RBRACKET)
-						)
-						choice(
-							terminal(COMMA)
-							terminal(ASSIGN)
-							terminal(SEMICOLON)
-						)
-					)
-					nonTerminal(ret, FieldDecl)
-				)
-				nonTerminal(ret, MethodDecl)
-			)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, Modifiers)
-		choice(
-			sequence(
-				nonTerminal(ret, InitializerDecl)
-			)
-			nonTerminal(ret, ClassOrInterfaceDecl)
-			nonTerminal(ret, EnumDecl)
-			nonTerminal(ret, AnnotationTypeDecl)
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeParameters)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, ConstructorDecl)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(Type)
-					nonTerminal(Name)
-					zeroOrMore(
-						terminal(LBRACKET)
-						terminal(RBRACKET)
-					)
-					choice(
-						terminal(COMMA)
-						terminal(ASSIGN)
-						terminal(SEMICOLON)
-					)
-				)
-				nonTerminal(ret, FieldDecl)
-			)
-			nonTerminal(ret, MethodDecl)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_2(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecl_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(ret, InitializerDecl)
-		)
-		nonTerminal(ret, ClassOrInterfaceDecl)
-		nonTerminal(ret, EnumDecl)
-		nonTerminal(ret, AnnotationTypeDecl)
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(TypeParameters)
-				)
-				nonTerminal(Name)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, ConstructorDecl)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(Type)
-				nonTerminal(Name)
-				zeroOrMore(
-					terminal(LBRACKET)
-					terminal(RBRACKET)
-				)
-				choice(
-					terminal(COMMA)
-					terminal(ASSIGN)
-					terminal(SEMICOLON)
-				)
-			)
-			nonTerminal(ret, FieldDecl)
-		)
-		nonTerminal(ret, MethodDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_2_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchEnumDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotationTypeDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_2_3_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_2_3_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMethodDecl(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InitializerDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_2_3_1(int lookahead) {
-		lookahead = matchInitializerDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(TypeParameters)
-			)
-			nonTerminal(Name)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, ConstructorDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_2_3_5(int lookahead) {
-		lookahead = matchConstructorDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Type)
-			nonTerminal(Name)
-			zeroOrMore(
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
-			choice(
-				terminal(COMMA)
-				terminal(ASSIGN)
-				terminal(SEMICOLON)
-			)
-		)
-		nonTerminal(ret, FieldDecl)
-	) */
-	private int matchClassOrInterfaceBodyDecl_2_2_3_6(int lookahead) {
-		lookahead = matchFieldDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(TypeParameters)
-		)
-		nonTerminal(Name)
-		terminal(LPAREN)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead1(int lookahead) {
-		lookahead = matchClassOrInterfaceBodyDecl_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(TypeParameters)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(TypeParameters)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead1_1_1(int lookahead) {
-		lookahead = matchTypeParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Type)
-		nonTerminal(Name)
-		zeroOrMore(
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-		choice(
-			terminal(COMMA)
-			terminal(ASSIGN)
-			terminal(SEMICOLON)
-		)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead2(int lookahead) {
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecl_lookahead2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecl_lookahead2_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_lookahead2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchClassOrInterfaceBodyDecl_lookahead2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(COMMA)
-		terminal(ASSIGN)
-		terminal(SEMICOLON)
-	) */
-	private int matchClassOrInterfaceBodyDecl_lookahead2_4(int lookahead) {
-		int newLookahead;
-		newLookahead = match(lookahead, TokenType.COMMA);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.ASSIGN);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.SEMICOLON);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
@@ -4219,28 +4207,15 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
+		int __token;
+		pushCallStack(JavaGrammar.FieldDecl_1);
 		type = parseType(null);
+		popCallStack();
+		pushCallStack(JavaGrammar.FieldDecl_2);
 		variables = parseVariableDeclarators();
+		popCallStack();
 		parse(TokenType.SEMICOLON);
 		return dress(SFieldDecl.make(modifiers, type, variables));
-	}
-
-	/* sequence(
-		nonTerminal(type, Type)
-		nonTerminal(variables, VariableDeclarators)
-		terminal(SEMICOLON)
-	) */
-	private int matchFieldDecl(int lookahead) {
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclarators(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4251,23 +4226,14 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SLocalVariableDecl> parseVariableDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
+		int __token;
+		pushCallStack(JavaGrammar.VariableDecl_1);
 		type = parseType(null);
+		popCallStack();
+		pushCallStack(JavaGrammar.VariableDecl_2);
 		variables = parseVariableDeclarators();
+		popCallStack();
 		return dress(SLocalVariableDecl.make(modifiers, type, variables));
-	}
-
-	/* sequence(
-		nonTerminal(type, Type)
-		nonTerminal(variables, VariableDeclarators)
-	) */
-	private int matchVariableDecl(int lookahead) {
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclarators(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4283,59 +4249,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseVariableDeclarators() throws ParseException {
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
+		int __token;
+		pushCallStack(JavaGrammar.VariableDeclarators_1);
 		val = parseVariableDeclarator();
+		popCallStack();
 		variables = append(variables, val);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
+			pushCallStack(JavaGrammar.VariableDeclarators_2_2);
 			val = parseVariableDeclarator();
+			popCallStack();
 			variables = append(variables, val);
+			__token = getToken(0).kind;
 		}
 		return variables;
-	}
-
-	/* sequence(
-		nonTerminal(val, VariableDeclarator)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(val, VariableDeclarator)
-		)
-	) */
-	private int matchVariableDeclarators(int lookahead) {
-		lookahead = matchVariableDeclarator(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclarators_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(val, VariableDeclarator)
-	) */
-	private int matchVariableDeclarators_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchVariableDeclarators_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchVariableDeclarators_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(val, VariableDeclarator)
-	) */
-	private int matchVariableDeclarators_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclarator(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4352,57 +4280,20 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SVariableDeclaratorId> id;
 		BUTree<SNodeOption> init = none();
 		BUTree<? extends SExpr> initExpr = null;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.VariableDeclarator_1);
 		id = parseVariableDeclaratorId();
-		if (match(0, TokenType.ASSIGN) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.ASSIGN) {
 			parse(TokenType.ASSIGN);
+			pushCallStack(JavaGrammar.VariableDeclarator_2_2);
 			initExpr = parseVariableInitializer();
+			popCallStack();
 			init = optionOf(initExpr);
 		}
 		return dress(SVariableDeclarator.make(id, init));
-	}
-
-	/* sequence(
-		nonTerminal(id, VariableDeclaratorId)
-		zeroOrOne(
-			terminal(ASSIGN)
-			nonTerminal(initExpr, VariableInitializer)
-		)
-	) */
-	private int matchVariableDeclarator(int lookahead) {
-		lookahead = matchVariableDeclaratorId(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclarator_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(ASSIGN)
-		nonTerminal(initExpr, VariableInitializer)
-	) */
-	private int matchVariableDeclarator_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchVariableDeclarator_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ASSIGN)
-		nonTerminal(initExpr, VariableInitializer)
-	) */
-	private int matchVariableDeclarator_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.ASSIGN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableInitializer(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4414,33 +4305,19 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SVariableDeclaratorId> parseVariableDeclaratorId() throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> arrayDims;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.VariableDeclaratorId_1);
 		name = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.VariableDeclaratorId_2);
 		arrayDims = parseArrayDims();
+		popCallStack();
 		return dress(SVariableDeclaratorId.make(name, arrayDims));
 	}
 
 	/* sequence(
-		nonTerminal(name, Name)
-		nonTerminal(arrayDims, ArrayDims)
-	) */
-	private int matchVariableDeclaratorId(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayDims(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		zeroOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -4452,94 +4329,19 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseArrayDims() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
-		while (matchArrayDims_lookahead1(0) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.ARRAY_DIMS_1) == 1) {
 			run();
+			pushCallStack(JavaGrammar.ArrayDims_1_1);
 			annotations = parseAnnotations();
+			popCallStack();
 			parse(TokenType.LBRACKET);
 			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
+			__token = getToken(0).kind;
 		}
 		return arrayDims;
-	}
-
-	/* sequence(
-		zeroOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-	) */
-	private int matchArrayDims(int lookahead) {
-		lookahead = matchArrayDims_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDims_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayDims_1_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchArrayDims_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDims_1_1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDims_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4551,42 +4353,19 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, TokenType.LBRACE) != -1) {
-			ret = parseArrayInitializer();
-		} else if (match(0, TokenType.LPAREN, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.BYTE, TokenType.LONG, TokenType.CHAR, TokenType.INT, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.VOID, TokenType.THIS, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.INCR, TokenType.DECR) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.VariableInitializer_1_2);
 			ret = parseExpression();
-		} else {
-			throw produceParseException(TokenType.LBRACE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.SUPER, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.BYTE, TokenType.LONG, TokenType.NEW, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.FALSE, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR);
-		}
+			popCallStack();
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.VariableInitializer_1_1);
+			ret = parseArrayInitializer();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			nonTerminal(ret, ArrayInitializer)
-			nonTerminal(ret, Expression)
-		)
-	) */
-	private int matchVariableInitializer(int lookahead) {
-		lookahead = matchVariableInitializer_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, ArrayInitializer)
-		nonTerminal(ret, Expression)
-	) */
-	private int matchVariableInitializer_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayInitializer(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
@@ -4596,12 +4375,6 @@ public class ParserImplementation extends ParserNewBase {
 			nonTerminal(val, VariableInitializer)
 			action({ values = append(values, val); })
 			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
 				terminal(COMMA)
 				nonTerminal(val, VariableInitializer)
 				action({ values = append(values, val); })
@@ -4618,201 +4391,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> values = emptyList();
 		BUTree<? extends SExpr> val;
 		boolean trailingComma = false;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.THIS, TokenType.VOID, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.SUPER, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.LBRACE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ArrayInitializer_2_1);
 			val = parseVariableInitializer();
+			popCallStack();
 			values = append(values, val);
-			while (matchArrayInitializer_lookahead1(0) == -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.ARRAY_INITIALIZER_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.ArrayInitializer_2_2_2);
 				val = parseVariableInitializer();
+				popCallStack();
 				values = append(values, val);
+				__token = getToken(0).kind;
 			}
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
 		parse(TokenType.RBRACE);
 		return dress(SArrayInitializerExpr.make(values, trailingComma));
-	}
-
-	/* sequence(
-		terminal(LBRACE)
-		zeroOrOne(
-			nonTerminal(val, VariableInitializer)
-			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
-				terminal(COMMA)
-				nonTerminal(val, VariableInitializer)
-			)
-		)
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchArrayInitializer(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayInitializer_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayInitializer_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(val, VariableInitializer)
-		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(COMMA)
-				)
-				terminal(RBRACE)
-			)
-			terminal(COMMA)
-			nonTerminal(val, VariableInitializer)
-		)
-	) */
-	private int matchArrayInitializer_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayInitializer_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(val, VariableInitializer)
-		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(COMMA)
-				)
-				terminal(RBRACE)
-			)
-			terminal(COMMA)
-			nonTerminal(val, VariableInitializer)
-		)
-	) */
-	private int matchArrayInitializer_3_1(int lookahead) {
-		lookahead = matchVariableInitializer(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayInitializer_3_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			terminal(RBRACE)
-		)
-		terminal(COMMA)
-		nonTerminal(val, VariableInitializer)
-	) */
-	private int matchArrayInitializer_3_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayInitializer_3_1_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchArrayInitializer_3_1_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			terminal(RBRACE)
-		)
-		terminal(COMMA)
-		nonTerminal(val, VariableInitializer)
-	) */
-	private int matchArrayInitializer_3_1_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableInitializer(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchArrayInitializer_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayInitializer_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchArrayInitializer_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchArrayInitializer_lookahead1(int lookahead) {
-		lookahead = matchArrayInitializer_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchArrayInitializer_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayInitializer_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchArrayInitializer_lookahead1_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -4848,145 +4452,46 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> throwsClause = null;
 		BUTree<SBlockStmt> block = null;
 		BUProblem problem = null;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.MethodDecl_1_1);
 			typeParameters = parseTypeParameters();
+			popCallStack();
+			pushCallStack(JavaGrammar.MethodDecl_1_2);
 			additionalAnnotations = parseAnnotations();
+			popCallStack();
 		}
+		pushCallStack(JavaGrammar.MethodDecl_2);
 		type = parseResultType();
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodDecl_3);
 		name = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodDecl_4);
 		parameters = parseFormalParameters();
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodDecl_5);
 		arrayDims = parseArrayDims();
-		if (match(0, TokenType.THROWS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.THROWS) {
+			pushCallStack(JavaGrammar.MethodDecl_6_1);
 			throwsClause = parseThrowsClause();
+			popCallStack();
 		}
-		if (match(0, TokenType.LBRACE) != -1) {
-			block = parseBlock();
-		} else if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
-		} else {
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.MethodDecl_7_1);
+			block = parseBlock();
+			popCallStack();
+		} else
 			throw produceParseException(TokenType.LBRACE, TokenType.SEMICOLON);
-		}
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(typeParameters, TypeParameters)
-			nonTerminal(additionalAnnotations, Annotations)
-		)
-		nonTerminal(type, ResultType)
-		nonTerminal(name, Name)
-		nonTerminal(parameters, FormalParameters)
-		nonTerminal(arrayDims, ArrayDims)
-		zeroOrOne(
-			nonTerminal(throwsClause, ThrowsClause)
-		)
-		choice(
-			nonTerminal(block, Block)
-			sequence(
-				terminal(SEMICOLON)
-			)
-		)
-	) */
-	private int matchMethodDecl(int lookahead) {
-		lookahead = matchMethodDecl_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchResultType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayDims(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMethodDecl_6(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMethodDecl_7(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeParameters, TypeParameters)
-		nonTerminal(additionalAnnotations, Annotations)
-	) */
-	private int matchMethodDecl_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMethodDecl_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeParameters, TypeParameters)
-		nonTerminal(additionalAnnotations, Annotations)
-	) */
-	private int matchMethodDecl_1_1(int lookahead) {
-		lookahead = matchTypeParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(throwsClause, ThrowsClause)
-	) */
-	private int matchMethodDecl_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMethodDecl_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(throwsClause, ThrowsClause)
-	) */
-	private int matchMethodDecl_6_1(int lookahead) {
-		lookahead = matchThrowsClause(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(block, Block)
-		sequence(
-			terminal(SEMICOLON)
-		)
-	) */
-	private int matchMethodDecl_7(int lookahead) {
-		int newLookahead;
-		newLookahead = matchBlock(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMethodDecl_7_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchMethodDecl_7_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -5000,53 +4505,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseFormalParameters() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
+		int __token;
 		parse(TokenType.LPAREN);
-		if (match(0, TokenType.PRIVATE, TokenType.FINAL, TokenType.STRICTFP, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.NATIVE, TokenType.PUBLIC, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.STATIC, TokenType.INT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.SHORT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.FormalParameters_2_1);
 			ret = parseFormalParameterList();
+			popCallStack();
 		}
 		parse(TokenType.RPAREN);
 		return ensureNotNull(ret);
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		zeroOrOne(
-			nonTerminal(ret, FormalParameterList)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchFormalParameters(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameters_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(ret, FormalParameterList)
-	) */
-	private int matchFormalParameters_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameters_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, FormalParameterList)
-	) */
-	private int matchFormalParameters_2_1(int lookahead) {
-		lookahead = matchFormalParameterList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -5070,135 +4538,29 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		if (quotesMode && matchFormalParameterList_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.ABSTRACT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.STATIC, TokenType.FINAL, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.AT, TokenType.PUBLIC, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.SHORT, TokenType.BOOLEAN, TokenType.INT, TokenType.LONG, TokenType.FLOAT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.FormalParameterList_1_2_1);
 			par = parseFormalParameter();
+			popCallStack();
 			ret = append(ret, par);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.FORMAL_PARAMETER_LIST_1_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.FormalParameterList_1_2_2_2);
 				par = parseFormalParameter();
+				popCallStack();
 				ret = append(ret, par);
+				__token = getToken(0).kind;
 			}
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.STATIC, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.PRIVATE, TokenType.FINAL, TokenType.NATIVE, TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.LONG);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.FormalParameterList_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(par, FormalParameter)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(par, FormalParameter)
-				)
-			)
-		)
-	) */
-	private int matchFormalParameterList(int lookahead) {
-		lookahead = matchFormalParameterList_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(par, FormalParameter)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(par, FormalParameter)
-			)
-		)
-	) */
-	private int matchFormalParameterList_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameterList_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchFormalParameterList_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchFormalParameterList_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(par, FormalParameter)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(par, FormalParameter)
-		)
-	) */
-	private int matchFormalParameterList_1_2(int lookahead) {
-		lookahead = matchFormalParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameterList_1_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(par, FormalParameter)
-	) */
-	private int matchFormalParameterList_1_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameterList_1_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchFormalParameterList_1_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(par, FormalParameter)
-	) */
-	private int matchFormalParameterList_1_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchFormalParameterList_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -5212,13 +4574,6 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		choice(
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(Name)
-						terminal(DOT)
-					)
-					terminal(THIS)
-				)
 				zeroOrOne(
 					nonTerminal(receiverTypeName, Name)
 					terminal(DOT)
@@ -5238,215 +4593,43 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SVariableDeclaratorId> id = null;
 		boolean isReceiver = false;
 		BUTree<SName> receiverTypeName = null;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.FormalParameter_1);
 		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.FormalParameter_2);
 		type = parseType(null);
-		if (match(0, TokenType.AT, TokenType.ELLIPSIS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.AT || __token == TokenType.ELLIPSIS) {
+			pushCallStack(JavaGrammar.FormalParameter_3_1);
 			ellipsisAnnotations = parseAnnotations();
+			popCallStack();
 			parse(TokenType.ELLIPSIS);
 			isVarArg = true;
 		}
-		if (matchFormalParameter_lookahead1(0) != -1) {
-			if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-				receiverTypeName = parseName();
-				parse(TokenType.DOT);
-			}
-			parse(TokenType.THIS);
-			isReceiver = true;
-		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-			id = parseVariableDeclaratorId();
-		} else {
-			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.THIS);
+		switch (predict(JavaGrammar.FORMAL_PARAMETER_4)) {
+			case 1:
+				__token = getToken(0).kind;
+				if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+					pushCallStack(JavaGrammar.FormalParameter_4_1_1_1);
+					receiverTypeName = parseName();
+					popCallStack();
+					parse(TokenType.DOT);
+				}
+				parse(TokenType.THIS);
+				isReceiver = true;
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.FormalParameter_4_2);
+				id = parseVariableDeclaratorId();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.THIS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return dress(SFormalParameter.make(modifiers, type, isVarArg, ensureNotNull(ellipsisAnnotations), optionOf(id), isReceiver, optionOf(receiverTypeName)));
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, Modifiers)
-		nonTerminal(type, Type)
-		zeroOrOne(
-			nonTerminal(ellipsisAnnotations, Annotations)
-			terminal(ELLIPSIS)
-		)
-		choice(
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(Name)
-						terminal(DOT)
-					)
-					terminal(THIS)
-				)
-				zeroOrOne(
-					nonTerminal(receiverTypeName, Name)
-					terminal(DOT)
-				)
-				terminal(THIS)
-			)
-			nonTerminal(id, VariableDeclaratorId)
-		)
-	) */
-	private int matchFormalParameter(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameter_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameter_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(ellipsisAnnotations, Annotations)
-		terminal(ELLIPSIS)
-	) */
-	private int matchFormalParameter_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameter_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ellipsisAnnotations, Annotations)
-		terminal(ELLIPSIS)
-	) */
-	private int matchFormalParameter_4_1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ELLIPSIS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(Name)
-					terminal(DOT)
-				)
-				terminal(THIS)
-			)
-			zeroOrOne(
-				nonTerminal(receiverTypeName, Name)
-				terminal(DOT)
-			)
-			terminal(THIS)
-		)
-		nonTerminal(id, VariableDeclaratorId)
-	) */
-	private int matchFormalParameter_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameter_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchVariableDeclaratorId(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(Name)
-				terminal(DOT)
-			)
-			terminal(THIS)
-		)
-		zeroOrOne(
-			nonTerminal(receiverTypeName, Name)
-			terminal(DOT)
-		)
-		terminal(THIS)
-	) */
-	private int matchFormalParameter_5_1(int lookahead) {
-		lookahead = matchFormalParameter_5_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(receiverTypeName, Name)
-		terminal(DOT)
-	) */
-	private int matchFormalParameter_5_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameter_5_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(receiverTypeName, Name)
-		terminal(DOT)
-	) */
-	private int matchFormalParameter_5_1_2_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(Name)
-			terminal(DOT)
-		)
-		terminal(THIS)
-	) */
-	private int matchFormalParameter_lookahead1(int lookahead) {
-		lookahead = matchFormalParameter_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(Name)
-		terminal(DOT)
-	) */
-	private int matchFormalParameter_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchFormalParameter_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Name)
-		terminal(DOT)
-	) */
-	private int matchFormalParameter_lookahead1_1_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -5463,64 +4646,22 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseThrowsClause() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
+		int __token;
 		parse(TokenType.THROWS);
+		pushCallStack(JavaGrammar.ThrowsClause_2);
 		cit = parseAnnotatedQualifiedType();
+		popCallStack();
 		ret = append(ret, cit);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
+			pushCallStack(JavaGrammar.ThrowsClause_3_2);
 			cit = parseAnnotatedQualifiedType();
+			popCallStack();
 			ret = append(ret, cit);
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		terminal(THROWS)
-		nonTerminal(cit, AnnotatedQualifiedType)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(cit, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchThrowsClause(int lookahead) {
-		lookahead = match(lookahead, TokenType.THROWS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchThrowsClause_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchThrowsClause_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchThrowsClause_4_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchThrowsClause_4_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(cit, AnnotatedQualifiedType)
-	) */
-	private int matchThrowsClause_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -5544,116 +4685,43 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SName> name;
 		BUTree<SNodeList> parameters;
 		BUTree<SNodeList> throwsClause = null;
+		BUTree<SExplicitConstructorInvocationStmt> exConsInv = null;
 		BUTree<SBlockStmt> block;
 		BUTree<SNodeList> stmts = emptyList();
 		BUTree<? extends SStmt> stmt;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.ConstructorDecl_1_1);
 			typeParameters = parseTypeParameters();
+			popCallStack();
 		}
+		pushCallStack(JavaGrammar.ConstructorDecl_2);
 		name = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.ConstructorDecl_3);
 		parameters = parseFormalParameters();
-		if (match(0, TokenType.THROWS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.THROWS) {
+			pushCallStack(JavaGrammar.ConstructorDecl_4_1);
 			throwsClause = parseThrowsClause();
+			popCallStack();
 		}
 		run();
 		parse(TokenType.LBRACE);
+		pushCallStack(JavaGrammar.ConstructorDecl_6);
 		stmts = parseStatements(true);
+		popCallStack();
 		parse(TokenType.RBRACE);
 		block = dress(SBlockStmt.make(stmts));
 		return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block));
 	}
 
 	/* sequence(
-		zeroOrOne(
-			nonTerminal(typeParameters, TypeParameters)
-		)
-		nonTerminal(name, Name)
-		nonTerminal(parameters, FormalParameters)
-		zeroOrOne(
-			nonTerminal(throwsClause, ThrowsClause)
-		)
-		terminal(LBRACE)
-		nonTerminal(stmts, Statements)
-		terminal(RBRACE)
-	) */
-	private int matchConstructorDecl(int lookahead) {
-		lookahead = matchConstructorDecl_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConstructorDecl_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements(lookahead, true);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeParameters, TypeParameters)
-	) */
-	private int matchConstructorDecl_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConstructorDecl_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeParameters, TypeParameters)
-	) */
-	private int matchConstructorDecl_1_1(int lookahead) {
-		lookahead = matchTypeParameters(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(throwsClause, ThrowsClause)
-	) */
-	private int matchConstructorDecl_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConstructorDecl_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(throwsClause, ThrowsClause)
-	) */
-	private int matchConstructorDecl_4_1(int lookahead) {
-		lookahead = matchThrowsClause(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		action({ run(); })
 		choice(
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					terminal(THIS)
-					terminal(LPAREN)
-				)
 				zeroOrOne(
 					nonTerminal(typeArgs, TypeArguments)
 				)
@@ -5664,10 +4732,6 @@ public class ParserImplementation extends ParserNewBase {
 			)
 			sequence(
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-						terminal(DOT)
-					)
 					nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
 					terminal(DOT)
 				)
@@ -5686,320 +4750,53 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> args;
 		BUTree<? extends SExpr> expr = null;
 		BUTree<SNodeList> typeArgs = null;
+		int __token;
 		run();
-		if (matchExplicitConstructorInvocation_lookahead1(0) != -1) {
-			if (match(0, TokenType.LT) != -1) {
-				typeArgs = parseTypeArguments();
-			}
-			parse(TokenType.THIS);
-			isThis = true;
-			args = parseArguments();
-			parse(TokenType.SEMICOLON);
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SUPER, TokenType.NEW, TokenType.LT, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LPAREN, TokenType.THIS, TokenType.VOID, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.BYTE) != -1) {
-			if (matchExplicitConstructorInvocation_lookahead2(0) != -1) {
-				expr = parsePrimaryExpressionWithoutSuperSuffix();
-				parse(TokenType.DOT);
-			}
-			if (match(0, TokenType.LT) != -1) {
-				typeArgs = parseTypeArguments();
-			}
-			parse(TokenType.SUPER);
-			args = parseArguments();
-			parse(TokenType.SEMICOLON);
-		} else {
-			throw produceParseException(TokenType.LT, TokenType.THIS, TokenType.NEW, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.INT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.FLOAT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.LPAREN, TokenType.SUPER);
+		switch (predict(JavaGrammar.EXPLICIT_CONSTRUCTOR_INVOCATION_1)) {
+			case 1:
+				__token = getToken(0).kind;
+				if (__token == TokenType.LT) {
+					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_1_1_1);
+					typeArgs = parseTypeArguments();
+					popCallStack();
+				}
+				parse(TokenType.THIS);
+				isThis = true;
+				pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_1_3);
+				args = parseArguments();
+				popCallStack();
+				parse(TokenType.SEMICOLON);
+				break;
+			case 2:
+				__token = getToken(0).kind;
+				if (predict(JavaGrammar.EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1) == 1) {
+					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_1_1);
+					expr = parsePrimaryExpressionWithoutSuperSuffix();
+					popCallStack();
+					parse(TokenType.DOT);
+				}
+				__token = getToken(0).kind;
+				if (__token == TokenType.LT) {
+					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_2_1);
+					typeArgs = parseTypeArguments();
+					popCallStack();
+				}
+				parse(TokenType.SUPER);
+				pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_4);
+				args = parseArguments();
+				popCallStack();
+				parse(TokenType.SEMICOLON);
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					terminal(THIS)
-					terminal(LPAREN)
-				)
-				zeroOrOne(
-					nonTerminal(typeArgs, TypeArguments)
-				)
-				terminal(THIS)
-				nonTerminal(args, Arguments)
-				terminal(SEMICOLON)
-			)
-			sequence(
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-						terminal(DOT)
-					)
-					nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-					terminal(DOT)
-				)
-				zeroOrOne(
-					nonTerminal(typeArgs, TypeArguments)
-				)
-				terminal(SUPER)
-				nonTerminal(args, Arguments)
-				terminal(SEMICOLON)
-			)
-		)
-	) */
-	private int matchExplicitConstructorInvocation(int lookahead) {
-		lookahead = matchExplicitConstructorInvocation_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(TypeArguments)
-				)
-				terminal(THIS)
-				terminal(LPAREN)
-			)
-			zeroOrOne(
-				nonTerminal(typeArgs, TypeArguments)
-			)
-			terminal(THIS)
-			nonTerminal(args, Arguments)
-			terminal(SEMICOLON)
-		)
-		sequence(
-			zeroOrOne(
-				lookAhead(
-					nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-					terminal(DOT)
-				)
-				nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-				terminal(DOT)
-			)
-			zeroOrOne(
-				nonTerminal(typeArgs, TypeArguments)
-			)
-			terminal(SUPER)
-			nonTerminal(args, Arguments)
-			terminal(SEMICOLON)
-		)
-	) */
-	private int matchExplicitConstructorInvocation_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(TypeArguments)
-			)
-			terminal(THIS)
-			terminal(LPAREN)
-		)
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		terminal(THIS)
-		nonTerminal(args, Arguments)
-		terminal(SEMICOLON)
-	) */
-	private int matchExplicitConstructorInvocation_2_1(int lookahead) {
-		lookahead = matchExplicitConstructorInvocation_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_2_1_2_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			lookAhead(
-				nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-				terminal(DOT)
-			)
-			nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-			terminal(DOT)
-		)
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		terminal(SUPER)
-		nonTerminal(args, Arguments)
-		terminal(SEMICOLON)
-	) */
-	private int matchExplicitConstructorInvocation_2_2(int lookahead) {
-		lookahead = matchExplicitConstructorInvocation_2_2_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExplicitConstructorInvocation_2_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SUPER);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-			terminal(DOT)
-		)
-		nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-		terminal(DOT)
-	) */
-	private int matchExplicitConstructorInvocation_2_2_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_2_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-			terminal(DOT)
-		)
-		nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-		terminal(DOT)
-	) */
-	private int matchExplicitConstructorInvocation_2_2_1_1(int lookahead) {
-		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_2_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_2_2_2_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(TypeArguments)
-		)
-		terminal(THIS)
-		terminal(LPAREN)
-	) */
-	private int matchExplicitConstructorInvocation_lookahead1(int lookahead) {
-		lookahead = matchExplicitConstructorInvocation_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchExplicitConstructorInvocation_lookahead1_1_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-		terminal(DOT)
-	) */
-	private int matchExplicitConstructorInvocation_lookahead2(int lookahead) {
-		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
 		zeroOrOne(
 			choice(
 				sequence(
-					lookAhead({ quotesMode })
 					nonTerminal(ret, NodeListVar)
 				)
 				sequence(
@@ -6020,382 +4817,30 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
-		if (quotesMode && matchStatements_lookahead1(0, inConstructor) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.VOID, TokenType.BOOLEAN, TokenType.INT, TokenType.CHAR, TokenType.LONG, TokenType.BYTE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.SHORT, TokenType.LT, TokenType.NEW, TokenType.SUPER, TokenType.LPAREN, TokenType.THIS, TokenType.STATIC, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.PROTECTED, TokenType.FINAL, TokenType.PRIVATE, TokenType.TRANSIENT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.AT, TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.INTERFACE, TokenType.CLASS, TokenType.DO, TokenType.THROW, TokenType.SWITCH, TokenType.ASSERT, TokenType.FOR, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.TRY, TokenType.BREAK, TokenType.CONTINUE, TokenType.WHILE, TokenType.RETURN, TokenType.LBRACE, TokenType.IF) != -1) {
-			if (inConstructor && matchStatements_lookahead2(0, inConstructor) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 0 & ~63) == 0 && (1L << __token - 0 & (1L << TokenType.EOF - 0 | 1L << TokenType.ABSTRACT - 0 | 1L << TokenType.ASSERT - 0 | 1L << TokenType.BOOLEAN - 0 | 1L << TokenType.BREAK - 0 | 1L << TokenType.BYTE - 0 | 1L << TokenType.CHAR - 0 | 1L << TokenType.CLASS - 0 | 1L << TokenType.CONTINUE - 0 | 1L << TokenType.DO - 0 | 1L << TokenType.DOUBLE - 0 | 1L << TokenType.FALSE - 0 | 1L << TokenType.FINAL - 0 | 1L << TokenType.FLOAT - 0 | 1L << TokenType.FOR - 0 | 1L << TokenType.IF - 0 | 1L << TokenType.INT - 0 | 1L << TokenType.INTERFACE - 0 | 1L << TokenType.LONG - 0 | 1L << TokenType.NATIVE - 0 | 1L << TokenType.NEW - 0 | 1L << TokenType.NULL - 0 | 1L << TokenType.PRIVATE - 0 | 1L << TokenType.PROTECTED - 0 | 1L << TokenType.PUBLIC - 0 | 1L << TokenType.RETURN - 0 | 1L << TokenType.SHORT - 0 | 1L << TokenType.STATIC - 0 | 1L << TokenType.STRICTFP - 0 | 1L << TokenType.SUPER - 0 | 1L << TokenType.SWITCH - 0 | 1L << TokenType.SYNCHRONIZED - 0 | 1L << TokenType.THIS - 0 | 1L << TokenType.THROW - 0 | 1L << TokenType.TRANSIENT - 0 | 1L << TokenType.TRUE - 0 | 1L << TokenType.TRY - 0 | 1L << TokenType.VOID - 0 | 1L << TokenType.VOLATILE - 0 | 1L << TokenType.WHILE - 0 | 1L << TokenType.LONG_LITERAL - 0 | 1L << TokenType.INTEGER_LITERAL - 0)) != 0 || (__token - 68 & ~63) == 0 && (1L << __token - 68 & (1L << TokenType.FLOAT_LITERAL - 68 | 1L << TokenType.DOUBLE_LITERAL - 68 | 1L << TokenType.CHARACTER_LITERAL - 68 | 1L << TokenType.STRING_LITERAL - 68 | 1L << TokenType.LPAREN - 68 | 1L << TokenType.LBRACE - 68 | 1L << TokenType.RBRACE - 68 | 1L << TokenType.SEMICOLON - 68 | 1L << TokenType.AT - 68 | 1L << TokenType.LT - 68 | 1L << TokenType.BANG - 68 | 1L << TokenType.TILDE - 68 | 1L << TokenType.INCR - 68 | 1L << TokenType.DECR - 68 | 1L << TokenType.PLUS - 68 | 1L << TokenType.MINUS - 68 | 1L << TokenType.NODE_VARIABLE - 68)) != 0) || ((__token - 132 & ~63) == 0 && (1L << __token - 132 & (1L << TokenType.IDENTIFIER - 132)) != 0)) {
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.STATEMENTS_1_1_2_1) == 1) {
+				pushCallStack(JavaGrammar.Statements_1_1_2_1_1);
 				stmt = parseExplicitConstructorInvocation();
+				popCallStack();
 				ret = append(ret, stmt);
 			}
-			while (match(0, TokenType.RETURN, TokenType.WHILE, TokenType.CONTINUE, TokenType.DO, TokenType.TRY, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LBRACE, TokenType.BREAK, TokenType.SYNCHRONIZED, TokenType.SEMICOLON, TokenType.IF, TokenType.ASSERT, TokenType.SWITCH, TokenType.LT, TokenType.NEW, TokenType.SUPER, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.VOID, TokenType.BOOLEAN, TokenType.LONG, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.LPAREN, TokenType.THIS, TokenType.INCR, TokenType.DECR, TokenType.FOR, TokenType.THROW, TokenType.PRIVATE, TokenType.VOLATILE, TokenType.ABSTRACT, TokenType.AT, TokenType.STATIC, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.FINAL, TokenType.NATIVE, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.INTERFACE, TokenType.CLASS) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.STATEMENTS_1_1_2_2) == 1) {
+				pushCallStack(JavaGrammar.Statements_1_1_2_2_1);
 				stmt = parseBlockStatement();
+				popCallStack();
 				ret = append(ret, stmt);
+				__token = getToken(0).kind;
 			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Statements_1_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		return ensureNotNull(ret);
-	}
-
-	/* sequence(
-		zeroOrOne(
-			choice(
-				sequence(
-					lookAhead({ quotesMode })
-					nonTerminal(ret, NodeListVar)
-				)
-				sequence(
-					zeroOrOne(
-						lookAhead({ inConstructor })
-						nonTerminal(stmt, ExplicitConstructorInvocation)
-					)
-					zeroOrMore(
-						nonTerminal(stmt, BlockStatement)
-					)
-				)
-			)
-		)
-	) */
-	private int matchStatements(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_1(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				zeroOrOne(
-					lookAhead({ inConstructor })
-					nonTerminal(stmt, ExplicitConstructorInvocation)
-				)
-				zeroOrMore(
-					nonTerminal(stmt, BlockStatement)
-				)
-			)
-		)
-	) */
-	private int matchStatements_1(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_1_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				zeroOrOne(
-					lookAhead({ inConstructor })
-					nonTerminal(stmt, ExplicitConstructorInvocation)
-				)
-				zeroOrMore(
-					nonTerminal(stmt, BlockStatement)
-				)
-			)
-		)
-	) */
-	private int matchStatements_1_1(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_1_1_1(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			zeroOrOne(
-				lookAhead({ inConstructor })
-				nonTerminal(stmt, ExplicitConstructorInvocation)
-			)
-			zeroOrMore(
-				nonTerminal(stmt, BlockStatement)
-			)
-		)
-	) */
-	private int matchStatements_1_1_1(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_1_1_1_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatements_1_1_1_2(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchStatements_1_1_1_1(int lookahead, boolean inConstructor) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			lookAhead({ inConstructor })
-			nonTerminal(stmt, ExplicitConstructorInvocation)
-		)
-		zeroOrMore(
-			nonTerminal(stmt, BlockStatement)
-		)
-	) */
-	private int matchStatements_1_1_1_2(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_1_1_1_2_1(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements_1_1_1_2_2(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead({ inConstructor })
-		nonTerminal(stmt, ExplicitConstructorInvocation)
-	) */
-	private int matchStatements_1_1_1_2_1(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_1_1_1_2_1_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead({ inConstructor })
-		nonTerminal(stmt, ExplicitConstructorInvocation)
-	) */
-	private int matchStatements_1_1_1_2_1_1(int lookahead, boolean inConstructor) {
-		lookahead = inConstructor ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExplicitConstructorInvocation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		nonTerminal(stmt, BlockStatement)
-	) */
-	private int matchStatements_1_1_1_2_2(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_1_1_1_2_2_1(lookahead, inConstructor);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchStatements_1_1_1_2_2_1(lookahead, inConstructor);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(stmt, BlockStatement)
-	) */
-	private int matchStatements_1_1_1_2_2_1(int lookahead, boolean inConstructor) {
-		lookahead = matchBlockStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchStatements_lookahead1(int lookahead, boolean inConstructor) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				zeroOrOne(
-					nonTerminal(typeArgs, TypeArguments)
-				)
-				choice(
-					terminal(THIS)
-					terminal(SUPER)
-				)
-				terminal(LPAREN)
-			)
-			sequence(
-				nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-				terminal(DOT)
-				zeroOrOne(
-					nonTerminal(typeArgs, TypeArguments)
-				)
-				terminal(SUPER)
-				terminal(LPAREN)
-			)
-		)
-	) */
-	private int matchStatements_lookahead2(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_lookahead2_1(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			zeroOrOne(
-				nonTerminal(typeArgs, TypeArguments)
-			)
-			choice(
-				terminal(THIS)
-				terminal(SUPER)
-			)
-			terminal(LPAREN)
-		)
-		sequence(
-			nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-			terminal(DOT)
-			zeroOrOne(
-				nonTerminal(typeArgs, TypeArguments)
-			)
-			terminal(SUPER)
-			terminal(LPAREN)
-		)
-	) */
-	private int matchStatements_lookahead2_1(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_lookahead2_1_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatements_lookahead2_1_2(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		choice(
-			terminal(THIS)
-			terminal(SUPER)
-		)
-		terminal(LPAREN)
-	) */
-	private int matchStatements_lookahead2_1_1(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_lookahead2_1_1_1(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements_lookahead2_1_1_2(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchStatements_lookahead2_1_1_1(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_lookahead2_1_1_1_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchStatements_lookahead2_1_1_1_1(int lookahead, boolean inConstructor) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(THIS)
-		terminal(SUPER)
-	) */
-	private int matchStatements_lookahead2_1_1_2(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = match(lookahead, TokenType.THIS);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.SUPER);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-		terminal(DOT)
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		terminal(SUPER)
-		terminal(LPAREN)
-	) */
-	private int matchStatements_lookahead2_1_2(int lookahead, boolean inConstructor) {
-		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements_lookahead2_1_2_3(lookahead, inConstructor);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SUPER);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchStatements_lookahead2_1_2_3(int lookahead, boolean inConstructor) {
-		int newLookahead;
-		newLookahead = matchStatements_lookahead2_1_2_3_1(lookahead, inConstructor);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchStatements_lookahead2_1_2_3_1(int lookahead, boolean inConstructor) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -6404,18 +4849,11 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SBlockStmt> block;
+		int __token;
+		pushCallStack(JavaGrammar.InitializerDecl_1);
 		block = parseBlock();
+		popCallStack();
 		return dress(SInitializerDecl.make(modifiers, block));
-	}
-
-	/* sequence(
-		nonTerminal(block, Block)
-	) */
-	private int matchInitializerDecl(int lookahead) {
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -6423,10 +4861,6 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(primitiveType, PrimitiveType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
@@ -6435,10 +4869,6 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(type, arrayDims)); })
@@ -6451,218 +4881,35 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
 		BUTree<SNodeList> arrayDims;
-		if (match(0, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN) != -1) {
-			primitiveType = parsePrimitiveType(annotations);
-			if (matchType_lookahead1(0) != -1) {
-				lateRun();
-				arrayDims = parseArrayDimsMandatory();
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-			}
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.Type_1_2_1);
 			type = parseQualifiedType(annotations);
-			if (matchType_lookahead2(0) != -1) {
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TYPE_1_2_2) == 1) {
 				lateRun();
+				pushCallStack(JavaGrammar.Type_1_2_2_1);
 				arrayDims = parseArrayDimsMandatory();
+				popCallStack();
 				type = dress(SArrayType.make(type, arrayDims));
 			}
-		} else {
-			throw produceParseException(TokenType.SHORT, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-		}
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.Type_1_1_1);
+			primitiveType = parsePrimitiveType(annotations);
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TYPE_1_1_2) == 1) {
+				lateRun();
+				pushCallStack(JavaGrammar.Type_1_1_2_1);
+				arrayDims = parseArrayDimsMandatory();
+				popCallStack();
+				type = dress(SArrayType.make(primitiveType, arrayDims));
+			}
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return type == null ? primitiveType : type;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				nonTerminal(primitiveType, PrimitiveType)
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-				)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-				)
-			)
-		)
-	) */
-	private int matchType(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 8);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchType_1(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 8, -1);
-		return memoizeMatch(initialLookahead, 8, lookahead);
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(primitiveType, PrimitiveType)
-			zeroOrOne(
-				lookAhead(
-					nonTerminal(Annotations)
-					terminal(LBRACKET)
-				)
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-			)
-		)
-		sequence(
-			nonTerminal(type, QualifiedType)
-			zeroOrOne(
-				lookAhead(
-					nonTerminal(Annotations)
-					terminal(LBRACKET)
-				)
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-			)
-		)
-	) */
-	private int matchType_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchType_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchType_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(primitiveType, PrimitiveType)
-		zeroOrOne(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-			)
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-		)
-	) */
-	private int matchType_1_1(int lookahead) {
-		lookahead = matchPrimitiveType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType_1_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchType_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchType_1_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchType_1_1_2_1(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(type, QualifiedType)
-		zeroOrOne(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-			)
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-		)
-	) */
-	private int matchType_1_2(int lookahead) {
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType_1_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchType_1_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchType_1_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchType_1_2_2_1(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-	) */
-	private int matchType_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-	) */
-	private int matchType_lookahead2(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -6676,10 +4923,6 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(type, arrayDims)); })
@@ -6692,151 +4935,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
 		BUTree<SNodeList> arrayDims;
-		if (match(0, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN) != -1) {
-			primitiveType = parsePrimitiveType(annotations);
-			lateRun();
-			arrayDims = parseArrayDimsMandatory();
-			type = dress(SArrayType.make(primitiveType, arrayDims));
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ReferenceType_1_2_1);
 			type = parseQualifiedType(annotations);
-			if (matchReferenceType_lookahead1(0) != -1) {
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.REFERENCE_TYPE_1_2_2) == 1) {
 				lateRun();
+				pushCallStack(JavaGrammar.ReferenceType_1_2_2_1);
 				arrayDims = parseArrayDimsMandatory();
+				popCallStack();
 				type = dress(SArrayType.make(type, arrayDims));
 			}
-		} else {
-			throw produceParseException(TokenType.SHORT, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-		}
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.ReferenceType_1_1_1);
+			primitiveType = parsePrimitiveType(annotations);
+			popCallStack();
+			lateRun();
+			pushCallStack(JavaGrammar.ReferenceType_1_1_2);
+			arrayDims = parseArrayDimsMandatory();
+			popCallStack();
+			type = dress(SArrayType.make(primitiveType, arrayDims));
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return type;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				nonTerminal(primitiveType, PrimitiveType)
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-				)
-			)
-		)
-	) */
-	private int matchReferenceType(int lookahead) {
-		lookahead = matchReferenceType_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(primitiveType, PrimitiveType)
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-		)
-		sequence(
-			nonTerminal(type, QualifiedType)
-			zeroOrOne(
-				lookAhead(
-					nonTerminal(Annotations)
-					terminal(LBRACKET)
-				)
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-			)
-		)
-	) */
-	private int matchReferenceType_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReferenceType_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchReferenceType_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(primitiveType, PrimitiveType)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchReferenceType_1_1(int lookahead) {
-		lookahead = matchPrimitiveType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(type, QualifiedType)
-		zeroOrOne(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-			)
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-		)
-	) */
-	private int matchReferenceType_1_2(int lookahead) {
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceType_1_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchReferenceType_1_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReferenceType_1_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchReferenceType_1_2_2_1(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-	) */
-	private int matchReferenceType_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -6848,19 +4972,16 @@ public class ParserImplementation extends ParserNewBase {
 		})
 		nonTerminal(name, Name)
 		zeroOrOne(
-			lookAhead(2)
 			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 		)
 		action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(DOT)
 			action({ scope = optionOf(ret); })
 			nonTerminal(annotations, Annotations)
 			nonTerminal(name, Name)
 			zeroOrOne(
-				lookAhead(2)
 				nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 			)
 			action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
@@ -6872,282 +4993,42 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedType> ret;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeArgs = null;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
 		}
+		pushCallStack(JavaGrammar.QualifiedType_1);
 		name = parseName();
-		if (matchQualifiedType_lookahead1(0) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (predict(JavaGrammar.QUALIFIED_TYPE_2) == 1) {
+			pushCallStack(JavaGrammar.QualifiedType_2_1);
 			typeArgs = parseTypeArgumentsOrDiamond();
+			popCallStack();
 		}
 		ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-		while (matchQualifiedType_lookahead2(0) != -1) {
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.QUALIFIED_TYPE_3) == 1) {
 			lateRun();
 			parse(TokenType.DOT);
 			scope = optionOf(ret);
+			pushCallStack(JavaGrammar.QualifiedType_3_2);
 			annotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.QualifiedType_3_3);
 			name = parseName();
-			if (matchQualifiedType_lookahead3(0) != -1) {
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.QUALIFIED_TYPE_3_4) == 1) {
+				pushCallStack(JavaGrammar.QualifiedType_3_4_1);
 				typeArgs = parseTypeArgumentsOrDiamond();
+				popCallStack();
 			}
 			ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(name, Name)
-		zeroOrOne(
-			lookAhead(2)
-			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		)
-		zeroOrMore(
-			lookAhead(2)
-			terminal(DOT)
-			nonTerminal(annotations, Annotations)
-			nonTerminal(name, Name)
-			zeroOrOne(
-				lookAhead(2)
-				nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-			)
-		)
-	) */
-	private int matchQualifiedType(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 4);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 4, -1);
-		lookahead = matchQualifiedType_3(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 4, -1);
-		lookahead = matchQualifiedType_5(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 4, -1);
-		return memoizeMatch(initialLookahead, 4, lookahead);
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchQualifiedType_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_3_1(int lookahead) {
-		lookahead = matchTypeArgumentsOrDiamond(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			lookAhead(2)
-			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		)
-	) */
-	private int matchQualifiedType_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchQualifiedType_5_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchQualifiedType_5_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			lookAhead(2)
-			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		)
-	) */
-	private int matchQualifiedType_5_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedType_5_1_7(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_5_1_7(int lookahead) {
-		int newLookahead;
-		newLookahead = matchQualifiedType_5_1_7_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_5_1_7_1(int lookahead) {
-		lookahead = matchTypeArgumentsOrDiamond(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_lookahead1(int lookahead) {
-		if (match(0, TokenType.LT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.HOOK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(name, Name)
-		zeroOrOne(
-			lookAhead(2)
-			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		)
-	) */
-	private int matchQualifiedType_lookahead2(int lookahead) {
-		if (match(0, TokenType.DOT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
-	) */
-	private int matchQualifiedType_lookahead3(int lookahead) {
-		if (match(0, TokenType.LT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.HOOK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -7161,57 +5042,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
+		int __token;
 		parse(TokenType.LT);
-		if (match(0, TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.DOUBLE, TokenType.BYTE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArguments_2_1);
 			ret = parseTypeArgumentList();
+			popCallStack();
 		}
 		parse(TokenType.GT);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LT)
-		zeroOrOne(
-			nonTerminal(ret, TypeArgumentList)
-		)
-		terminal(GT)
-	) */
-	private int matchTypeArguments(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 5);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = match(lookahead, TokenType.LT);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 5, -1);
-		lookahead = matchTypeArguments_2(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 5, -1);
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 5, -1);
-		return memoizeMatch(initialLookahead, 5, lookahead);
-	}
-
-	/* zeroOrOne(
-		nonTerminal(ret, TypeArgumentList)
-	) */
-	private int matchTypeArguments_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeArguments_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, TypeArgumentList)
-	) */
-	private int matchTypeArguments_2_1(int lookahead) {
-		lookahead = matchTypeArgumentList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -7225,53 +5065,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
+		int __token;
 		parse(TokenType.LT);
-		if (match(0, TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.DOUBLE, TokenType.BYTE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArgumentsOrDiamond_2_1);
 			ret = parseTypeArgumentList();
+			popCallStack();
 		}
 		parse(TokenType.GT);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LT)
-		zeroOrOne(
-			nonTerminal(ret, TypeArgumentList)
-		)
-		terminal(GT)
-	) */
-	private int matchTypeArgumentsOrDiamond(int lookahead) {
-		lookahead = match(lookahead, TokenType.LT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeArgumentsOrDiamond_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(ret, TypeArgumentList)
-	) */
-	private int matchTypeArgumentsOrDiamond_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeArgumentsOrDiamond_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, TypeArgumentList)
-	) */
-	private int matchTypeArgumentsOrDiamond_2_1(int lookahead) {
-		lookahead = matchTypeArgumentList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* choice(
@@ -7294,114 +5097,30 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		if (quotesMode && matchTypeArgumentList_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-			return ret;
-		} else if (match(0, TokenType.AT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArgumentList_2_1);
 			type = parseTypeArgument();
+			popCallStack();
 			ret = append(ret, type);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (__token == TokenType.COMMA) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.TypeArgumentList_2_2_2);
 				type = parseTypeArgument();
+				popCallStack();
 				ret = append(ret, type);
+				__token = getToken(0).kind;
 			}
 			return ret;
-		} else {
-			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.BYTE, TokenType.HOOK);
-		}
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(type, TypeArgument)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(type, TypeArgument)
-			)
-		)
-	) */
-	private int matchTypeArgumentList(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeArgumentList_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTypeArgumentList_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchTypeArgumentList_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(type, TypeArgument)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(type, TypeArgument)
-		)
-	) */
-	private int matchTypeArgumentList_2(int lookahead) {
-		lookahead = matchTypeArgument(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeArgumentList_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(type, TypeArgument)
-	) */
-	private int matchTypeArgumentList_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTypeArgumentList_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchTypeArgumentList_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(type, TypeArgument)
-	) */
-	private int matchTypeArgumentList_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeArgument(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchTypeArgumentList_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeArgumentList_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+			return ret;
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 	}
 
 	/* sequence(
@@ -7416,48 +5135,23 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SType> parseTypeArgument() throws ParseException {
 		BUTree<? extends SType> ret;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.TypeArgument_1);
 		annotations = parseAnnotations();
-		if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.FLOAT, TokenType.SHORT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.LONG, TokenType.BYTE, TokenType.INT) != -1) {
-			ret = parseReferenceType(annotations);
-		} else if (match(0, TokenType.HOOK) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.HOOK) {
+			pushCallStack(JavaGrammar.TypeArgument_2_2);
 			ret = parseWildcard(annotations);
-		} else {
-			throw produceParseException(TokenType.CHAR, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.BYTE, TokenType.SHORT, TokenType.LONG, TokenType.INT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.HOOK);
-		}
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArgument_2_1);
+			ret = parseReferenceType(annotations);
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(annotations, Annotations)
-		choice(
-			nonTerminal(ret, ReferenceType)
-			nonTerminal(ret, Wildcard)
-		)
-	) */
-	private int matchTypeArgument(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTypeArgument_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, ReferenceType)
-		nonTerminal(ret, Wildcard)
-	) */
-	private int matchTypeArgument_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReferenceType(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchWildcard(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
@@ -7490,152 +5184,33 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SReferenceType> ext = null;
 		BUTree<? extends SReferenceType> sup = null;
 		BUTree<SNodeList> boundAnnotations = null;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
 		}
 		parse(TokenType.HOOK);
-		if (match(0, TokenType.EXTENDS) != -1) {
-			parse(TokenType.EXTENDS);
-			run();
-			boundAnnotations = parseAnnotations();
-			ext = parseReferenceType(boundAnnotations);
-		} else if (match(0, TokenType.SUPER) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SUPER) {
 			parse(TokenType.SUPER);
 			run();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
 			boundAnnotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_3);
 			sup = parseReferenceType(boundAnnotations);
+			popCallStack();
+		} else if (__token == TokenType.EXTENDS) {
+			parse(TokenType.EXTENDS);
+			run();
+			pushCallStack(JavaGrammar.Wildcard_2_1_1_2);
+			boundAnnotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.Wildcard_2_1_1_3);
+			ext = parseReferenceType(boundAnnotations);
+			popCallStack();
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
-	}
-
-	/* sequence(
-		terminal(HOOK)
-		zeroOrOne(
-			choice(
-				sequence(
-					terminal(EXTENDS)
-					nonTerminal(boundAnnotations, Annotations)
-					nonTerminal(ext, ReferenceType)
-				)
-				sequence(
-					terminal(SUPER)
-					nonTerminal(boundAnnotations, Annotations)
-					nonTerminal(sup, ReferenceType)
-				)
-			)
-		)
-	) */
-	private int matchWildcard(int lookahead) {
-		lookahead = match(lookahead, TokenType.HOOK);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchWildcard_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				terminal(EXTENDS)
-				nonTerminal(boundAnnotations, Annotations)
-				nonTerminal(ext, ReferenceType)
-			)
-			sequence(
-				terminal(SUPER)
-				nonTerminal(boundAnnotations, Annotations)
-				nonTerminal(sup, ReferenceType)
-			)
-		)
-	) */
-	private int matchWildcard_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchWildcard_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(EXTENDS)
-				nonTerminal(boundAnnotations, Annotations)
-				nonTerminal(ext, ReferenceType)
-			)
-			sequence(
-				terminal(SUPER)
-				nonTerminal(boundAnnotations, Annotations)
-				nonTerminal(sup, ReferenceType)
-			)
-		)
-	) */
-	private int matchWildcard_3_1(int lookahead) {
-		lookahead = matchWildcard_3_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(EXTENDS)
-			nonTerminal(boundAnnotations, Annotations)
-			nonTerminal(ext, ReferenceType)
-		)
-		sequence(
-			terminal(SUPER)
-			nonTerminal(boundAnnotations, Annotations)
-			nonTerminal(sup, ReferenceType)
-		)
-	) */
-	private int matchWildcard_3_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchWildcard_3_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchWildcard_3_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(EXTENDS)
-		nonTerminal(boundAnnotations, Annotations)
-		nonTerminal(ext, ReferenceType)
-	) */
-	private int matchWildcard_3_1_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.EXTENDS);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SUPER)
-		nonTerminal(boundAnnotations, Annotations)
-		nonTerminal(sup, ReferenceType)
-	) */
-	private int matchWildcard_3_1_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.SUPER);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -7683,208 +5258,39 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SPrimitiveType> parsePrimitiveType(BUTree<SNodeList> annotations) throws ParseException {
 		Primitive primitive;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
 		}
-		if (match(0, TokenType.BOOLEAN) != -1) {
-			parse(TokenType.BOOLEAN);
-			primitive = Primitive.Boolean;
-		} else if (match(0, TokenType.CHAR) != -1) {
-			parse(TokenType.CHAR);
-			primitive = Primitive.Char;
-		} else if (match(0, TokenType.BYTE) != -1) {
-			parse(TokenType.BYTE);
-			primitive = Primitive.Byte;
-		} else if (match(0, TokenType.SHORT) != -1) {
-			parse(TokenType.SHORT);
-			primitive = Primitive.Short;
-		} else if (match(0, TokenType.INT) != -1) {
-			parse(TokenType.INT);
-			primitive = Primitive.Int;
-		} else if (match(0, TokenType.LONG) != -1) {
-			parse(TokenType.LONG);
-			primitive = Primitive.Long;
-		} else if (match(0, TokenType.FLOAT) != -1) {
-			parse(TokenType.FLOAT);
-			primitive = Primitive.Float;
-		} else if (match(0, TokenType.DOUBLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.DOUBLE) {
 			parse(TokenType.DOUBLE);
 			primitive = Primitive.Double;
-		} else {
-			throw produceParseException(TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.CHAR, TokenType.LONG, TokenType.INT);
-		}
+		} else if (__token == TokenType.FLOAT) {
+			parse(TokenType.FLOAT);
+			primitive = Primitive.Float;
+		} else if (__token == TokenType.LONG) {
+			parse(TokenType.LONG);
+			primitive = Primitive.Long;
+		} else if (__token == TokenType.INT) {
+			parse(TokenType.INT);
+			primitive = Primitive.Int;
+		} else if (__token == TokenType.SHORT) {
+			parse(TokenType.SHORT);
+			primitive = Primitive.Short;
+		} else if (__token == TokenType.BYTE) {
+			parse(TokenType.BYTE);
+			primitive = Primitive.Byte;
+		} else if (__token == TokenType.CHAR) {
+			parse(TokenType.CHAR);
+			primitive = Primitive.Char;
+		} else if (__token == TokenType.BOOLEAN) {
+			parse(TokenType.BOOLEAN);
+			primitive = Primitive.Boolean;
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT);
 		return dress(SPrimitiveType.make(annotations, primitive));
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(BOOLEAN)
-			)
-			sequence(
-				terminal(CHAR)
-			)
-			sequence(
-				terminal(BYTE)
-			)
-			sequence(
-				terminal(SHORT)
-			)
-			sequence(
-				terminal(INT)
-			)
-			sequence(
-				terminal(LONG)
-			)
-			sequence(
-				terminal(FLOAT)
-			)
-			sequence(
-				terminal(DOUBLE)
-			)
-		)
-	) */
-	private int matchPrimitiveType(int lookahead) {
-		lookahead = matchPrimitiveType_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(BOOLEAN)
-		)
-		sequence(
-			terminal(CHAR)
-		)
-		sequence(
-			terminal(BYTE)
-		)
-		sequence(
-			terminal(SHORT)
-		)
-		sequence(
-			terminal(INT)
-		)
-		sequence(
-			terminal(LONG)
-		)
-		sequence(
-			terminal(FLOAT)
-		)
-		sequence(
-			terminal(DOUBLE)
-		)
-	) */
-	private int matchPrimitiveType_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimitiveType_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimitiveType_2_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(BOOLEAN)
-	) */
-	private int matchPrimitiveType_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BOOLEAN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(CHAR)
-	) */
-	private int matchPrimitiveType_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.CHAR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BYTE)
-	) */
-	private int matchPrimitiveType_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.BYTE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SHORT)
-	) */
-	private int matchPrimitiveType_2_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.SHORT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(INT)
-	) */
-	private int matchPrimitiveType_2_5(int lookahead) {
-		lookahead = match(lookahead, TokenType.INT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LONG)
-	) */
-	private int matchPrimitiveType_2_6(int lookahead) {
-		lookahead = match(lookahead, TokenType.LONG);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FLOAT)
-	) */
-	private int matchPrimitiveType_2_7(int lookahead) {
-		lookahead = match(lookahead, TokenType.FLOAT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DOUBLE)
-	) */
-	private int matchPrimitiveType_2_8(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOUBLE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -7900,58 +5306,19 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
-		if (match(0, TokenType.VOID) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+			pushCallStack(JavaGrammar.ResultType_1_2);
+			ret = parseType(null);
+			popCallStack();
+		} else if (__token == TokenType.VOID) {
 			run();
 			parse(TokenType.VOID);
 			ret = dress(SVoidType.make());
-		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.LONG, TokenType.CHAR, TokenType.FLOAT, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT) != -1) {
-			ret = parseType(null);
-		} else {
-			throw produceParseException(TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.LONG, TokenType.DOUBLE, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.FLOAT);
-		}
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(VOID)
-			)
-			nonTerminal(ret, Type)
-		)
-	) */
-	private int matchResultType(int lookahead) {
-		lookahead = matchResultType_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(VOID)
-		)
-		nonTerminal(ret, Type)
-	) */
-	private int matchResultType_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchResultType_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchType(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(VOID)
-	) */
-	private int matchResultType_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.VOID);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -7963,24 +5330,15 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<SQualifiedType> ret;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.AnnotatedQualifiedType_1);
 		annotations = parseAnnotations();
+		popCallStack();
+		pushCallStack(JavaGrammar.AnnotatedQualifiedType_2);
 		ret = parseQualifiedType(annotations);
+		popCallStack();
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(annotations, Annotations)
-		nonTerminal(ret, QualifiedType)
-	) */
-	private int matchAnnotatedQualifiedType(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -7988,7 +5346,6 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, Name)
 		action({ ret = dress(SQualifiedName.make(qualifier, name)); })
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(DOT)
 			action({ qualifier = optionOf(ret); })
@@ -8001,86 +5358,24 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeOption> qualifier = none();
 		BUTree<SQualifiedName> ret = null;
 		BUTree<SName> name;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.QualifiedName_1);
 		name = parseName();
+		popCallStack();
 		ret = dress(SQualifiedName.make(qualifier, name));
-		while (matchQualifiedName_lookahead1(0) != -1) {
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.QUALIFIED_NAME_2) == 1) {
 			lateRun();
 			parse(TokenType.DOT);
 			qualifier = optionOf(ret);
+			pushCallStack(JavaGrammar.QualifiedName_2_2);
 			name = parseName();
+			popCallStack();
 			ret = dress(SQualifiedName.make(qualifier, name));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(name, Name)
-		zeroOrMore(
-			lookAhead(2)
-			terminal(DOT)
-			nonTerminal(name, Name)
-		)
-	) */
-	private int matchQualifiedName(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 1);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 1, -1);
-		lookahead = matchQualifiedName_4(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 1, -1);
-		return memoizeMatch(initialLookahead, 1, lookahead);
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(name, Name)
-	) */
-	private int matchQualifiedName_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchQualifiedName_4_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchQualifiedName_4_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(name, Name)
-	) */
-	private int matchQualifiedName_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(DOT)
-		nonTerminal(name, Name)
-	) */
-	private int matchQualifiedName_lookahead1(int lookahead) {
-		if (match(0, TokenType.DOT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -8100,193 +5395,76 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
-		if (quotesMode && matchName_lookahead1(0) != -1) {
-			name = parseNodeVar();
-		} else if (match(0, TokenType.IDENTIFIER) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.IDENTIFIER) {
 			run();
 			id = parse(TokenType.IDENTIFIER);
 			name = dress(SName.make(id.image));
-		} else {
+		} else if (__token == TokenType.NODE_VARIABLE) {
+			pushCallStack(JavaGrammar.Name_1_1_1);
+			name = parseNodeVar();
+			popCallStack();
+		} else
 			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-		}
 		return name;
 	}
 
 	/* sequence(
 		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(name, NodeVar)
-			)
-			sequence(
-				terminal(id, IDENTIFIER)
-			)
-		)
-	) */
-	private int matchName(int lookahead) {
-		lookahead = matchName_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(name, NodeVar)
-		)
-		sequence(
-			terminal(id, IDENTIFIER)
-		)
-	) */
-	private int matchName_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchName_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchName_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(name, NodeVar)
-	) */
-	private int matchName_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(id, IDENTIFIER)
-	) */
-	private int matchName_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.IDENTIFIER);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeVar)
-	) */
-	private int matchName_lookahead1(int lookahead) {
-		lookahead = matchNodeVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					nonTerminal(Name)
-					terminal(ARROW)
-				)
-				action({ run(); })
-				nonTerminal(ret, Name)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					terminal(RPAREN)
-					terminal(ARROW)
-				)
-				action({ run(); })
-				terminal(LPAREN)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					nonTerminal(Name)
-					terminal(RPAREN)
-					terminal(ARROW)
-				)
-				action({ run(); })
-				terminal(LPAREN)
-				nonTerminal(ret, Name)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					nonTerminal(Name)
-					terminal(COMMA)
-				)
-				action({ run(); })
-				terminal(LPAREN)
-				nonTerminal(params, InferredFormalParameterList)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				nonTerminal(ret, ConditionalExpression)
-				zeroOrOne(
-					action({ lateRun(); })
-					nonTerminal(op, AssignmentOperator)
-					nonTerminal(value, Expression)
-					action({ ret = dress(SAssignExpr.make(ret, op, value)); })
-				)
-			)
+			nonTerminal(ret, AssignmentExpression)
+			nonTerminal(ret, LambdaExpression)
 		)
 		action({ return ret; })
 	) */
 	protected BUTree<? extends SExpr> parseExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
+		switch (predict(JavaGrammar.EXPRESSION_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.Expression_1_1);
+				ret = parseAssignmentExpression();
+				popCallStack();
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.Expression_1_2);
+				ret = parseLambdaExpression();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+		}
+		return ret;
+	}
+
+	/* sequence(
+		nonTerminal(ret, ConditionalExpression)
+		zeroOrOne(
+			action({ lateRun(); })
+			nonTerminal(op, AssignmentOperator)
+			nonTerminal(expr, Expression)
+			action({ ret = dress(SAssignExpr.make(ret, op, expr)); })
+		)
+		action({ return ret; })
+	) */
+	protected BUTree<? extends SExpr> parseAssignmentExpression() throws ParseException {
+		BUTree<? extends SExpr> ret;
 		AssignOp op;
-		BUTree<? extends SExpr> value;
-		BUTree<SNodeList> params;
-		if (matchExpression_lookahead1(0) != -1) {
-			run();
-			ret = parseName();
-			parse(TokenType.ARROW);
-			ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false);
-		} else if (matchExpression_lookahead2(0) != -1) {
-			run();
-			parse(TokenType.LPAREN);
-			parse(TokenType.RPAREN);
-			parse(TokenType.ARROW);
-			ret = parseLambdaBody(emptyList(), true);
-		} else if (matchExpression_lookahead3(0) != -1) {
-			run();
-			parse(TokenType.LPAREN);
-			ret = parseName();
-			parse(TokenType.RPAREN);
-			parse(TokenType.ARROW);
-			ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true);
-		} else if (matchExpression_lookahead4(0) != -1) {
-			run();
-			parse(TokenType.LPAREN);
-			params = parseInferredFormalParameterList();
-			parse(TokenType.RPAREN);
-			parse(TokenType.ARROW);
-			ret = parseLambdaBody(params, true);
-		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NEW, TokenType.SUPER, TokenType.BOOLEAN, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.FLOAT, TokenType.CHAR, TokenType.INT, TokenType.DOUBLE, TokenType.VOID, TokenType.THIS, TokenType.LPAREN, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.DECR, TokenType.INCR) != -1) {
-			ret = parseConditionalExpression();
-			if (match(0, TokenType.LSHIFTASSIGN, TokenType.XORASSIGN, TokenType.REMASSIGN, TokenType.ANDASSIGN, TokenType.MINUSASSIGN, TokenType.ASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.STARASSIGN, TokenType.PLUSASSIGN, TokenType.ORASSIGN, TokenType.SLASHASSIGN, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				lateRun();
-				op = parseAssignmentOperator();
-				value = parseExpression();
-				ret = dress(SAssignExpr.make(ret, op, value));
-			}
-		} else {
-			throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.BANG, TokenType.TILDE, TokenType.LT, TokenType.NEW, TokenType.SUPER, TokenType.TRUE, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.THIS, TokenType.VOID, TokenType.BYTE, TokenType.LONG, TokenType.CHAR, TokenType.INT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.SHORT);
+		BUTree<? extends SExpr> expr;
+		int __token;
+		pushCallStack(JavaGrammar.AssignmentExpression_1);
+		ret = parseConditionalExpression();
+		popCallStack();
+		__token = getToken(0).kind;
+		if ((__token - 90 & ~63) == 0 && (1L << __token - 90 & (1L << TokenType.ASSIGN - 90 | 1L << TokenType.PLUSASSIGN - 90 | 1L << TokenType.MINUSASSIGN - 90 | 1L << TokenType.STARASSIGN - 90 | 1L << TokenType.SLASHASSIGN - 90 | 1L << TokenType.ANDASSIGN - 90 | 1L << TokenType.ORASSIGN - 90 | 1L << TokenType.XORASSIGN - 90 | 1L << TokenType.REMASSIGN - 90 | 1L << TokenType.LSHIFTASSIGN - 90 | 1L << TokenType.RSIGNEDSHIFTASSIGN - 90 | 1L << TokenType.RUNSIGNEDSHIFTASSIGN - 90)) != 0) {
+			lateRun();
+			pushCallStack(JavaGrammar.AssignmentExpression_2_1);
+			op = parseAssignmentOperator();
+			popCallStack();
+			pushCallStack(JavaGrammar.AssignmentExpression_2_2);
+			expr = parseExpression();
+			popCallStack();
+			ret = dress(SAssignExpr.make(ret, op, expr));
 		}
 		return ret;
 	}
@@ -8294,44 +5472,71 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(Name)
-					terminal(ARROW)
-				)
-				nonTerminal(ret, Name)
+				action({ run(); })
+				terminal(LPAREN)
+				action({ run(); })
+				nonTerminal(annotations, Annotations)
+				nonTerminal(type, ReferenceType)
+				nonTerminal(type, ReferenceCastTypeRest)
+				terminal(RPAREN)
+				nonTerminal(ret, LambdaExpression)
+				action({ ret = dress(SCastExpr.make(type, ret)); })
+			)
+			nonTerminal(ret, LambdaExpressionWithoutCast)
+		)
+		action({ return ret; })
+	) */
+	protected BUTree<? extends SExpr> parseLambdaExpression() throws ParseException {
+		BUTree<SNodeList> annotations;
+		BUTree<? extends SType> type;
+		BUTree<? extends SExpr> ret;
+		int __token;
+		switch (predict(JavaGrammar.LAMBDA_EXPRESSION_1)) {
+			case 1:
+				run();
+				parse(TokenType.LPAREN);
+				run();
+				pushCallStack(JavaGrammar.LambdaExpression_1_1_2);
+				annotations = parseAnnotations();
+				popCallStack();
+				pushCallStack(JavaGrammar.LambdaExpression_1_1_3);
+				type = parseReferenceType(annotations);
+				popCallStack();
+				pushCallStack(JavaGrammar.LambdaExpression_1_1_4);
+				type = parseReferenceCastTypeRest(type);
+				popCallStack();
+				parse(TokenType.RPAREN);
+				pushCallStack(JavaGrammar.LambdaExpression_1_1_6);
+				ret = parseLambdaExpression();
+				popCallStack();
+				ret = dress(SCastExpr.make(type, ret));
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.LambdaExpression_1_2);
+				ret = parseLambdaExpressionWithoutCast();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+		}
+		return ret;
+	}
+
+	/* sequence(
+		action({ run(); })
+		choice(
+			sequence(
+				nonTerminal(name, Name)
 				terminal(ARROW)
 				nonTerminal(ret, LambdaBody)
 			)
 			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					terminal(RPAREN)
-					terminal(ARROW)
-				)
 				terminal(LPAREN)
 				terminal(RPAREN)
 				terminal(ARROW)
 				nonTerminal(ret, LambdaBody)
 			)
 			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					nonTerminal(Name)
-					terminal(RPAREN)
-					terminal(ARROW)
-				)
-				terminal(LPAREN)
-				nonTerminal(ret, Name)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					terminal(LPAREN)
-					nonTerminal(Name)
-					terminal(COMMA)
-				)
 				terminal(LPAREN)
 				nonTerminal(params, InferredFormalParameterList)
 				terminal(RPAREN)
@@ -8339,320 +5544,65 @@ public class ParserImplementation extends ParserNewBase {
 				nonTerminal(ret, LambdaBody)
 			)
 			sequence(
-				nonTerminal(ret, ConditionalExpression)
-				zeroOrOne(
-					nonTerminal(op, AssignmentOperator)
-					nonTerminal(value, Expression)
-				)
-			)
-		)
-	) */
-	private int matchExpression(int lookahead) {
-		lookahead = matchExpression_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Name)
-				terminal(ARROW)
-			)
-			nonTerminal(ret, Name)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead(
 				terminal(LPAREN)
+				nonTerminal(params, FormalParameterList)
 				terminal(RPAREN)
 				terminal(ARROW)
-			)
-			terminal(LPAREN)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead(
-				terminal(LPAREN)
-				nonTerminal(Name)
-				terminal(RPAREN)
-				terminal(ARROW)
-			)
-			terminal(LPAREN)
-			nonTerminal(ret, Name)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead(
-				terminal(LPAREN)
-				nonTerminal(Name)
-				terminal(COMMA)
-			)
-			terminal(LPAREN)
-			nonTerminal(params, InferredFormalParameterList)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			nonTerminal(ret, ConditionalExpression)
-			zeroOrOne(
-				nonTerminal(op, AssignmentOperator)
-				nonTerminal(value, Expression)
+				nonTerminal(ret, LambdaBody)
 			)
 		)
+		action({ return ret; })
 	) */
-	private int matchExpression_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExpression_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpression_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpression_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpression_1_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpression_1_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Name)
-			terminal(ARROW)
-		)
-		nonTerminal(ret, Name)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchExpression_1_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(LPAREN)
-			terminal(RPAREN)
-			terminal(ARROW)
-		)
-		terminal(LPAREN)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchExpression_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(LPAREN)
-			nonTerminal(Name)
-			terminal(RPAREN)
-			terminal(ARROW)
-		)
-		terminal(LPAREN)
-		nonTerminal(ret, Name)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchExpression_1_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(LPAREN)
-			nonTerminal(Name)
-			terminal(COMMA)
-		)
-		terminal(LPAREN)
-		nonTerminal(params, InferredFormalParameterList)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchExpression_1_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInferredFormalParameterList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ConditionalExpression)
-		zeroOrOne(
-			nonTerminal(op, AssignmentOperator)
-			nonTerminal(value, Expression)
-		)
-	) */
-	private int matchExpression_1_5(int lookahead) {
-		lookahead = matchConditionalExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression_1_5_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(op, AssignmentOperator)
-		nonTerminal(value, Expression)
-	) */
-	private int matchExpression_1_5_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExpression_1_5_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(op, AssignmentOperator)
-		nonTerminal(value, Expression)
-	) */
-	private int matchExpression_1_5_2_1(int lookahead) {
-		lookahead = matchAssignmentOperator(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Name)
-		terminal(ARROW)
-	) */
-	private int matchExpression_lookahead1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		terminal(RPAREN)
-		terminal(ARROW)
-	) */
-	private int matchExpression_lookahead2(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		nonTerminal(Name)
-		terminal(RPAREN)
-		terminal(ARROW)
-	) */
-	private int matchExpression_lookahead3(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		nonTerminal(Name)
-		terminal(COMMA)
-	) */
-	private int matchExpression_lookahead4(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+	protected BUTree<SLambdaExpr> parseLambdaExpressionWithoutCast() throws ParseException {
+		BUTree<SLambdaExpr> ret;
+		BUTree<SName> name;
+		BUTree<SNodeList> params;
+		int __token;
+		run();
+		switch (predict(JavaGrammar.LAMBDA_EXPRESSION_WITHOUT_CAST_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_1_1);
+				name = parseName();
+				popCallStack();
+				parse(TokenType.ARROW);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_1_3);
+				ret = parseLambdaBody(singletonList(makeFormalParameter(name)), false);
+				popCallStack();
+				break;
+			case 2:
+				parse(TokenType.LPAREN);
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_2_4);
+				ret = parseLambdaBody(emptyList(), true);
+				popCallStack();
+				break;
+			case 3:
+				parse(TokenType.LPAREN);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_3_2);
+				params = parseInferredFormalParameterList();
+				popCallStack();
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_3_5);
+				ret = parseLambdaBody(params, true);
+				popCallStack();
+				break;
+			case 4:
+				parse(TokenType.LPAREN);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_4_2);
+				params = parseFormalParameterList();
+				popCallStack();
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
+				pushCallStack(JavaGrammar.LambdaExpressionWithoutCast_1_4_5);
+				ret = parseLambdaBody(params, true);
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+		}
+		return ret;
 	}
 
 	/* sequence(
@@ -8672,72 +5622,21 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		if (match(0, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.VOID, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
-			expr = parseExpression();
-			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-		} else if (match(0, TokenType.LBRACE) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.LambdaBody_1_2_1);
 			block = parseBlock();
+			popCallStack();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-		} else {
-			throw produceParseException(TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.THIS, TokenType.VOID, TokenType.BOOLEAN, TokenType.LONG, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SUPER, TokenType.LT, TokenType.NEW, TokenType.FALSE, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.LBRACE);
-		}
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.LambdaBody_1_1_1);
+			expr = parseExpression();
+			popCallStack();
+			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				nonTerminal(expr, Expression)
-			)
-			sequence(
-				nonTerminal(block, Block)
-			)
-		)
-	) */
-	private int matchLambdaBody(int lookahead) {
-		lookahead = matchLambdaBody_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(expr, Expression)
-		)
-		sequence(
-			nonTerminal(block, Block)
-		)
-	) */
-	private int matchLambdaBody_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchLambdaBody_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLambdaBody_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(expr, Expression)
-	) */
-	private int matchLambdaBody_1_1(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(block, Block)
-	) */
-	private int matchLambdaBody_1_2(int lookahead) {
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -8753,59 +5652,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseInferredFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SFormalParameter> param;
+		int __token;
+		pushCallStack(JavaGrammar.InferredFormalParameterList_1);
 		param = parseInferredFormalParameter();
+		popCallStack();
 		ret = append(ret, param);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
+			pushCallStack(JavaGrammar.InferredFormalParameterList_2_2);
 			param = parseInferredFormalParameter();
+			popCallStack();
 			ret = append(ret, param);
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(param, InferredFormalParameter)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(param, InferredFormalParameter)
-		)
-	) */
-	private int matchInferredFormalParameterList(int lookahead) {
-		lookahead = matchInferredFormalParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInferredFormalParameterList_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(param, InferredFormalParameter)
-	) */
-	private int matchInferredFormalParameterList_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchInferredFormalParameterList_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchInferredFormalParameterList_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(param, InferredFormalParameter)
-	) */
-	private int matchInferredFormalParameterList_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInferredFormalParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -8814,18 +5675,11 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SFormalParameter> parseInferredFormalParameter() throws ParseException {
 		BUTree<SName> name;
+		int __token;
+		pushCallStack(JavaGrammar.InferredFormalParameter_1);
 		name = parseName();
+		popCallStack();
 		return makeFormalParameter(name);
-	}
-
-	/* sequence(
-		nonTerminal(name, Name)
-	) */
-	private int matchInferredFormalParameter(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -8883,292 +5737,47 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
-		if (match(0, TokenType.ASSIGN) != -1) {
-			parse(TokenType.ASSIGN);
-			ret = AssignOp.Normal;
-		} else if (match(0, TokenType.STARASSIGN) != -1) {
-			parse(TokenType.STARASSIGN);
-			ret = AssignOp.Times;
-		} else if (match(0, TokenType.SLASHASSIGN) != -1) {
-			parse(TokenType.SLASHASSIGN);
-			ret = AssignOp.Divide;
-		} else if (match(0, TokenType.REMASSIGN) != -1) {
-			parse(TokenType.REMASSIGN);
-			ret = AssignOp.Remainder;
-		} else if (match(0, TokenType.PLUSASSIGN) != -1) {
-			parse(TokenType.PLUSASSIGN);
-			ret = AssignOp.Plus;
-		} else if (match(0, TokenType.MINUSASSIGN) != -1) {
-			parse(TokenType.MINUSASSIGN);
-			ret = AssignOp.Minus;
-		} else if (match(0, TokenType.LSHIFTASSIGN) != -1) {
-			parse(TokenType.LSHIFTASSIGN);
-			ret = AssignOp.LeftShift;
-		} else if (match(0, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-			parse(TokenType.RSIGNEDSHIFTASSIGN);
-			ret = AssignOp.RightSignedShift;
-		} else if (match(0, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-			parse(TokenType.RUNSIGNEDSHIFTASSIGN);
-			ret = AssignOp.RightUnsignedShift;
-		} else if (match(0, TokenType.ANDASSIGN) != -1) {
-			parse(TokenType.ANDASSIGN);
-			ret = AssignOp.And;
-		} else if (match(0, TokenType.XORASSIGN) != -1) {
-			parse(TokenType.XORASSIGN);
-			ret = AssignOp.XOr;
-		} else if (match(0, TokenType.ORASSIGN) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.ORASSIGN) {
 			parse(TokenType.ORASSIGN);
 			ret = AssignOp.Or;
-		} else {
-			throw produceParseException(TokenType.REMASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.SLASHASSIGN, TokenType.XORASSIGN, TokenType.ASSIGN, TokenType.LSHIFTASSIGN, TokenType.STARASSIGN, TokenType.ORASSIGN, TokenType.MINUSASSIGN, TokenType.ANDASSIGN, TokenType.PLUSASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN);
-		}
+		} else if (__token == TokenType.XORASSIGN) {
+			parse(TokenType.XORASSIGN);
+			ret = AssignOp.XOr;
+		} else if (__token == TokenType.ANDASSIGN) {
+			parse(TokenType.ANDASSIGN);
+			ret = AssignOp.And;
+		} else if (__token == TokenType.RUNSIGNEDSHIFTASSIGN) {
+			parse(TokenType.RUNSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightUnsignedShift;
+		} else if (__token == TokenType.RSIGNEDSHIFTASSIGN) {
+			parse(TokenType.RSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightSignedShift;
+		} else if (__token == TokenType.LSHIFTASSIGN) {
+			parse(TokenType.LSHIFTASSIGN);
+			ret = AssignOp.LeftShift;
+		} else if (__token == TokenType.MINUSASSIGN) {
+			parse(TokenType.MINUSASSIGN);
+			ret = AssignOp.Minus;
+		} else if (__token == TokenType.PLUSASSIGN) {
+			parse(TokenType.PLUSASSIGN);
+			ret = AssignOp.Plus;
+		} else if (__token == TokenType.REMASSIGN) {
+			parse(TokenType.REMASSIGN);
+			ret = AssignOp.Remainder;
+		} else if (__token == TokenType.SLASHASSIGN) {
+			parse(TokenType.SLASHASSIGN);
+			ret = AssignOp.Divide;
+		} else if (__token == TokenType.STARASSIGN) {
+			parse(TokenType.STARASSIGN);
+			ret = AssignOp.Times;
+		} else if (__token == TokenType.ASSIGN) {
+			parse(TokenType.ASSIGN);
+			ret = AssignOp.Normal;
+		} else
+			throw produceParseException(TokenType.ASSIGN, TokenType.PLUSASSIGN, TokenType.MINUSASSIGN, TokenType.STARASSIGN, TokenType.SLASHASSIGN, TokenType.ANDASSIGN, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.REMASSIGN, TokenType.LSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(ASSIGN)
-			)
-			sequence(
-				terminal(STARASSIGN)
-			)
-			sequence(
-				terminal(SLASHASSIGN)
-			)
-			sequence(
-				terminal(REMASSIGN)
-			)
-			sequence(
-				terminal(PLUSASSIGN)
-			)
-			sequence(
-				terminal(MINUSASSIGN)
-			)
-			sequence(
-				terminal(LSHIFTASSIGN)
-			)
-			sequence(
-				terminal(RSIGNEDSHIFTASSIGN)
-			)
-			sequence(
-				terminal(RUNSIGNEDSHIFTASSIGN)
-			)
-			sequence(
-				terminal(ANDASSIGN)
-			)
-			sequence(
-				terminal(XORASSIGN)
-			)
-			sequence(
-				terminal(ORASSIGN)
-			)
-		)
-	) */
-	private int matchAssignmentOperator(int lookahead) {
-		lookahead = matchAssignmentOperator_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(ASSIGN)
-		)
-		sequence(
-			terminal(STARASSIGN)
-		)
-		sequence(
-			terminal(SLASHASSIGN)
-		)
-		sequence(
-			terminal(REMASSIGN)
-		)
-		sequence(
-			terminal(PLUSASSIGN)
-		)
-		sequence(
-			terminal(MINUSASSIGN)
-		)
-		sequence(
-			terminal(LSHIFTASSIGN)
-		)
-		sequence(
-			terminal(RSIGNEDSHIFTASSIGN)
-		)
-		sequence(
-			terminal(RUNSIGNEDSHIFTASSIGN)
-		)
-		sequence(
-			terminal(ANDASSIGN)
-		)
-		sequence(
-			terminal(XORASSIGN)
-		)
-		sequence(
-			terminal(ORASSIGN)
-		)
-	) */
-	private int matchAssignmentOperator_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAssignmentOperator_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_9(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_10(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_11(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssignmentOperator_1_12(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(ASSIGN)
-	) */
-	private int matchAssignmentOperator_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.ASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ANDASSIGN)
-	) */
-	private int matchAssignmentOperator_1_10(int lookahead) {
-		lookahead = match(lookahead, TokenType.ANDASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(XORASSIGN)
-	) */
-	private int matchAssignmentOperator_1_11(int lookahead) {
-		lookahead = match(lookahead, TokenType.XORASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ORASSIGN)
-	) */
-	private int matchAssignmentOperator_1_12(int lookahead) {
-		lookahead = match(lookahead, TokenType.ORASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(STARASSIGN)
-	) */
-	private int matchAssignmentOperator_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.STARASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SLASHASSIGN)
-	) */
-	private int matchAssignmentOperator_1_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.SLASHASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(REMASSIGN)
-	) */
-	private int matchAssignmentOperator_1_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.REMASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(PLUSASSIGN)
-	) */
-	private int matchAssignmentOperator_1_5(int lookahead) {
-		lookahead = match(lookahead, TokenType.PLUSASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(MINUSASSIGN)
-	) */
-	private int matchAssignmentOperator_1_6(int lookahead) {
-		lookahead = match(lookahead, TokenType.MINUSASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LSHIFTASSIGN)
-	) */
-	private int matchAssignmentOperator_1_7(int lookahead) {
-		lookahead = match(lookahead, TokenType.LSHIFTASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(RSIGNEDSHIFTASSIGN)
-	) */
-	private int matchAssignmentOperator_1_8(int lookahead) {
-		lookahead = match(lookahead, TokenType.RSIGNEDSHIFTASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(RUNSIGNEDSHIFTASSIGN)
-	) */
-	private int matchAssignmentOperator_1_9(int lookahead) {
-		lookahead = match(lookahead, TokenType.RUNSIGNEDSHIFTASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9178,7 +5787,10 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(HOOK)
 			nonTerminal(left, Expression)
 			terminal(COLON)
-			nonTerminal(right, ConditionalExpression)
+			choice(
+				nonTerminal(right, ConditionalExpression)
+				nonTerminal(right, LambdaExpression)
+			)
 			action({ ret = dress(SConditionalExpr.make(ret, left, right)); })
 		)
 		action({ return ret; })
@@ -9187,71 +5799,35 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.ConditionalExpression_1);
 		ret = parseConditionalOrExpression();
-		if (match(0, TokenType.HOOK) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.HOOK) {
 			lateRun();
 			parse(TokenType.HOOK);
+			pushCallStack(JavaGrammar.ConditionalExpression_2_2);
 			left = parseExpression();
+			popCallStack();
 			parse(TokenType.COLON);
-			right = parseConditionalExpression();
+			switch (predict(JavaGrammar.CONDITIONAL_EXPRESSION_2_4)) {
+				case 1:
+					pushCallStack(JavaGrammar.ConditionalExpression_2_4_1);
+					right = parseConditionalExpression();
+					popCallStack();
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.ConditionalExpression_2_4_2);
+					right = parseLambdaExpression();
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
 			ret = dress(SConditionalExpr.make(ret, left, right));
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ConditionalOrExpression)
-		zeroOrOne(
-			terminal(HOOK)
-			nonTerminal(left, Expression)
-			terminal(COLON)
-			nonTerminal(right, ConditionalExpression)
-		)
-	) */
-	private int matchConditionalExpression(int lookahead) {
-		lookahead = matchConditionalOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(HOOK)
-		nonTerminal(left, Expression)
-		terminal(COLON)
-		nonTerminal(right, ConditionalExpression)
-	) */
-	private int matchConditionalExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConditionalExpression_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(HOOK)
-		nonTerminal(left, Expression)
-		terminal(COLON)
-		nonTerminal(right, ConditionalExpression)
-	) */
-	private int matchConditionalExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.HOOK);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9267,59 +5843,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.ConditionalOrExpression_1);
 		ret = parseConditionalAndExpression();
-		while (match(0, TokenType.SC_OR) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.SC_OR) {
 			lateRun();
 			parse(TokenType.SC_OR);
+			pushCallStack(JavaGrammar.ConditionalOrExpression_2_2);
 			right = parseConditionalAndExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ConditionalAndExpression)
-		zeroOrMore(
-			terminal(SC_OR)
-			nonTerminal(right, ConditionalAndExpression)
-		)
-	) */
-	private int matchConditionalOrExpression(int lookahead) {
-		lookahead = matchConditionalAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(SC_OR)
-		nonTerminal(right, ConditionalAndExpression)
-	) */
-	private int matchConditionalOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConditionalOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchConditionalOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SC_OR)
-		nonTerminal(right, ConditionalAndExpression)
-	) */
-	private int matchConditionalOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SC_OR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9335,59 +5873,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.ConditionalAndExpression_1);
 		ret = parseInclusiveOrExpression();
-		while (match(0, TokenType.SC_AND) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.SC_AND) {
 			lateRun();
 			parse(TokenType.SC_AND);
+			pushCallStack(JavaGrammar.ConditionalAndExpression_2_2);
 			right = parseInclusiveOrExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InclusiveOrExpression)
-		zeroOrMore(
-			terminal(SC_AND)
-			nonTerminal(right, InclusiveOrExpression)
-		)
-	) */
-	private int matchConditionalAndExpression(int lookahead) {
-		lookahead = matchInclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalAndExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(SC_AND)
-		nonTerminal(right, InclusiveOrExpression)
-	) */
-	private int matchConditionalAndExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConditionalAndExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchConditionalAndExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SC_AND)
-		nonTerminal(right, InclusiveOrExpression)
-	) */
-	private int matchConditionalAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SC_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9403,59 +5903,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.InclusiveOrExpression_1);
 		ret = parseExclusiveOrExpression();
-		while (match(0, TokenType.BIT_OR) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.BIT_OR) {
 			lateRun();
 			parse(TokenType.BIT_OR);
+			pushCallStack(JavaGrammar.InclusiveOrExpression_2_2);
 			right = parseExclusiveOrExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ExclusiveOrExpression)
-		zeroOrMore(
-			terminal(BIT_OR)
-			nonTerminal(right, ExclusiveOrExpression)
-		)
-	) */
-	private int matchInclusiveOrExpression(int lookahead) {
-		lookahead = matchExclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInclusiveOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(BIT_OR)
-		nonTerminal(right, ExclusiveOrExpression)
-	) */
-	private int matchInclusiveOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchInclusiveOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchInclusiveOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_OR)
-		nonTerminal(right, ExclusiveOrExpression)
-	) */
-	private int matchInclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_OR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9471,59 +5933,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.ExclusiveOrExpression_1);
 		ret = parseAndExpression();
-		while (match(0, TokenType.XOR) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.XOR) {
 			lateRun();
 			parse(TokenType.XOR);
+			pushCallStack(JavaGrammar.ExclusiveOrExpression_2_2);
 			right = parseAndExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, AndExpression)
-		zeroOrMore(
-			terminal(XOR)
-			nonTerminal(right, AndExpression)
-		)
-	) */
-	private int matchExclusiveOrExpression(int lookahead) {
-		lookahead = matchAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExclusiveOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(XOR)
-		nonTerminal(right, AndExpression)
-	) */
-	private int matchExclusiveOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExclusiveOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchExclusiveOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(XOR)
-		nonTerminal(right, AndExpression)
-	) */
-	private int matchExclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.XOR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9539,59 +5963,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
+		pushCallStack(JavaGrammar.AndExpression_1);
 		ret = parseEqualityExpression();
-		while (match(0, TokenType.BIT_AND) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.BIT_AND) {
 			lateRun();
 			parse(TokenType.BIT_AND);
+			pushCallStack(JavaGrammar.AndExpression_2_2);
 			right = parseEqualityExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, EqualityExpression)
-		zeroOrMore(
-			terminal(BIT_AND)
-			nonTerminal(right, EqualityExpression)
-		)
-	) */
-	private int matchAndExpression(int lookahead) {
-		lookahead = matchEqualityExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAndExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(BIT_AND)
-		nonTerminal(right, EqualityExpression)
-	) */
-	private int matchAndExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAndExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAndExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_AND)
-		nonTerminal(right, EqualityExpression)
-	) */
-	private int matchAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEqualityExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9617,127 +6003,29 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.EqualityExpression_1);
 		ret = parseInstanceOfExpression();
-		while (match(0, TokenType.EQ, TokenType.NE) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.EQ || __token == TokenType.NE) {
 			lateRun();
-			if (match(0, TokenType.EQ) != -1) {
-				parse(TokenType.EQ);
-				op = BinaryOp.Equal;
-			} else if (match(0, TokenType.NE) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.NE) {
 				parse(TokenType.NE);
 				op = BinaryOp.NotEqual;
-			} else {
+			} else if (__token == TokenType.EQ) {
+				parse(TokenType.EQ);
+				op = BinaryOp.Equal;
+			} else
 				throw produceParseException(TokenType.EQ, TokenType.NE);
-			}
+			pushCallStack(JavaGrammar.EqualityExpression_2_2);
 			right = parseInstanceOfExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InstanceOfExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(EQ)
-				)
-				sequence(
-					terminal(NE)
-				)
-			)
-			nonTerminal(right, InstanceOfExpression)
-		)
-	) */
-	private int matchEqualityExpression(int lookahead) {
-		lookahead = matchInstanceOfExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEqualityExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(EQ)
-			)
-			sequence(
-				terminal(NE)
-			)
-		)
-		nonTerminal(right, InstanceOfExpression)
-	) */
-	private int matchEqualityExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEqualityExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchEqualityExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(EQ)
-			)
-			sequence(
-				terminal(NE)
-			)
-		)
-		nonTerminal(right, InstanceOfExpression)
-	) */
-	private int matchEqualityExpression_2_1(int lookahead) {
-		lookahead = matchEqualityExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInstanceOfExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(EQ)
-		)
-		sequence(
-			terminal(NE)
-		)
-	) */
-	private int matchEqualityExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchEqualityExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchEqualityExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(EQ)
-	) */
-	private int matchEqualityExpression_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.EQ);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(NE)
-	) */
-	private int matchEqualityExpression_2_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.NE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9756,65 +6044,24 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
+		int __token;
+		pushCallStack(JavaGrammar.InstanceOfExpression_1);
 		ret = parseRelationalExpression();
-		if (match(0, TokenType.INSTANCEOF) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.INSTANCEOF) {
 			lateRun();
 			parse(TokenType.INSTANCEOF);
 			run();
+			pushCallStack(JavaGrammar.InstanceOfExpression_2_2);
 			annotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.InstanceOfExpression_2_3);
 			type = parseType(annotations);
+			popCallStack();
 			ret = dress(SInstanceOfExpr.make(ret, type));
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, RelationalExpression)
-		zeroOrOne(
-			terminal(INSTANCEOF)
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, Type)
-		)
-	) */
-	private int matchInstanceOfExpression(int lookahead) {
-		lookahead = matchRelationalExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInstanceOfExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(INSTANCEOF)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, Type)
-	) */
-	private int matchInstanceOfExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchInstanceOfExpression_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(INSTANCEOF)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, Type)
-	) */
-	private int matchInstanceOfExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.INSTANCEOF);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -9848,189 +6095,40 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.RelationalExpression_1);
 		ret = parseShiftExpression();
-		while (match(0, TokenType.LE, TokenType.LT, TokenType.GE, TokenType.GT) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while ((__token - 91 & ~63) == 0 && (1L << __token - 91 & (1L << TokenType.LT - 91 | 1L << TokenType.LE - 91 | 1L << TokenType.GE - 91 | 1L << TokenType.GT - 91)) != 0) {
 			lateRun();
-			if (match(0, TokenType.LT) != -1) {
-				parse(TokenType.LT);
-				op = BinaryOp.Less;
-			} else if (match(0, TokenType.GT) != -1) {
-				parse(TokenType.GT);
-				op = BinaryOp.Greater;
-			} else if (match(0, TokenType.LE) != -1) {
-				parse(TokenType.LE);
-				op = BinaryOp.LessOrEqual;
-			} else if (match(0, TokenType.GE) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.GE) {
 				parse(TokenType.GE);
 				op = BinaryOp.GreaterOrEqual;
-			} else {
-				throw produceParseException(TokenType.GE, TokenType.LE, TokenType.LT, TokenType.GT);
-			}
+			} else if (__token == TokenType.LE) {
+				parse(TokenType.LE);
+				op = BinaryOp.LessOrEqual;
+			} else if (__token == TokenType.GT) {
+				parse(TokenType.GT);
+				op = BinaryOp.Greater;
+			} else if (__token == TokenType.LT) {
+				parse(TokenType.LT);
+				op = BinaryOp.Less;
+			} else
+				throw produceParseException(TokenType.LT, TokenType.LE, TokenType.GE, TokenType.GT);
+			pushCallStack(JavaGrammar.RelationalExpression_2_2);
 			right = parseShiftExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
 
 	/* sequence(
-		nonTerminal(ret, ShiftExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(LT)
-				)
-				sequence(
-					terminal(GT)
-				)
-				sequence(
-					terminal(LE)
-				)
-				sequence(
-					terminal(GE)
-				)
-			)
-			nonTerminal(right, ShiftExpression)
-		)
-	) */
-	private int matchRelationalExpression(int lookahead) {
-		lookahead = matchShiftExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchRelationalExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(LT)
-			)
-			sequence(
-				terminal(GT)
-			)
-			sequence(
-				terminal(LE)
-			)
-			sequence(
-				terminal(GE)
-			)
-		)
-		nonTerminal(right, ShiftExpression)
-	) */
-	private int matchRelationalExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchRelationalExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchRelationalExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(LT)
-			)
-			sequence(
-				terminal(GT)
-			)
-			sequence(
-				terminal(LE)
-			)
-			sequence(
-				terminal(GE)
-			)
-		)
-		nonTerminal(right, ShiftExpression)
-	) */
-	private int matchRelationalExpression_2_1(int lookahead) {
-		lookahead = matchRelationalExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchShiftExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(LT)
-		)
-		sequence(
-			terminal(GT)
-		)
-		sequence(
-			terminal(LE)
-		)
-		sequence(
-			terminal(GE)
-		)
-	) */
-	private int matchRelationalExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(LT)
-	) */
-	private int matchRelationalExpression_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.LT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(GT)
-	) */
-	private int matchRelationalExpression_2_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LE)
-	) */
-	private int matchRelationalExpression_2_1_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.LE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(GE)
-	) */
-	private int matchRelationalExpression_2_1_2_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.GE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		nonTerminal(ret, AdditiveExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -10043,7 +6141,6 @@ public class ParserImplementation extends ParserNewBase {
 					action({ op = BinaryOp.RightUnsignedShift; })
 				)
 				sequence(
-					lookAhead(2)
 					nonTerminal(RSIGNEDSHIFT)
 					action({ op = BinaryOp.RightSignedShift; })
 				)
@@ -10057,317 +6154,40 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.ShiftExpression_1);
 		ret = parseAdditiveExpression();
-		while (matchShiftExpression_lookahead1(0) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.SHIFT_EXPRESSION_2) == 1) {
 			lateRun();
-			if (match(0, TokenType.LSHIFT) != -1) {
-				parse(TokenType.LSHIFT);
-				op = BinaryOp.LeftShift;
-			} else if (matchShiftExpression_lookahead2(0) != -1) {
-				parseRUNSIGNEDSHIFT();
-				op = BinaryOp.RightUnsignedShift;
-			} else if (matchShiftExpression_lookahead3(0) != -1) {
-				parseRSIGNEDSHIFT();
-				op = BinaryOp.RightSignedShift;
-			} else {
-				throw produceParseException(TokenType.GT, TokenType.LSHIFT);
+			switch (predict(JavaGrammar.SHIFT_EXPRESSION_2_1)) {
+				case 1:
+					parse(TokenType.LSHIFT);
+					op = BinaryOp.LeftShift;
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.ShiftExpression_2_1_2_1);
+					parseRUNSIGNEDSHIFT();
+					popCallStack();
+					op = BinaryOp.RightUnsignedShift;
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.ShiftExpression_2_1_3_1);
+					parseRSIGNEDSHIFT();
+					popCallStack();
+					op = BinaryOp.RightSignedShift;
+					break;
+				default:
+					throw produceParseException(TokenType.LSHIFT, TokenType.GT);
 			}
+			pushCallStack(JavaGrammar.ShiftExpression_2_2);
 			right = parseAdditiveExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, AdditiveExpression)
-		zeroOrMore(
-			lookAhead(2)
-			choice(
-				sequence(
-					terminal(LSHIFT)
-				)
-				sequence(
-					lookAhead(3)
-					nonTerminal(RUNSIGNEDSHIFT)
-				)
-				sequence(
-					lookAhead(2)
-					nonTerminal(RSIGNEDSHIFT)
-				)
-			)
-			nonTerminal(right, AdditiveExpression)
-		)
-	) */
-	private int matchShiftExpression(int lookahead) {
-		lookahead = matchAdditiveExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchShiftExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchShiftExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchShiftExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_2_1(int lookahead) {
-		lookahead = matchShiftExpression_2_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAdditiveExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(LSHIFT)
-		)
-		sequence(
-			lookAhead(3)
-			nonTerminal(RUNSIGNEDSHIFT)
-		)
-		sequence(
-			lookAhead(2)
-			nonTerminal(RSIGNEDSHIFT)
-		)
-	) */
-	private int matchShiftExpression_2_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(LSHIFT)
-	) */
-	private int matchShiftExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.LSHIFT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(3)
-		nonTerminal(RUNSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_2_1_3_2(int lookahead) {
-		lookahead = matchRUNSIGNEDSHIFT(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(RSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_2_1_3_3(int lookahead) {
-		lookahead = matchRSIGNEDSHIFT(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.LSHIFT) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(3)
-		nonTerminal(RUNSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_lookahead2(int lookahead) {
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				if (match(2, TokenType.GT) != -1) {
-					return lookahead;
-				}
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(RSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_lookahead3(int lookahead) {
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -10393,127 +6213,29 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.AdditiveExpression_1);
 		ret = parseMultiplicativeExpression();
-		while (match(0, TokenType.PLUS, TokenType.MINUS) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (__token == TokenType.PLUS || __token == TokenType.MINUS) {
 			lateRun();
-			if (match(0, TokenType.PLUS) != -1) {
-				parse(TokenType.PLUS);
-				op = BinaryOp.Plus;
-			} else if (match(0, TokenType.MINUS) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.MINUS) {
 				parse(TokenType.MINUS);
 				op = BinaryOp.Minus;
-			} else {
+			} else if (__token == TokenType.PLUS) {
+				parse(TokenType.PLUS);
+				op = BinaryOp.Plus;
+			} else
 				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
-			}
+			pushCallStack(JavaGrammar.AdditiveExpression_2_2);
 			right = parseMultiplicativeExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, MultiplicativeExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(PLUS)
-				)
-				sequence(
-					terminal(MINUS)
-				)
-			)
-			nonTerminal(right, MultiplicativeExpression)
-		)
-	) */
-	private int matchAdditiveExpression(int lookahead) {
-		lookahead = matchMultiplicativeExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAdditiveExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(right, MultiplicativeExpression)
-	) */
-	private int matchAdditiveExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAdditiveExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAdditiveExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(right, MultiplicativeExpression)
-	) */
-	private int matchAdditiveExpression_2_1(int lookahead) {
-		lookahead = matchAdditiveExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMultiplicativeExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(PLUS)
-		)
-		sequence(
-			terminal(MINUS)
-		)
-	) */
-	private int matchAdditiveExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(PLUS)
-	) */
-	private int matchAdditiveExpression_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.PLUS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(MINUS)
-	) */
-	private int matchAdditiveExpression_2_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.MINUS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -10543,155 +6265,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.MultiplicativeExpression_1);
 		ret = parseUnaryExpression();
-		while (match(0, TokenType.REM, TokenType.STAR, TokenType.SLASH) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while ((__token - 106 & ~63) == 0 && (1L << __token - 106 & (1L << TokenType.STAR - 106 | 1L << TokenType.SLASH - 106 | 1L << TokenType.REM - 106)) != 0) {
 			lateRun();
-			if (match(0, TokenType.STAR) != -1) {
-				parse(TokenType.STAR);
-				op = BinaryOp.Times;
-			} else if (match(0, TokenType.SLASH) != -1) {
-				parse(TokenType.SLASH);
-				op = BinaryOp.Divide;
-			} else if (match(0, TokenType.REM) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.REM) {
 				parse(TokenType.REM);
 				op = BinaryOp.Remainder;
-			} else {
-				throw produceParseException(TokenType.REM, TokenType.STAR, TokenType.SLASH);
-			}
+			} else if (__token == TokenType.SLASH) {
+				parse(TokenType.SLASH);
+				op = BinaryOp.Divide;
+			} else if (__token == TokenType.STAR) {
+				parse(TokenType.STAR);
+				op = BinaryOp.Times;
+			} else
+				throw produceParseException(TokenType.STAR, TokenType.SLASH, TokenType.REM);
+			pushCallStack(JavaGrammar.MultiplicativeExpression_2_2);
 			right = parseUnaryExpression();
+			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, UnaryExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(STAR)
-				)
-				sequence(
-					terminal(SLASH)
-				)
-				sequence(
-					terminal(REM)
-				)
-			)
-			nonTerminal(right, UnaryExpression)
-		)
-	) */
-	private int matchMultiplicativeExpression(int lookahead) {
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMultiplicativeExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(STAR)
-			)
-			sequence(
-				terminal(SLASH)
-			)
-			sequence(
-				terminal(REM)
-			)
-		)
-		nonTerminal(right, UnaryExpression)
-	) */
-	private int matchMultiplicativeExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchMultiplicativeExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(STAR)
-			)
-			sequence(
-				terminal(SLASH)
-			)
-			sequence(
-				terminal(REM)
-			)
-		)
-		nonTerminal(right, UnaryExpression)
-	) */
-	private int matchMultiplicativeExpression_2_1(int lookahead) {
-		lookahead = matchMultiplicativeExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(STAR)
-		)
-		sequence(
-			terminal(SLASH)
-		)
-		sequence(
-			terminal(REM)
-		)
-	) */
-	private int matchMultiplicativeExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(STAR)
-	) */
-	private int matchMultiplicativeExpression_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.STAR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SLASH)
-	) */
-	private int matchMultiplicativeExpression_2_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.SLASH);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(REM)
-	) */
-	private int matchMultiplicativeExpression_2_1_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.REM);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -10719,140 +6318,34 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
-			ret = parsePrefixExpression();
-		} else if (match(0, TokenType.PLUS, TokenType.MINUS) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_3);
+			ret = parseUnaryExpressionNotPlusMinus();
+			popCallStack();
+		} else if (__token == TokenType.PLUS || __token == TokenType.MINUS) {
 			run();
-			if (match(0, TokenType.PLUS) != -1) {
-				parse(TokenType.PLUS);
-				op = UnaryOp.Positive;
-			} else if (match(0, TokenType.MINUS) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.MINUS) {
 				parse(TokenType.MINUS);
 				op = UnaryOp.Negative;
-			} else {
+			} else if (__token == TokenType.PLUS) {
+				parse(TokenType.PLUS);
+				op = UnaryOp.Positive;
+			} else
 				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
-			}
+			pushCallStack(JavaGrammar.UnaryExpression_1_2_2);
 			ret = parseUnaryExpression();
+			popCallStack();
 			ret = dress(SUnaryExpr.make(op, ret));
-		} else if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.LONG, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.NEW, TokenType.BANG, TokenType.TILDE) != -1) {
-			ret = parseUnaryExpressionNotPlusMinus();
-		} else {
-			throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BOOLEAN, TokenType.CHAR, TokenType.SHORT, TokenType.INT, TokenType.FLOAT, TokenType.BYTE, TokenType.LONG, TokenType.DOUBLE, TokenType.VOID, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR, TokenType.MINUS, TokenType.PLUS);
-		}
+		} else if (__token == TokenType.INCR || __token == TokenType.DECR) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_1);
+			ret = parsePrefixExpression();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			nonTerminal(ret, PrefixExpression)
-			sequence(
-				choice(
-					sequence(
-						terminal(PLUS)
-					)
-					sequence(
-						terminal(MINUS)
-					)
-				)
-				nonTerminal(ret, UnaryExpression)
-			)
-			nonTerminal(ret, UnaryExpressionNotPlusMinus)
-		)
-	) */
-	private int matchUnaryExpression(int lookahead) {
-		lookahead = matchUnaryExpression_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, PrefixExpression)
-		sequence(
-			choice(
-				sequence(
-					terminal(PLUS)
-				)
-				sequence(
-					terminal(MINUS)
-				)
-			)
-			nonTerminal(ret, UnaryExpression)
-		)
-		nonTerminal(ret, UnaryExpressionNotPlusMinus)
-	) */
-	private int matchUnaryExpression_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrefixExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchUnaryExpression_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchUnaryExpressionNotPlusMinus(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(ret, UnaryExpression)
-	) */
-	private int matchUnaryExpression_1_2(int lookahead) {
-		lookahead = matchUnaryExpression_1_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(PLUS)
-		)
-		sequence(
-			terminal(MINUS)
-		)
-	) */
-	private int matchUnaryExpression_1_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchUnaryExpression_1_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchUnaryExpression_1_2_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(PLUS)
-	) */
-	private int matchUnaryExpression_1_2_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.PLUS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(MINUS)
-	) */
-	private int matchUnaryExpression_1_2_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.MINUS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -10873,78 +6366,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parsePrefixExpression() throws ParseException {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
-		if (match(0, TokenType.INCR) != -1) {
-			parse(TokenType.INCR);
-			op = UnaryOp.PreIncrement;
-		} else if (match(0, TokenType.DECR) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.DECR) {
 			parse(TokenType.DECR);
 			op = UnaryOp.PreDecrement;
-		} else {
+		} else if (__token == TokenType.INCR) {
+			parse(TokenType.INCR);
+			op = UnaryOp.PreIncrement;
+		} else
 			throw produceParseException(TokenType.INCR, TokenType.DECR);
-		}
+		pushCallStack(JavaGrammar.PrefixExpression_2);
 		ret = parseUnaryExpression();
+		popCallStack();
 		return dress(SUnaryExpr.make(op, ret));
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-		)
-		nonTerminal(ret, UnaryExpression)
-	) */
-	private int matchPrefixExpression(int lookahead) {
-		lookahead = matchPrefixExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(INCR)
-		)
-		sequence(
-			terminal(DECR)
-		)
-	) */
-	private int matchPrefixExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrefixExpression_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrefixExpression_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(INCR)
-	) */
-	private int matchPrefixExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.INCR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DECR)
-	) */
-	private int matchPrefixExpression_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.DECR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -10964,12 +6400,7 @@ public class ParserImplementation extends ParserNewBase {
 				nonTerminal(ret, UnaryExpression)
 				action({ ret = dress(SUnaryExpr.make(op, ret)); })
 			)
-			sequence(
-				lookAhead(
-					nonTerminal(CastExpression)
-				)
-				nonTerminal(ret, CastExpression)
-			)
+			nonTerminal(ret, CastExpression)
 			nonTerminal(ret, PostfixExpression)
 		)
 		action({ return ret; })
@@ -10977,179 +6408,43 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		if (match(0, TokenType.TILDE, TokenType.BANG) != -1) {
-			run();
-			if (match(0, TokenType.TILDE) != -1) {
-				parse(TokenType.TILDE);
-				op = UnaryOp.Inverse;
-			} else if (match(0, TokenType.BANG) != -1) {
-				parse(TokenType.BANG);
-				op = UnaryOp.Not;
-			} else {
-				throw produceParseException(TokenType.TILDE, TokenType.BANG);
-			}
-			ret = parseUnaryExpression();
-			ret = dress(SUnaryExpr.make(op, ret));
-		} else if (matchUnaryExpressionNotPlusMinus_lookahead1(0) != -1) {
-			ret = parseCastExpression();
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NEW, TokenType.THIS, TokenType.LPAREN, TokenType.SUPER, TokenType.VOID, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.SHORT, TokenType.BYTE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.LT) != -1) {
-			ret = parsePostfixExpression();
-		} else {
-			throw produceParseException(TokenType.NEW, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.BYTE, TokenType.FLOAT, TokenType.SHORT, TokenType.DOUBLE, TokenType.LPAREN, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.TILDE, TokenType.BANG);
+		int __token;
+		switch (predict(JavaGrammar.UNARY_EXPRESSION_NOT_PLUS_MINUS_1)) {
+			case 1:
+				run();
+				__token = getToken(0).kind;
+				if (__token == TokenType.BANG) {
+					parse(TokenType.BANG);
+					op = UnaryOp.Not;
+				} else if (__token == TokenType.TILDE) {
+					parse(TokenType.TILDE);
+					op = UnaryOp.Inverse;
+				} else
+					throw produceParseException(TokenType.BANG, TokenType.TILDE);
+				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_1_2);
+				ret = parseUnaryExpression();
+				popCallStack();
+				ret = dress(SUnaryExpr.make(op, ret));
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_2);
+				ret = parseCastExpression();
+				popCallStack();
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_3);
+				ret = parsePostfixExpression();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
 
 	/* sequence(
-		choice(
-			sequence(
-				choice(
-					sequence(
-						terminal(TILDE)
-					)
-					sequence(
-						terminal(BANG)
-					)
-				)
-				nonTerminal(ret, UnaryExpression)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(CastExpression)
-				)
-				nonTerminal(ret, CastExpression)
-			)
-			nonTerminal(ret, PostfixExpression)
-		)
-	) */
-	private int matchUnaryExpressionNotPlusMinus(int lookahead) {
-		lookahead = matchUnaryExpressionNotPlusMinus_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			choice(
-				sequence(
-					terminal(TILDE)
-				)
-				sequence(
-					terminal(BANG)
-				)
-			)
-			nonTerminal(ret, UnaryExpression)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(CastExpression)
-			)
-			nonTerminal(ret, CastExpression)
-		)
-		nonTerminal(ret, PostfixExpression)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchUnaryExpressionNotPlusMinus_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchUnaryExpressionNotPlusMinus_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPostfixExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(TILDE)
-			)
-			sequence(
-				terminal(BANG)
-			)
-		)
-		nonTerminal(ret, UnaryExpression)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1_1(int lookahead) {
-		lookahead = matchUnaryExpressionNotPlusMinus_1_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(TILDE)
-		)
-		sequence(
-			terminal(BANG)
-		)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchUnaryExpressionNotPlusMinus_1_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchUnaryExpressionNotPlusMinus_1_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(TILDE)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.TILDE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BANG)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.BANG);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(CastExpression)
-		)
-		nonTerminal(ret, CastExpression)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_1_2(int lookahead) {
-		lookahead = matchCastExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(CastExpression)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_lookahead1(int lookahead) {
-		lookahead = matchCastExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		nonTerminal(ret, PrimaryExpression)
 		zeroOrOne(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -11168,142 +6463,25 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parsePostfixExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
+		int __token;
+		pushCallStack(JavaGrammar.PostfixExpression_1);
 		ret = parsePrimaryExpression();
-		if (matchPostfixExpression_lookahead1(0) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.INCR || __token == TokenType.DECR) {
 			lateRun();
-			if (match(0, TokenType.INCR) != -1) {
-				parse(TokenType.INCR);
-				op = UnaryOp.PostIncrement;
-			} else if (match(0, TokenType.DECR) != -1) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.DECR) {
 				parse(TokenType.DECR);
 				op = UnaryOp.PostDecrement;
-			} else {
+			} else if (__token == TokenType.INCR) {
+				parse(TokenType.INCR);
+				op = UnaryOp.PostIncrement;
+			} else
 				throw produceParseException(TokenType.INCR, TokenType.DECR);
-			}
 			ret = dress(SUnaryExpr.make(op, ret));
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, PrimaryExpression)
-		zeroOrOne(
-			lookAhead(2)
-			choice(
-				sequence(
-					terminal(INCR)
-				)
-				sequence(
-					terminal(DECR)
-				)
-			)
-		)
-	) */
-	private int matchPostfixExpression(int lookahead) {
-		lookahead = matchPrimaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPostfixExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-		)
-	) */
-	private int matchPostfixExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPostfixExpression_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-		)
-	) */
-	private int matchPostfixExpression_2_1(int lookahead) {
-		lookahead = matchPostfixExpression_2_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(INCR)
-		)
-		sequence(
-			terminal(DECR)
-		)
-	) */
-	private int matchPostfixExpression_2_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPostfixExpression_2_1_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPostfixExpression_2_1_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(INCR)
-	) */
-	private int matchPostfixExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.INCR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DECR)
-	) */
-	private int matchPostfixExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.DECR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-		)
-	) */
-	private int matchPostfixExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.INCR) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.DECR) != -1) {
-			return lookahead;
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -11314,34 +6492,12 @@ public class ParserImplementation extends ParserNewBase {
 		choice(
 			sequence(
 				nonTerminal(primitiveType, PrimitiveType)
-				choice(
-					sequence(
-						terminal(RPAREN)
-						nonTerminal(ret, UnaryExpression)
-						action({ ret = dress(SCastExpr.make(primitiveType, ret)); })
-					)
-					sequence(
-						action({ lateRun(); })
-						nonTerminal(arrayDims, ArrayDimsMandatory)
-						action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
-						nonTerminal(type, ReferenceCastTypeRest)
-						terminal(RPAREN)
-						nonTerminal(ret, UnaryExpressionNotPlusMinus)
-						action({ ret = dress(SCastExpr.make(type, ret)); })
-					)
-				)
+				terminal(RPAREN)
+				nonTerminal(ret, UnaryExpression)
+				action({ ret = dress(SCastExpr.make(primitiveType, ret)); })
 			)
 			sequence(
-				nonTerminal(type, QualifiedType)
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
-					action({ lateRun(); })
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-					action({ type = dress(SArrayType.make(type, arrayDims)); })
-				)
+				nonTerminal(type, ReferenceType)
 				nonTerminal(type, ReferenceCastTypeRest)
 				terminal(RPAREN)
 				nonTerminal(ret, UnaryExpressionNotPlusMinus)
@@ -11356,300 +6512,45 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> arrayDims;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
 		parse(TokenType.LPAREN);
 		run();
+		pushCallStack(JavaGrammar.CastExpression_2);
 		annotations = parseAnnotations();
-		if (match(0, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN) != -1) {
-			primitiveType = parsePrimitiveType(annotations);
-			if (match(0, TokenType.RPAREN) != -1) {
+		popCallStack();
+		switch (predict(JavaGrammar.CAST_EXPRESSION_3)) {
+			case 1:
+				pushCallStack(JavaGrammar.CastExpression_3_1_1);
+				primitiveType = parsePrimitiveType(annotations);
+				popCallStack();
 				parse(TokenType.RPAREN);
+				pushCallStack(JavaGrammar.CastExpression_3_1_3);
 				ret = parseUnaryExpression();
+				popCallStack();
 				ret = dress(SCastExpr.make(primitiveType, ret));
-			} else if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
-				lateRun();
-				arrayDims = parseArrayDimsMandatory();
-				type = dress(SArrayType.make(primitiveType, arrayDims));
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.CastExpression_3_2_1);
+				type = parseReferenceType(annotations);
+				popCallStack();
+				pushCallStack(JavaGrammar.CastExpression_3_2_2);
 				type = parseReferenceCastTypeRest(type);
+				popCallStack();
 				parse(TokenType.RPAREN);
+				pushCallStack(JavaGrammar.CastExpression_3_2_4);
 				ret = parseUnaryExpressionNotPlusMinus();
+				popCallStack();
 				ret = dress(SCastExpr.make(type, ret));
-			} else {
-				throw produceParseException(TokenType.RPAREN, TokenType.AT, TokenType.LBRACKET);
-			}
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
-			type = parseQualifiedType(annotations);
-			if (matchCastExpression_lookahead1(0) != -1) {
-				lateRun();
-				arrayDims = parseArrayDimsMandatory();
-				type = dress(SArrayType.make(type, arrayDims));
-			}
-			type = parseReferenceCastTypeRest(type);
-			parse(TokenType.RPAREN);
-			ret = parseUnaryExpressionNotPlusMinus();
-			ret = dress(SCastExpr.make(type, ret));
-		} else {
-			throw produceParseException(TokenType.SHORT, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
 
 	/* sequence(
-		terminal(LPAREN)
-		nonTerminal(annotations, Annotations)
-		choice(
-			sequence(
-				nonTerminal(primitiveType, PrimitiveType)
-				choice(
-					sequence(
-						terminal(RPAREN)
-						nonTerminal(ret, UnaryExpression)
-					)
-					sequence(
-						nonTerminal(arrayDims, ArrayDimsMandatory)
-						nonTerminal(type, ReferenceCastTypeRest)
-						terminal(RPAREN)
-						nonTerminal(ret, UnaryExpressionNotPlusMinus)
-					)
-				)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-				)
-				nonTerminal(type, ReferenceCastTypeRest)
-				terminal(RPAREN)
-				nonTerminal(ret, UnaryExpressionNotPlusMinus)
-			)
-		)
-	) */
-	private int matchCastExpression(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 2);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 2, -1);
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 2, -1);
-		lookahead = matchCastExpression_5(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 2, -1);
-		return memoizeMatch(initialLookahead, 2, lookahead);
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(primitiveType, PrimitiveType)
-			choice(
-				sequence(
-					terminal(RPAREN)
-					nonTerminal(ret, UnaryExpression)
-				)
-				sequence(
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-					nonTerminal(type, ReferenceCastTypeRest)
-					terminal(RPAREN)
-					nonTerminal(ret, UnaryExpressionNotPlusMinus)
-				)
-			)
-		)
-		sequence(
-			nonTerminal(type, QualifiedType)
-			zeroOrOne(
-				lookAhead(
-					nonTerminal(Annotations)
-					terminal(LBRACKET)
-				)
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-			)
-			nonTerminal(type, ReferenceCastTypeRest)
-			terminal(RPAREN)
-			nonTerminal(ret, UnaryExpressionNotPlusMinus)
-		)
-	) */
-	private int matchCastExpression_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCastExpression_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchCastExpression_5_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(primitiveType, PrimitiveType)
-		choice(
-			sequence(
-				terminal(RPAREN)
-				nonTerminal(ret, UnaryExpression)
-			)
-			sequence(
-				nonTerminal(arrayDims, ArrayDimsMandatory)
-				nonTerminal(type, ReferenceCastTypeRest)
-				terminal(RPAREN)
-				nonTerminal(ret, UnaryExpressionNotPlusMinus)
-			)
-		)
-	) */
-	private int matchCastExpression_5_1(int lookahead) {
-		lookahead = matchPrimitiveType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchCastExpression_5_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(RPAREN)
-			nonTerminal(ret, UnaryExpression)
-		)
-		sequence(
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-			nonTerminal(type, ReferenceCastTypeRest)
-			terminal(RPAREN)
-			nonTerminal(ret, UnaryExpressionNotPlusMinus)
-		)
-	) */
-	private int matchCastExpression_5_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCastExpression_5_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchCastExpression_5_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(RPAREN)
-		nonTerminal(ret, UnaryExpression)
-	) */
-	private int matchCastExpression_5_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-		nonTerminal(type, ReferenceCastTypeRest)
-		terminal(RPAREN)
-		nonTerminal(ret, UnaryExpressionNotPlusMinus)
-	) */
-	private int matchCastExpression_5_1_2_2(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceCastTypeRest(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpressionNotPlusMinus(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(type, QualifiedType)
 		zeroOrOne(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-			)
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-		)
-		nonTerminal(type, ReferenceCastTypeRest)
-		terminal(RPAREN)
-		nonTerminal(ret, UnaryExpressionNotPlusMinus)
-	) */
-	private int matchCastExpression_5_2(int lookahead) {
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchCastExpression_5_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceCastTypeRest(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpressionNotPlusMinus(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchCastExpression_5_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCastExpression_5_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-		)
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-	) */
-	private int matchCastExpression_5_2_2_1(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-	) */
-	private int matchCastExpression_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			lookAhead(
-				terminal(BIT_AND)
-			)
 			action({ types = append(types, type); })
 			action({ lateRun(); })
 			oneOrMore(
@@ -11666,118 +6567,26 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SType> parseReferenceCastTypeRest(BUTree<? extends SType> type) throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<SNodeList> annotations = null;
-		if (matchReferenceCastTypeRest_lookahead1(0) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.BIT_AND) {
 			types = append(types, type);
 			lateRun();
 			do {
 				parse(TokenType.BIT_AND);
 				run();
+				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_2);
 				annotations = parseAnnotations();
+				popCallStack();
+				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_3);
 				type = parseReferenceType(annotations);
+				popCallStack();
 				types = append(types, type);
-			} while (match(0, TokenType.BIT_AND) != -1);
+				__token = getToken(0).kind;
+			} while (__token == TokenType.BIT_AND);
 			type = dress(SIntersectionType.make(types));
 		}
 		return type;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			lookAhead(
-				terminal(BIT_AND)
-			)
-			oneOrMore(
-				terminal(BIT_AND)
-				nonTerminal(annotations, Annotations)
-				nonTerminal(type, ReferenceType)
-			)
-		)
-	) */
-	private int matchReferenceCastTypeRest(int lookahead) {
-		lookahead = matchReferenceCastTypeRest_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			terminal(BIT_AND)
-		)
-		oneOrMore(
-			terminal(BIT_AND)
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, ReferenceType)
-		)
-	) */
-	private int matchReferenceCastTypeRest_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReferenceCastTypeRest_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(BIT_AND)
-		)
-		oneOrMore(
-			terminal(BIT_AND)
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, ReferenceType)
-		)
-	) */
-	private int matchReferenceCastTypeRest_1_1(int lookahead) {
-		lookahead = matchReferenceCastTypeRest_1_1_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		terminal(BIT_AND)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, ReferenceType)
-	) */
-	private int matchReferenceCastTypeRest_1_1_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReferenceCastTypeRest_1_1_4_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchReferenceCastTypeRest_1_1_4_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_AND)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, ReferenceType)
-	) */
-	private int matchReferenceCastTypeRest_1_1_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReferenceType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_AND)
-	) */
-	private int matchReferenceCastTypeRest_lookahead1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_AND);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -11825,227 +6634,66 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parseLiteral() throws ParseException {
 		Token literal;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
-		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
-			literal = parse(TokenType.INTEGER_LITERAL);
-			ret = SLiteralExpr.make(Integer.class, literal.image);
-		} else if (match(0, TokenType.LONG_LITERAL) != -1) {
-			literal = parse(TokenType.LONG_LITERAL);
-			ret = SLiteralExpr.make(Long.class, literal.image);
-		} else if (match(0, TokenType.FLOAT_LITERAL) != -1) {
-			literal = parse(TokenType.FLOAT_LITERAL);
-			ret = SLiteralExpr.make(Float.class, literal.image);
-		} else if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
-			literal = parse(TokenType.DOUBLE_LITERAL);
-			ret = SLiteralExpr.make(Double.class, literal.image);
-		} else if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
-			literal = parse(TokenType.CHARACTER_LITERAL);
-			ret = SLiteralExpr.make(Character.class, literal.image);
-		} else if (match(0, TokenType.STRING_LITERAL) != -1) {
-			literal = parse(TokenType.STRING_LITERAL);
-			ret = SLiteralExpr.make(String.class, literal.image);
-		} else if (match(0, TokenType.TRUE) != -1) {
-			literal = parse(TokenType.TRUE);
-			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (match(0, TokenType.FALSE) != -1) {
-			literal = parse(TokenType.FALSE);
-			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (match(0, TokenType.NULL) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NULL) {
 			literal = parse(TokenType.NULL);
 			ret = SLiteralExpr.make(Void.class, literal.image);
-		} else {
-			throw produceParseException(TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL);
-		}
+		} else if (__token == TokenType.FALSE) {
+			literal = parse(TokenType.FALSE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.TRUE) {
+			literal = parse(TokenType.TRUE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.STRING_LITERAL) {
+			literal = parse(TokenType.STRING_LITERAL);
+			ret = SLiteralExpr.make(String.class, literal.image);
+		} else if (__token == TokenType.CHARACTER_LITERAL) {
+			literal = parse(TokenType.CHARACTER_LITERAL);
+			ret = SLiteralExpr.make(Character.class, literal.image);
+		} else if (__token == TokenType.DOUBLE_LITERAL) {
+			literal = parse(TokenType.DOUBLE_LITERAL);
+			ret = SLiteralExpr.make(Double.class, literal.image);
+		} else if (__token == TokenType.FLOAT_LITERAL) {
+			literal = parse(TokenType.FLOAT_LITERAL);
+			ret = SLiteralExpr.make(Float.class, literal.image);
+		} else if (__token == TokenType.LONG_LITERAL) {
+			literal = parse(TokenType.LONG_LITERAL);
+			ret = SLiteralExpr.make(Long.class, literal.image);
+		} else if (__token == TokenType.INTEGER_LITERAL) {
+			literal = parse(TokenType.INTEGER_LITERAL);
+			ret = SLiteralExpr.make(Integer.class, literal.image);
+		} else
+			throw produceParseException(TokenType.FALSE, TokenType.NULL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL);
 		return dress(ret);
 	}
 
 	/* sequence(
 		choice(
-			sequence(
-				terminal(literal, INTEGER_LITERAL)
-			)
-			sequence(
-				terminal(literal, LONG_LITERAL)
-			)
-			sequence(
-				terminal(literal, FLOAT_LITERAL)
-			)
-			sequence(
-				terminal(literal, DOUBLE_LITERAL)
-			)
-			sequence(
-				terminal(literal, CHARACTER_LITERAL)
-			)
-			sequence(
-				terminal(literal, STRING_LITERAL)
-			)
-			sequence(
-				terminal(literal, TRUE)
-			)
-			sequence(
-				terminal(literal, FALSE)
-			)
-			sequence(
-				terminal(literal, NULL)
-			)
+			nonTerminal(ret, PrimaryNoNewArray)
+			nonTerminal(ret, ArrayCreationExpr)
 		)
+		action({ return ret; })
 	) */
-	private int matchLiteral(int lookahead) {
-		lookahead = matchLiteral_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(literal, INTEGER_LITERAL)
-		)
-		sequence(
-			terminal(literal, LONG_LITERAL)
-		)
-		sequence(
-			terminal(literal, FLOAT_LITERAL)
-		)
-		sequence(
-			terminal(literal, DOUBLE_LITERAL)
-		)
-		sequence(
-			terminal(literal, CHARACTER_LITERAL)
-		)
-		sequence(
-			terminal(literal, STRING_LITERAL)
-		)
-		sequence(
-			terminal(literal, TRUE)
-		)
-		sequence(
-			terminal(literal, FALSE)
-		)
-		sequence(
-			terminal(literal, NULL)
-		)
-	) */
-	private int matchLiteral_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchLiteral_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchLiteral_2_9(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(literal, INTEGER_LITERAL)
-	) */
-	private int matchLiteral_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.INTEGER_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, LONG_LITERAL)
-	) */
-	private int matchLiteral_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.LONG_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, FLOAT_LITERAL)
-	) */
-	private int matchLiteral_2_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.FLOAT_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, DOUBLE_LITERAL)
-	) */
-	private int matchLiteral_2_4(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOUBLE_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, CHARACTER_LITERAL)
-	) */
-	private int matchLiteral_2_5(int lookahead) {
-		lookahead = match(lookahead, TokenType.CHARACTER_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, STRING_LITERAL)
-	) */
-	private int matchLiteral_2_6(int lookahead) {
-		lookahead = match(lookahead, TokenType.STRING_LITERAL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, TRUE)
-	) */
-	private int matchLiteral_2_7(int lookahead) {
-		lookahead = match(lookahead, TokenType.TRUE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, FALSE)
-	) */
-	private int matchLiteral_2_8(int lookahead) {
-		lookahead = match(lookahead, TokenType.FALSE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(literal, NULL)
-	) */
-	private int matchLiteral_2_9(int lookahead) {
-		lookahead = match(lookahead, TokenType.NULL);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
+		BUTree<? extends SExpr> ret;
+		int __token;
+		switch (predict(JavaGrammar.PRIMARY_EXPRESSION_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.PrimaryExpression_1_1);
+				ret = parsePrimaryNoNewArray();
+				popCallStack();
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.PrimaryExpression_1_2);
+				ret = parseArrayCreationExpr(null);
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+		}
+		return ret;
 	}
 
 	/* sequence(
@@ -12056,12 +6704,19 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimaryNoNewArray() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
+		pushCallStack(JavaGrammar.PrimaryNoNewArray_1);
 		ret = parsePrimaryPrefix();
-		while (match(0, TokenType.DOT, TokenType.LBRACKET, TokenType.DOUBLECOLON) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while ((__token - 84 & ~63) == 0 && (1L << __token - 84 & (1L << TokenType.LBRACKET - 84 | 1L << TokenType.DOT - 84 | 1L << TokenType.DOUBLECOLON - 84)) != 0) {
 			lateRun();
+			pushCallStack(JavaGrammar.PrimaryNoNewArray_2_1);
 			ret = parsePrimarySuffix(ret);
+			popCallStack();
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -12069,48 +6724,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			nonTerminal(ret, PrimarySuffix)
-		)
-	) */
-	private int matchPrimaryExpression(int lookahead) {
-		lookahead = matchPrimaryPrefix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		nonTerminal(ret, PrimarySuffix)
-	) */
-	private int matchPrimaryExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchPrimaryExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, PrimarySuffix)
-	) */
-	private int matchPrimaryExpression_2_1(int lookahead) {
-		lookahead = matchPrimarySuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, PrimaryPrefix)
-		zeroOrMore(
-			lookAhead(
-				nonTerminal(PrimarySuffixWithoutSuper)
-			)
 			action({ lateRun(); })
 			nonTerminal(ret, PrimarySuffixWithoutSuper)
 		)
@@ -12118,74 +6731,19 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
+		pushCallStack(JavaGrammar.PrimaryExpressionWithoutSuperSuffix_1);
 		ret = parsePrimaryPrefix();
-		while (matchPrimaryExpressionWithoutSuperSuffix_lookahead1(0) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2) == 1) {
 			lateRun();
+			pushCallStack(JavaGrammar.PrimaryExpressionWithoutSuperSuffix_2_1);
 			ret = parsePrimarySuffixWithoutSuper(ret);
+			popCallStack();
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, PrimaryPrefix)
-		zeroOrMore(
-			lookAhead(
-				nonTerminal(PrimarySuffixWithoutSuper)
-			)
-			nonTerminal(ret, PrimarySuffixWithoutSuper)
-		)
-	) */
-	private int matchPrimaryExpressionWithoutSuperSuffix(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 6);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchPrimaryPrefix(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 6, -1);
-		lookahead = matchPrimaryExpressionWithoutSuperSuffix_2(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 6, -1);
-		return memoizeMatch(initialLookahead, 6, lookahead);
-	}
-
-	/* zeroOrMore(
-		lookAhead(
-			nonTerminal(PrimarySuffixWithoutSuper)
-		)
-		nonTerminal(ret, PrimarySuffixWithoutSuper)
-	) */
-	private int matchPrimaryExpressionWithoutSuperSuffix_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryExpressionWithoutSuperSuffix_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchPrimaryExpressionWithoutSuperSuffix_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(PrimarySuffixWithoutSuper)
-		)
-		nonTerminal(ret, PrimarySuffixWithoutSuper)
-	) */
-	private int matchPrimaryExpressionWithoutSuperSuffix_2_1(int lookahead) {
-		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(PrimarySuffixWithoutSuper)
-	) */
-	private int matchPrimaryExpressionWithoutSuperSuffix_lookahead1(int lookahead) {
-		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -12205,16 +6763,7 @@ public class ParserImplementation extends ParserNewBase {
 						action({ lateRun(); })
 						terminal(DOT)
 						choice(
-							sequence(
-								lookAhead(
-									zeroOrOne(
-										nonTerminal(TypeArguments)
-									)
-									nonTerminal(Name)
-									terminal(LPAREN)
-								)
-								nonTerminal(ret, MethodInvocation)
-							)
+							nonTerminal(ret, MethodInvocation)
 							nonTerminal(ret, FieldAccess)
 						)
 					)
@@ -12224,13 +6773,8 @@ public class ParserImplementation extends ParserNewBase {
 					)
 				)
 			)
-			nonTerminal(ret, AllocationExpression)
+			nonTerminal(ret, ClassCreationExpr)
 			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOT)
-					terminal(CLASS)
-				)
 				action({ run(); })
 				nonTerminal(type, ResultType)
 				terminal(DOT)
@@ -12238,77 +6782,24 @@ public class ParserImplementation extends ParserNewBase {
 				action({ ret = dress(SClassExpr.make(type)); })
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOUBLECOLON)
-				)
 				action({ run(); })
 				nonTerminal(type, ResultType)
 				action({ ret = STypeExpr.make(type); })
 				nonTerminal(ret, MethodReferenceSuffix)
 			)
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
 				action({ run(); })
 				nonTerminal(ret, MethodInvocation)
 			)
 			sequence(
 				nonTerminal(ret, Name)
-				zeroOrOne(
-					action({ lateRun(); })
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
 			)
 			sequence(
 				action({ run(); })
 				terminal(LPAREN)
-				choice(
-					sequence(
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead(
-							nonTerminal(Name)
-							terminal(RPAREN)
-							terminal(ARROW)
-						)
-						nonTerminal(ret, Name)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead(
-							nonTerminal(Name)
-							terminal(COMMA)
-						)
-						nonTerminal(params, InferredFormalParameterList)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead({ isLambda() })
-						nonTerminal(params, FormalParameterList)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						nonTerminal(ret, Expression)
-						terminal(RPAREN)
-						action({ ret = dress(SParenthesizedExpr.make(ret)); })
-					)
-				)
+				nonTerminal(ret, Expression)
+				terminal(RPAREN)
+				action({ ret = dress(SParenthesizedExpr.make(ret)); })
 			)
 		)
 		action({ return ret; })
@@ -12318,973 +6809,101 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SNodeList> params;
 		BUTree<? extends SType> type;
-		if (match(0, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.CHARACTER_LITERAL) != -1) {
-			ret = parseLiteral();
-		} else if (match(0, TokenType.THIS) != -1) {
-			run();
-			parse(TokenType.THIS);
-			ret = dress(SThisExpr.make(none()));
-		} else if (match(0, TokenType.SUPER) != -1) {
-			run();
-			parse(TokenType.SUPER);
-			ret = dress(SSuperExpr.make(none()));
-			if (match(0, TokenType.DOT) != -1) {
-				lateRun();
+		int __token;
+		switch (predict(JavaGrammar.PRIMARY_PREFIX_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_1);
+				ret = parseLiteral();
+				popCallStack();
+				break;
+			case 2:
+				run();
+				parse(TokenType.THIS);
+				ret = dress(SThisExpr.make(none()));
+				break;
+			case 3:
+				run();
+				parse(TokenType.SUPER);
+				ret = dress(SSuperExpr.make(none()));
+				__token = getToken(0).kind;
+				if (__token == TokenType.DOUBLECOLON) {
+					lateRun();
+					pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
+					ret = parseMethodReferenceSuffix(ret);
+					popCallStack();
+				} else if (__token == TokenType.DOT) {
+					lateRun();
+					parse(TokenType.DOT);
+					switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
+						case 1:
+							pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_1);
+							ret = parseMethodInvocation(ret);
+							popCallStack();
+							break;
+						case 2:
+							pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_2);
+							ret = parseFieldAccess(ret);
+							popCallStack();
+							break;
+						default:
+							throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+					}
+				} else
+					throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON);
+				break;
+			case 4:
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_4);
+				ret = parseClassCreationExpr(null);
+				popCallStack();
+				break;
+			case 5:
+				run();
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_5_1);
+				type = parseResultType();
+				popCallStack();
 				parse(TokenType.DOT);
-				if (matchPrimaryPrefix_lookahead1(0) != -1) {
-					ret = parseMethodInvocation(ret);
-				} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-					ret = parseFieldAccess(ret);
-				} else {
-					throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-				}
-			} else if (match(0, TokenType.DOUBLECOLON) != -1) {
-				lateRun();
+				parse(TokenType.CLASS);
+				ret = dress(SClassExpr.make(type));
+				break;
+			case 6:
+				run();
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_6_1);
+				type = parseResultType();
+				popCallStack();
+				ret = STypeExpr.make(type);
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_6_2);
 				ret = parseMethodReferenceSuffix(ret);
-			} else {
-				throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON);
-			}
-		} else if (match(0, TokenType.NEW) != -1) {
-			ret = parseAllocationExpression(null);
-		} else if (matchPrimaryPrefix_lookahead2(0) != -1) {
-			run();
-			type = parseResultType();
-			parse(TokenType.DOT);
-			parse(TokenType.CLASS);
-			ret = dress(SClassExpr.make(type));
-		} else if (matchPrimaryPrefix_lookahead3(0) != -1) {
-			run();
-			type = parseResultType();
-			ret = STypeExpr.make(type);
-			ret = parseMethodReferenceSuffix(ret);
-		} else if (matchPrimaryPrefix_lookahead4(0) != -1) {
-			run();
-			ret = parseMethodInvocation(null);
-		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-			ret = parseName();
-			if (match(0, TokenType.ARROW) != -1) {
-				lateRun();
-				parse(TokenType.ARROW);
-				ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false);
-			}
-		} else if (match(0, TokenType.LPAREN) != -1) {
-			run();
-			parse(TokenType.LPAREN);
-			if (match(0, TokenType.RPAREN) != -1) {
-				parse(TokenType.RPAREN);
-				parse(TokenType.ARROW);
-				ret = parseLambdaBody(emptyList(), true);
-			} else if (matchPrimaryPrefix_lookahead5(0) != -1) {
+				popCallStack();
+				break;
+			case 7:
+				run();
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_7_1);
+				ret = parseMethodInvocation(null);
+				popCallStack();
+				break;
+			case 8:
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_8_1);
 				ret = parseName();
-				parse(TokenType.RPAREN);
-				parse(TokenType.ARROW);
-				ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true);
-			} else if (matchPrimaryPrefix_lookahead6(0) != -1) {
-				params = parseInferredFormalParameterList();
-				parse(TokenType.RPAREN);
-				parse(TokenType.ARROW);
-				ret = parseLambdaBody(params, true);
-			} else if (isLambda(0)) {
-				params = parseFormalParameterList();
-				parse(TokenType.RPAREN);
-				parse(TokenType.ARROW);
-				ret = parseLambdaBody(params, true);
-			} else if (match(0, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.VOID, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+				popCallStack();
+				break;
+			case 9:
+				run();
+				parse(TokenType.LPAREN);
+				pushCallStack(JavaGrammar.PrimaryPrefix_1_9_2);
 				ret = parseExpression();
+				popCallStack();
 				parse(TokenType.RPAREN);
 				ret = dress(SParenthesizedExpr.make(ret));
-			} else {
-				throw produceParseException(TokenType.STRICTFP, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.FINAL, TokenType.PRIVATE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.NATIVE, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.VOLATILE, TokenType.PUBLIC, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.FLOAT, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.NODE_LIST_VARIABLE, TokenType.RPAREN, TokenType.LPAREN, TokenType.INCR, TokenType.DECR, TokenType.THIS, TokenType.LT, TokenType.SUPER, TokenType.VOID, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS);
-			}
-		} else {
-			throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SUPER, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.LT, TokenType.THIS, TokenType.VOID, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.CHAR, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.LPAREN);
+				break;
+			default:
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
 
 	/* sequence(
 		choice(
-			nonTerminal(ret, Literal)
 			sequence(
-				terminal(THIS)
-			)
-			sequence(
-				terminal(SUPER)
-				choice(
-					sequence(
-						terminal(DOT)
-						choice(
-							sequence(
-								lookAhead(
-									zeroOrOne(
-										nonTerminal(TypeArguments)
-									)
-									nonTerminal(Name)
-									terminal(LPAREN)
-								)
-								nonTerminal(ret, MethodInvocation)
-							)
-							nonTerminal(ret, FieldAccess)
-						)
-					)
-					sequence(
-						nonTerminal(ret, MethodReferenceSuffix)
-					)
-				)
-			)
-			nonTerminal(ret, AllocationExpression)
-			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOT)
-					terminal(CLASS)
-				)
-				nonTerminal(type, ResultType)
-				terminal(DOT)
-				terminal(CLASS)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOUBLECOLON)
-				)
-				nonTerminal(type, ResultType)
-				nonTerminal(ret, MethodReferenceSuffix)
-			)
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, MethodInvocation)
-			)
-			sequence(
-				nonTerminal(ret, Name)
-				zeroOrOne(
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
-			)
-			sequence(
-				terminal(LPAREN)
-				choice(
-					sequence(
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead(
-							nonTerminal(Name)
-							terminal(RPAREN)
-							terminal(ARROW)
-						)
-						nonTerminal(ret, Name)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead(
-							nonTerminal(Name)
-							terminal(COMMA)
-						)
-						nonTerminal(params, InferredFormalParameterList)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						lookAhead({ isLambda() })
-						nonTerminal(params, FormalParameterList)
-						terminal(RPAREN)
-						terminal(ARROW)
-						nonTerminal(ret, LambdaBody)
-					)
-					sequence(
-						nonTerminal(ret, Expression)
-						terminal(RPAREN)
-					)
-				)
-			)
-		)
-	) */
-	private int matchPrimaryPrefix(int lookahead) {
-		lookahead = matchPrimaryPrefix_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, Literal)
-		sequence(
-			terminal(THIS)
-		)
-		sequence(
-			terminal(SUPER)
-			choice(
-				sequence(
-					terminal(DOT)
-					choice(
-						sequence(
-							lookAhead(
-								zeroOrOne(
-									nonTerminal(TypeArguments)
-								)
-								nonTerminal(Name)
-								terminal(LPAREN)
-							)
-							nonTerminal(ret, MethodInvocation)
-						)
-						nonTerminal(ret, FieldAccess)
-					)
-				)
-				sequence(
-					nonTerminal(ret, MethodReferenceSuffix)
-				)
-			)
-		)
-		nonTerminal(ret, AllocationExpression)
-		sequence(
-			lookAhead(
-				nonTerminal(ResultType)
-				terminal(DOT)
-				terminal(CLASS)
-			)
-			nonTerminal(type, ResultType)
-			terminal(DOT)
-			terminal(CLASS)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(ResultType)
-				terminal(DOUBLECOLON)
-			)
-			nonTerminal(type, ResultType)
-			nonTerminal(ret, MethodReferenceSuffix)
-		)
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(TypeArguments)
-				)
-				nonTerminal(Name)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, MethodInvocation)
-		)
-		sequence(
-			nonTerminal(ret, Name)
-			zeroOrOne(
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-		)
-		sequence(
-			terminal(LPAREN)
-			choice(
-				sequence(
-					terminal(RPAREN)
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
-				sequence(
-					lookAhead(
-						nonTerminal(Name)
-						terminal(RPAREN)
-						terminal(ARROW)
-					)
-					nonTerminal(ret, Name)
-					terminal(RPAREN)
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
-				sequence(
-					lookAhead(
-						nonTerminal(Name)
-						terminal(COMMA)
-					)
-					nonTerminal(params, InferredFormalParameterList)
-					terminal(RPAREN)
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
-				sequence(
-					lookAhead({ isLambda() })
-					nonTerminal(params, FormalParameterList)
-					terminal(RPAREN)
-					terminal(ARROW)
-					nonTerminal(ret, LambdaBody)
-				)
-				sequence(
-					nonTerminal(ret, Expression)
-					terminal(RPAREN)
-				)
-			)
-		)
-	) */
-	private int matchPrimaryPrefix_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchLiteral(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAllocationExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_6(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_7(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_8(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(THIS)
-	) */
-	private int matchPrimaryPrefix_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SUPER)
-		choice(
-			sequence(
-				terminal(DOT)
-				choice(
-					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeArguments)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, MethodInvocation)
-					)
-					nonTerminal(ret, FieldAccess)
-				)
-			)
-			sequence(
-				nonTerminal(ret, MethodReferenceSuffix)
-			)
-		)
-	) */
-	private int matchPrimaryPrefix_1_3(int lookahead) {
-		lookahead = match(lookahead, TokenType.SUPER);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryPrefix_1_3_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(DOT)
-			choice(
-				sequence(
-					lookAhead(
-						zeroOrOne(
-							nonTerminal(TypeArguments)
-						)
-						nonTerminal(Name)
-						terminal(LPAREN)
-					)
-					nonTerminal(ret, MethodInvocation)
-				)
-				nonTerminal(ret, FieldAccess)
-			)
-		)
-		sequence(
-			nonTerminal(ret, MethodReferenceSuffix)
-		)
-	) */
-	private int matchPrimaryPrefix_1_3_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3_4_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(DOT)
-		choice(
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, MethodInvocation)
-			)
-			nonTerminal(ret, FieldAccess)
-		)
-	) */
-	private int matchPrimaryPrefix_1_3_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryPrefix_1_3_4_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(TypeArguments)
-				)
-				nonTerminal(Name)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, MethodInvocation)
-		)
-		nonTerminal(ret, FieldAccess)
-	) */
-	private int matchPrimaryPrefix_1_3_4_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3_4_1_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchFieldAccess(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(TypeArguments)
-			)
-			nonTerminal(Name)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, MethodInvocation)
-	) */
-	private int matchPrimaryPrefix_1_3_4_1_3_1(int lookahead) {
-		lookahead = matchMethodInvocation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, MethodReferenceSuffix)
-	) */
-	private int matchPrimaryPrefix_1_3_4_2(int lookahead) {
-		lookahead = matchMethodReferenceSuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(ResultType)
-			terminal(DOT)
-			terminal(CLASS)
-		)
-		nonTerminal(type, ResultType)
-		terminal(DOT)
-		terminal(CLASS)
-	) */
-	private int matchPrimaryPrefix_1_5(int lookahead) {
-		lookahead = matchResultType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.CLASS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(ResultType)
-			terminal(DOUBLECOLON)
-		)
-		nonTerminal(type, ResultType)
-		nonTerminal(ret, MethodReferenceSuffix)
-	) */
-	private int matchPrimaryPrefix_1_6(int lookahead) {
-		lookahead = matchResultType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMethodReferenceSuffix(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(TypeArguments)
-			)
-			nonTerminal(Name)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, MethodInvocation)
-	) */
-	private int matchPrimaryPrefix_1_7(int lookahead) {
-		lookahead = matchMethodInvocation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, Name)
-		zeroOrOne(
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-	) */
-	private int matchPrimaryPrefix_1_8(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryPrefix_1_8_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_8_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_8_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_8_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		choice(
-			sequence(
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(Name)
-					terminal(RPAREN)
-					terminal(ARROW)
-				)
-				nonTerminal(ret, Name)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(Name)
-					terminal(COMMA)
-				)
-				nonTerminal(params, InferredFormalParameterList)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				lookAhead({ isLambda() })
-				nonTerminal(params, FormalParameterList)
-				terminal(RPAREN)
-				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
-			)
-			sequence(
-				nonTerminal(ret, Expression)
-				terminal(RPAREN)
-			)
-		)
-	) */
-	private int matchPrimaryPrefix_1_9(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryPrefix_1_9_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(Name)
-				terminal(RPAREN)
-				terminal(ARROW)
-			)
-			nonTerminal(ret, Name)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(Name)
-				terminal(COMMA)
-			)
-			nonTerminal(params, InferredFormalParameterList)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			lookAhead({ isLambda() })
-			nonTerminal(params, FormalParameterList)
-			terminal(RPAREN)
-			terminal(ARROW)
-			nonTerminal(ret, LambdaBody)
-		)
-		sequence(
-			nonTerminal(ret, Expression)
-			terminal(RPAREN)
-		)
-	) */
-	private int matchPrimaryPrefix_1_9_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_9_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Name)
-			terminal(RPAREN)
-			terminal(ARROW)
-		)
-		nonTerminal(ret, Name)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_9_3_2(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Name)
-			terminal(COMMA)
-		)
-		nonTerminal(params, InferredFormalParameterList)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_9_3_3(int lookahead) {
-		lookahead = matchInferredFormalParameterList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead({ isLambda() })
-		nonTerminal(params, FormalParameterList)
-		terminal(RPAREN)
-		terminal(ARROW)
-		nonTerminal(ret, LambdaBody)
-	) */
-	private int matchPrimaryPrefix_1_9_3_4(int lookahead) {
-		lookahead = isLambda(lookahead) ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchFormalParameterList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchLambdaBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, Expression)
-		terminal(RPAREN)
-	) */
-	private int matchPrimaryPrefix_1_9_3_5(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(TypeArguments)
-		)
-		nonTerminal(Name)
-		terminal(LPAREN)
-	) */
-	private int matchPrimaryPrefix_lookahead1(int lookahead) {
-		lookahead = matchPrimaryPrefix_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimaryPrefix_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimaryPrefix_lookahead1_1_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ResultType)
-		terminal(DOT)
-		terminal(CLASS)
-	) */
-	private int matchPrimaryPrefix_lookahead2(int lookahead) {
-		lookahead = matchResultType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.CLASS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ResultType)
-		terminal(DOUBLECOLON)
-	) */
-	private int matchPrimaryPrefix_lookahead3(int lookahead) {
-		lookahead = matchResultType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.DOUBLECOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(TypeArguments)
-		)
-		nonTerminal(Name)
-		terminal(LPAREN)
-	) */
-	private int matchPrimaryPrefix_lookahead4(int lookahead) {
-		lookahead = matchPrimaryPrefix_lookahead4_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimaryPrefix_lookahead4_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_lookahead4_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimaryPrefix_lookahead4_1_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Name)
-		terminal(RPAREN)
-		terminal(ARROW)
-	) */
-	private int matchPrimaryPrefix_lookahead5(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ARROW);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Name)
-		terminal(COMMA)
-	) */
-	private int matchPrimaryPrefix_lookahead6(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(2)
 				nonTerminal(ret, PrimarySuffixWithoutSuper)
 			)
 			sequence(
@@ -13298,208 +6917,27 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (matchPrimarySuffix_lookahead1(0) != -1) {
-			ret = parsePrimarySuffixWithoutSuper(scope);
-		} else if (match(0, TokenType.DOT) != -1) {
-			parse(TokenType.DOT);
-			parse(TokenType.SUPER);
-			ret = dress(SSuperExpr.make(optionOf(scope)));
-		} else if (match(0, TokenType.DOUBLECOLON) != -1) {
-			ret = parseMethodReferenceSuffix(scope);
-		} else {
-			throw produceParseException(TokenType.DOUBLECOLON, TokenType.DOT, TokenType.LBRACKET);
+		int __token;
+		switch (predict(JavaGrammar.PRIMARY_SUFFIX_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.PrimarySuffix_1_1_1);
+				ret = parsePrimarySuffixWithoutSuper(scope);
+				popCallStack();
+				break;
+			case 2:
+				parse(TokenType.DOT);
+				parse(TokenType.SUPER);
+				ret = dress(SSuperExpr.make(optionOf(scope)));
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.PrimarySuffix_1_3);
+				ret = parseMethodReferenceSuffix(scope);
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.LBRACKET, TokenType.DOT, TokenType.DOUBLECOLON);
 		}
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(2)
-				nonTerminal(ret, PrimarySuffixWithoutSuper)
-			)
-			sequence(
-				terminal(DOT)
-				terminal(SUPER)
-			)
-			nonTerminal(ret, MethodReferenceSuffix)
-		)
-	) */
-	private int matchPrimarySuffix(int lookahead) {
-		lookahead = matchPrimarySuffix_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(2)
-			nonTerminal(ret, PrimarySuffixWithoutSuper)
-		)
-		sequence(
-			terminal(DOT)
-			terminal(SUPER)
-		)
-		nonTerminal(ret, MethodReferenceSuffix)
-	) */
-	private int matchPrimarySuffix_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimarySuffix_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimarySuffix_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMethodReferenceSuffix(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(ret, PrimarySuffixWithoutSuper)
-	) */
-	private int matchPrimarySuffix_1_1(int lookahead) {
-		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DOT)
-		terminal(SUPER)
-	) */
-	private int matchPrimarySuffix_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SUPER);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(ret, PrimarySuffixWithoutSuper)
-	) */
-	private int matchPrimarySuffix_lookahead1(int lookahead) {
-		if (match(0, TokenType.DOT) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LBRACKET) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -13511,17 +6949,8 @@ public class ParserImplementation extends ParserNewBase {
 						terminal(THIS)
 						action({ ret = dress(SThisExpr.make(optionOf(scope))); })
 					)
-					nonTerminal(ret, AllocationExpression)
-					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeArguments)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, MethodInvocation)
-					)
+					nonTerminal(ret, ClassCreationExpr)
+					nonTerminal(ret, MethodInvocation)
 					nonTerminal(ret, FieldAccess)
 				)
 			)
@@ -13537,253 +6966,43 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
-		if (match(0, TokenType.DOT) != -1) {
-			parse(TokenType.DOT);
-			if (match(0, TokenType.THIS) != -1) {
-				parse(TokenType.THIS);
-				ret = dress(SThisExpr.make(optionOf(scope)));
-			} else if (match(0, TokenType.NEW) != -1) {
-				ret = parseAllocationExpression(scope);
-			} else if (matchPrimarySuffixWithoutSuper_lookahead1(0) != -1) {
-				ret = parseMethodInvocation(scope);
-			} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-				ret = parseFieldAccess(scope);
-			} else {
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.THIS, TokenType.NEW);
-			}
-		} else if (match(0, TokenType.LBRACKET) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACKET) {
 			parse(TokenType.LBRACKET);
+			pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
 			ret = parseExpression();
+			popCallStack();
 			parse(TokenType.RBRACKET);
 			ret = dress(SArrayAccessExpr.make(scope, ret));
-		} else {
-			throw produceParseException(TokenType.DOT, TokenType.LBRACKET);
-		}
+		} else if (__token == TokenType.DOT) {
+			parse(TokenType.DOT);
+			switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2)) {
+				case 1:
+					parse(TokenType.THIS);
+					ret = dress(SThisExpr.make(optionOf(scope)));
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_2);
+					ret = parseClassCreationExpr(scope);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_3);
+					ret = parseMethodInvocation(scope);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_4);
+					ret = parseFieldAccess(scope);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.NEW, TokenType.THIS, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
+		} else
+			throw produceParseException(TokenType.LBRACKET, TokenType.DOT);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(DOT)
-				choice(
-					sequence(
-						terminal(THIS)
-					)
-					nonTerminal(ret, AllocationExpression)
-					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeArguments)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, MethodInvocation)
-					)
-					nonTerminal(ret, FieldAccess)
-				)
-			)
-			sequence(
-				terminal(LBRACKET)
-				nonTerminal(ret, Expression)
-				terminal(RBRACKET)
-			)
-		)
-	) */
-	private int matchPrimarySuffixWithoutSuper(int lookahead) {
-		lookahead = matchPrimarySuffixWithoutSuper_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(DOT)
-			choice(
-				sequence(
-					terminal(THIS)
-				)
-				nonTerminal(ret, AllocationExpression)
-				sequence(
-					lookAhead(
-						zeroOrOne(
-							nonTerminal(TypeArguments)
-						)
-						nonTerminal(Name)
-						terminal(LPAREN)
-					)
-					nonTerminal(ret, MethodInvocation)
-				)
-				nonTerminal(ret, FieldAccess)
-			)
-		)
-		sequence(
-			terminal(LBRACKET)
-			nonTerminal(ret, Expression)
-			terminal(RBRACKET)
-		)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(DOT)
-		choice(
-			sequence(
-				terminal(THIS)
-			)
-			nonTerminal(ret, AllocationExpression)
-			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, MethodInvocation)
-			)
-			nonTerminal(ret, FieldAccess)
-		)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.DOT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimarySuffixWithoutSuper_1_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(THIS)
-		)
-		nonTerminal(ret, AllocationExpression)
-		sequence(
-			lookAhead(
-				zeroOrOne(
-					nonTerminal(TypeArguments)
-				)
-				nonTerminal(Name)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, MethodInvocation)
-		)
-		nonTerminal(ret, FieldAccess)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAllocationExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchFieldAccess(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(THIS)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.THIS);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			zeroOrOne(
-				nonTerminal(TypeArguments)
-			)
-			nonTerminal(Name)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, MethodInvocation)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1_1_2_3(int lookahead) {
-		lookahead = matchMethodInvocation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LBRACKET)
-		nonTerminal(ret, Expression)
-		terminal(RBRACKET)
-	) */
-	private int matchPrimarySuffixWithoutSuper_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(TypeArguments)
-		)
-		nonTerminal(Name)
-		terminal(LPAREN)
-	) */
-	private int matchPrimarySuffixWithoutSuper_lookahead1(int lookahead) {
-		lookahead = matchPrimarySuffixWithoutSuper_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimarySuffixWithoutSuper_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(TypeArguments)
-	) */
-	private int matchPrimarySuffixWithoutSuper_lookahead1_1_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -13792,18 +7011,11 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SExpr> parseFieldAccess(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SName> name;
+		int __token;
+		pushCallStack(JavaGrammar.FieldAccess_1);
 		name = parseName();
+		popCallStack();
 		return dress(SFieldAccessExpr.make(optionOf(scope), name));
-	}
-
-	/* sequence(
-		nonTerminal(name, Name)
-	) */
-	private int matchFieldAccess(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -13819,53 +7031,20 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
 		BUTree<? extends SExpr> ret;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.MethodInvocation_1_1);
 			typeArgs = parseTypeArguments();
+			popCallStack();
 		}
+		pushCallStack(JavaGrammar.MethodInvocation_2);
 		name = parseName();
+		popCallStack();
+		pushCallStack(JavaGrammar.MethodInvocation_3);
 		args = parseArguments();
+		popCallStack();
 		return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args));
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		nonTerminal(name, Name)
-		nonTerminal(args, Arguments)
-	) */
-	private int matchMethodInvocation(int lookahead) {
-		lookahead = matchMethodInvocation_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchMethodInvocation_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMethodInvocation_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchMethodInvocation_1_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -13893,190 +7072,30 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
+		int __token;
 		parse(TokenType.LPAREN);
-		if (quotesMode && matchArguments_lookahead1(0) != -1) {
-			ret = parseNodeListVar();
-		} else if (match(0, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.VOID, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.Arguments_2_1_2_1);
 			expr = parseExpression();
+			popCallStack();
 			ret = append(ret, expr);
-			while (match(0, TokenType.COMMA) != -1) {
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.ARGUMENTS_2_1_2_2) == 1) {
 				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.Arguments_2_1_2_2_2);
 				expr = parseExpression();
+				popCallStack();
 				ret = append(ret, expr);
+				__token = getToken(0).kind;
 			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Arguments_2_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		parse(TokenType.RPAREN);
 		return ret;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		zeroOrOne(
-			choice(
-				sequence(
-					lookAhead({ quotesMode })
-					nonTerminal(ret, NodeListVar)
-				)
-				sequence(
-					nonTerminal(expr, Expression)
-					zeroOrMore(
-						terminal(COMMA)
-						nonTerminal(expr, Expression)
-					)
-				)
-			)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchArguments(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArguments_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(expr, Expression)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(expr, Expression)
-				)
-			)
-		)
-	) */
-	private int matchArguments_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArguments_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead({ quotesMode })
-				nonTerminal(ret, NodeListVar)
-			)
-			sequence(
-				nonTerminal(expr, Expression)
-				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(expr, Expression)
-				)
-			)
-		)
-	) */
-	private int matchArguments_2_1(int lookahead) {
-		lookahead = matchArguments_2_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead({ quotesMode })
-			nonTerminal(ret, NodeListVar)
-		)
-		sequence(
-			nonTerminal(expr, Expression)
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(expr, Expression)
-			)
-		)
-	) */
-	private int matchArguments_2_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArguments_2_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchArguments_2_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead({ quotesMode })
-		nonTerminal(ret, NodeListVar)
-	) */
-	private int matchArguments_2_1_1_1(int lookahead) {
-		lookahead = quotesMode ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(expr, Expression)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(expr, Expression)
-		)
-	) */
-	private int matchArguments_2_1_1_2(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArguments_2_1_1_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(expr, Expression)
-	) */
-	private int matchArguments_2_1_1_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArguments_2_1_1_2_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchArguments_2_1_1_2_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(expr, Expression)
-	) */
-	private int matchArguments_2_1_1_2_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(NodeListVar)
-	) */
-	private int matchArguments_lookahead1(int lookahead) {
-		lookahead = matchNodeListVar(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -14098,97 +7117,79 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		parse(TokenType.DOUBLECOLON);
-		if (match(0, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.MethodReferenceSuffix_2_1);
 			typeArgs = parseTypeArguments();
+			popCallStack();
 		}
-		if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
-			name = parseName();
-		} else if (match(0, TokenType.NEW) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NEW) {
 			parse(TokenType.NEW);
 			name = SName.make("new");
-		} else {
-			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NEW);
-		}
+		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.MethodReferenceSuffix_3_1);
+			name = parseName();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
 	}
 
 	/* sequence(
-		terminal(DOUBLECOLON)
+		action({
+			if (scope == null) run();
+		})
+		terminal(NEW)
 		zeroOrOne(
 			nonTerminal(typeArgs, TypeArguments)
 		)
-		choice(
-			nonTerminal(name, Name)
-			sequence(
-				terminal(NEW)
-			)
+		action({ run(); })
+		nonTerminal(annotations, Annotations)
+		nonTerminal(type, QualifiedType)
+		nonTerminal(args, Arguments)
+		zeroOrOne(
+			nonTerminal(anonymousBody, ClassOrInterfaceBody)
 		)
+		action({ return dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
 	) */
-	private int matchMethodReferenceSuffix(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 10);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = match(lookahead, TokenType.DOUBLECOLON);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 10, -1);
-		lookahead = matchMethodReferenceSuffix_2(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 10, -1);
-		lookahead = matchMethodReferenceSuffix_3(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 10, -1);
-		return memoizeMatch(initialLookahead, 10, lookahead);
-	}
+	protected BUTree<? extends SExpr> parseClassCreationExpr(BUTree<? extends SExpr> scope) throws ParseException {
+		BUTree<? extends SExpr> ret;
+		BUTree<? extends SType> type;
+		BUTree<SNodeList> typeArgs = null;
+		BUTree<SNodeList> anonymousBody = null;
+		BUTree<SNodeList> args;
+		BUTree<SNodeList> annotations = null;
+		int __token;
+		if (scope == null) run();
 
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchMethodReferenceSuffix_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMethodReferenceSuffix_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchMethodReferenceSuffix_2_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(name, Name)
-		sequence(
-			terminal(NEW)
-		)
-	) */
-	private int matchMethodReferenceSuffix_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchName(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMethodReferenceSuffix_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(NEW)
-	) */
-	private int matchMethodReferenceSuffix_3_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.NEW);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		parse(TokenType.NEW);
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.ClassCreationExpr_2_1);
+			typeArgs = parseTypeArguments();
+			popCallStack();
+		}
+		run();
+		pushCallStack(JavaGrammar.ClassCreationExpr_3);
+		annotations = parseAnnotations();
+		popCallStack();
+		pushCallStack(JavaGrammar.ClassCreationExpr_4);
+		type = parseQualifiedType(annotations);
+		popCallStack();
+		pushCallStack(JavaGrammar.ClassCreationExpr_5);
+		args = parseArguments();
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.ClassCreationExpr_6_1);
+			anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
+			popCallStack();
+		}
+		return dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
 	}
 
 	/* sequence(
@@ -14202,289 +7203,52 @@ public class ParserImplementation extends ParserNewBase {
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
 		choice(
-			sequence(
-				nonTerminal(type, PrimitiveType)
-				nonTerminal(ret, ArrayCreationExpr)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				choice(
-					nonTerminal(ret, ArrayCreationExpr)
-					sequence(
-						nonTerminal(args, Arguments)
-						zeroOrOne(
-							lookAhead(
-								terminal(LBRACE)
-							)
-							nonTerminal(anonymousBody, ClassOrInterfaceBody)
-						)
-						action({ ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
-					)
-				)
-			)
+			nonTerminal(type, PrimitiveType)
+			nonTerminal(type, QualifiedType)
 		)
+		nonTerminal(ret, ArrayCreationExprRest)
 		action({ return ret; })
 	) */
-	protected BUTree<? extends SExpr> parseAllocationExpression(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SNodeList> anonymousBody = null;
 		BUTree<SNodeList> args;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		if (scope == null) run();
 
 		parse(TokenType.NEW);
-		if (match(0, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_2_1);
 			typeArgs = parseTypeArguments();
+			popCallStack();
 		}
 		run();
+		pushCallStack(JavaGrammar.ArrayCreationExpr_3);
 		annotations = parseAnnotations();
-		if (match(0, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN) != -1) {
-			type = parsePrimitiveType(annotations);
-			ret = parseArrayCreationExpr(type);
-		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
 			type = parseQualifiedType(annotations);
-			if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
-				ret = parseArrayCreationExpr(type);
-			} else if (match(0, TokenType.LPAREN) != -1) {
-				args = parseArguments();
-				if (matchAllocationExpression_lookahead1(0) != -1) {
-					anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
-				}
-				ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-			} else {
-				throw produceParseException(TokenType.AT, TokenType.LBRACKET, TokenType.LPAREN);
-			}
-		} else {
-			throw produceParseException(TokenType.SHORT, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
-		}
+			popCallStack();
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
+			type = parsePrimitiveType(annotations);
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+		pushCallStack(JavaGrammar.ArrayCreationExpr_5);
+		ret = parseArrayCreationExprRest(type);
+		popCallStack();
 		return ret;
 	}
 
-	/* sequence(
-		terminal(NEW)
-		zeroOrOne(
-			nonTerminal(typeArgs, TypeArguments)
-		)
-		nonTerminal(annotations, Annotations)
-		choice(
-			sequence(
-				nonTerminal(type, PrimitiveType)
-				nonTerminal(ret, ArrayCreationExpr)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				choice(
-					nonTerminal(ret, ArrayCreationExpr)
-					sequence(
-						nonTerminal(args, Arguments)
-						zeroOrOne(
-							lookAhead(
-								terminal(LBRACE)
-							)
-							nonTerminal(anonymousBody, ClassOrInterfaceBody)
-						)
-					)
-				)
-			)
-		)
-	) */
-	private int matchAllocationExpression(int lookahead) {
-		lookahead = match(lookahead, TokenType.NEW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAllocationExpression_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAllocationExpression_6(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchAllocationExpression_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAllocationExpression_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(typeArgs, TypeArguments)
-	) */
-	private int matchAllocationExpression_3_1(int lookahead) {
-		lookahead = matchTypeArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
 	/* choice(
 		sequence(
-			nonTerminal(type, PrimitiveType)
-			nonTerminal(ret, ArrayCreationExpr)
-		)
-		sequence(
-			nonTerminal(type, QualifiedType)
-			choice(
-				nonTerminal(ret, ArrayCreationExpr)
-				sequence(
-					nonTerminal(args, Arguments)
-					zeroOrOne(
-						lookAhead(
-							terminal(LBRACE)
-						)
-						nonTerminal(anonymousBody, ClassOrInterfaceBody)
-					)
-				)
-			)
-		)
-	) */
-	private int matchAllocationExpression_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAllocationExpression_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAllocationExpression_6_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(type, PrimitiveType)
-		nonTerminal(ret, ArrayCreationExpr)
-	) */
-	private int matchAllocationExpression_6_1(int lookahead) {
-		lookahead = matchPrimitiveType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayCreationExpr(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(type, QualifiedType)
-		choice(
-			nonTerminal(ret, ArrayCreationExpr)
-			sequence(
-				nonTerminal(args, Arguments)
-				zeroOrOne(
-					lookAhead(
-						terminal(LBRACE)
-					)
-					nonTerminal(anonymousBody, ClassOrInterfaceBody)
-				)
-			)
-		)
-	) */
-	private int matchAllocationExpression_6_2(int lookahead) {
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAllocationExpression_6_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, ArrayCreationExpr)
-		sequence(
-			nonTerminal(args, Arguments)
-			zeroOrOne(
-				lookAhead(
-					terminal(LBRACE)
-				)
-				nonTerminal(anonymousBody, ClassOrInterfaceBody)
-			)
-		)
-	) */
-	private int matchAllocationExpression_6_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayCreationExpr(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAllocationExpression_6_2_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(args, Arguments)
-		zeroOrOne(
-			lookAhead(
-				terminal(LBRACE)
-			)
-			nonTerminal(anonymousBody, ClassOrInterfaceBody)
-		)
-	) */
-	private int matchAllocationExpression_6_2_2_2(int lookahead) {
-		lookahead = matchArguments(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAllocationExpression_6_2_2_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			terminal(LBRACE)
-		)
-		nonTerminal(anonymousBody, ClassOrInterfaceBody)
-	) */
-	private int matchAllocationExpression_6_2_2_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAllocationExpression_6_2_2_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(LBRACE)
-		)
-		nonTerminal(anonymousBody, ClassOrInterfaceBody)
-	) */
-	private int matchAllocationExpression_6_2_2_2_2_1(int lookahead) {
-		lookahead = matchClassOrInterfaceBody(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(LBRACE)
-	) */
-	private int matchAllocationExpression_lookahead1(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
 			nonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
 			nonTerminal(arrayDims, ArrayDims)
 			action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); })
@@ -14495,116 +7259,37 @@ public class ParserImplementation extends ParserNewBase {
 			action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); })
 		)
 	) */
-	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SType> componentType) throws ParseException {
+	protected BUTree<? extends SExpr> parseArrayCreationExprRest(BUTree<? extends SType> componentType) throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations = null;
 		BUTree<SArrayInitializerExpr> initializer;
-		if (matchArrayCreationExpr_lookahead1(0) != -1) {
-			arrayDimExprs = parseArrayDimExprsMandatory();
-			arrayDims = parseArrayDims();
-			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
-		} else if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
-			arrayDims = parseArrayDimsMandatory();
-			initializer = parseArrayInitializer();
-			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
-		} else {
-			throw produceParseException(TokenType.AT, TokenType.LBRACKET);
+		int __token;
+		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR_REST)) {
+			case 1:
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_1_1);
+				arrayDimExprs = parseArrayDimExprsMandatory();
+				popCallStack();
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_1_2);
+				arrayDims = parseArrayDims();
+				popCallStack();
+				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
+			case 2:
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_2_1);
+				arrayDims = parseArrayDimsMandatory();
+				popCallStack();
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_2_2);
+				initializer = parseArrayInitializer();
+				popCallStack();
+				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
+			default:
+				throw produceParseException(TokenType.LBRACKET, TokenType.AT);
 		}
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
-			nonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
-			nonTerminal(arrayDims, ArrayDims)
-		)
-		sequence(
-			nonTerminal(arrayDims, ArrayDimsMandatory)
-			nonTerminal(initializer, ArrayInitializer)
-		)
-	) */
-	private int matchArrayCreationExpr(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayCreationExpr_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchArrayCreationExpr_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			nonTerminal(Expression)
-			terminal(RBRACKET)
-		)
-		nonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
-		nonTerminal(arrayDims, ArrayDims)
-	) */
-	private int matchArrayCreationExpr_1(int lookahead) {
-		lookahead = matchArrayDimExprsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayDims(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(arrayDims, ArrayDimsMandatory)
-		nonTerminal(initializer, ArrayInitializer)
-	) */
-	private int matchArrayCreationExpr_2(int lookahead) {
-		lookahead = matchArrayDimsMandatory(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchArrayInitializer(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-		nonTerminal(Expression)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayCreationExpr_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
 		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -14618,119 +7303,25 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SExpr> expr;
+		int __token;
 		do {
 			run();
+			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_1);
 			annotations = parseAnnotations();
+			popCallStack();
 			parse(TokenType.LBRACKET);
+			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_3);
 			expr = parseExpression();
+			popCallStack();
 			parse(TokenType.RBRACKET);
 			arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
-		} while (matchArrayDimExprsMandatory_lookahead1(0) != -1);
+			__token = getToken(0).kind;
+		} while (predict(JavaGrammar.ARRAY_DIM_EXPRS_MANDATORY_1) == 1);
 		return arrayDimExprs;
 	}
 
 	/* sequence(
 		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			nonTerminal(expr, Expression)
-			terminal(RBRACKET)
-		)
-	) */
-	private int matchArrayDimExprsMandatory(int lookahead) {
-		lookahead = matchArrayDimExprsMandatory_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			nonTerminal(Expression)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		nonTerminal(expr, Expression)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimExprsMandatory_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayDimExprsMandatory_1_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchArrayDimExprsMandatory_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			nonTerminal(Expression)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		nonTerminal(expr, Expression)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimExprsMandatory_1_1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-		nonTerminal(Expression)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimExprsMandatory_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -14742,112 +7333,27 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseArrayDimsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
+		int __token;
 		do {
 			run();
+			pushCallStack(JavaGrammar.ArrayDimsMandatory_1_1);
 			annotations = parseAnnotations();
+			popCallStack();
 			parse(TokenType.LBRACKET);
 			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-		} while (matchArrayDimsMandatory_lookahead1(0) != -1);
+			__token = getToken(0).kind;
+		} while (predict(JavaGrammar.ARRAY_DIMS_MANDATORY_1) == 1);
 		return arrayDims;
 	}
 
 	/* sequence(
-		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-	) */
-	private int matchArrayDimsMandatory(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 3);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchArrayDimsMandatory_1(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 3, -1);
-		return memoizeMatch(initialLookahead, 3, lookahead);
-	}
-
-	/* oneOrMore(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimsMandatory_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchArrayDimsMandatory_1_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchArrayDimsMandatory_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-		)
-		nonTerminal(annotations, Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimsMandatory_1_1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Annotations)
-		terminal(LBRACKET)
-		terminal(RBRACKET)
-	) */
-	private int matchArrayDimsMandatory_lookahead1(int lookahead) {
-		lookahead = matchAnnotations(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACKET);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACKET);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		choice(
-			sequence(
-				lookAhead(2)
-				nonTerminal(ret, LabeledStatement)
-			)
+			nonTerminal(ret, LabeledStatement)
 			nonTerminal(ret, AssertStatement)
 			nonTerminal(ret, Block)
 			nonTerminal(ret, EmptyStatement)
-			nonTerminal(ret, StatementExpression)
+			nonTerminal(ret, ExpressionStatement)
 			nonTerminal(ret, SwitchStatement)
 			nonTerminal(ret, IfStatement)
 			nonTerminal(ret, WhileStatement)
@@ -14864,175 +7370,92 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<? extends SStmt> parseStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
-		if (matchStatement_lookahead1(0) != -1) {
-			ret = parseLabeledStatement();
-		} else if (match(0, TokenType.ASSERT) != -1) {
-			ret = parseAssertStatement();
-		} else if (match(0, TokenType.LBRACE) != -1) {
-			ret = parseBlock();
-		} else if (match(0, TokenType.SEMICOLON) != -1) {
-			ret = parseEmptyStatement();
-		} else if (match(0, TokenType.INCR, TokenType.DECR, TokenType.THIS, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.INT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.CHAR, TokenType.SHORT, TokenType.LONG, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.LPAREN, TokenType.LT, TokenType.NEW, TokenType.SUPER) != -1) {
-			ret = parseStatementExpression();
-		} else if (match(0, TokenType.SWITCH) != -1) {
-			ret = parseSwitchStatement();
-		} else if (match(0, TokenType.IF) != -1) {
-			ret = parseIfStatement();
-		} else if (match(0, TokenType.WHILE) != -1) {
-			ret = parseWhileStatement();
-		} else if (match(0, TokenType.DO) != -1) {
-			ret = parseDoStatement();
-		} else if (match(0, TokenType.FOR) != -1) {
-			ret = parseForStatement();
-		} else if (match(0, TokenType.BREAK) != -1) {
-			ret = parseBreakStatement();
-		} else if (match(0, TokenType.CONTINUE) != -1) {
-			ret = parseContinueStatement();
-		} else if (match(0, TokenType.RETURN) != -1) {
-			ret = parseReturnStatement();
-		} else if (match(0, TokenType.THROW) != -1) {
-			ret = parseThrowStatement();
-		} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
-			ret = parseSynchronizedStatement();
-		} else if (match(0, TokenType.TRY) != -1) {
-			ret = parseTryStatement();
-		} else {
-			throw produceParseException(TokenType.SYNCHRONIZED, TokenType.SEMICOLON, TokenType.WHILE, TokenType.LBRACE, TokenType.BREAK, TokenType.TRY, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.IF, TokenType.ASSERT, TokenType.CONTINUE, TokenType.SWITCH, TokenType.RETURN, TokenType.FOR, TokenType.CHAR, TokenType.LONG, TokenType.BOOLEAN, TokenType.INT, TokenType.FLOAT, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.VOID, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.LT, TokenType.SUPER, TokenType.LPAREN, TokenType.NEW, TokenType.INCR, TokenType.DECR, TokenType.THROW, TokenType.DO);
+		int __token;
+		switch (predict(JavaGrammar.STATEMENT_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.Statement_1_1);
+				ret = parseLabeledStatement();
+				popCallStack();
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.Statement_1_2);
+				ret = parseAssertStatement();
+				popCallStack();
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.Statement_1_3);
+				ret = parseBlock();
+				popCallStack();
+				break;
+			case 4:
+				pushCallStack(JavaGrammar.Statement_1_4);
+				ret = parseEmptyStatement();
+				popCallStack();
+				break;
+			case 5:
+				pushCallStack(JavaGrammar.Statement_1_5);
+				ret = parseExpressionStatement();
+				popCallStack();
+				break;
+			case 6:
+				pushCallStack(JavaGrammar.Statement_1_6);
+				ret = parseSwitchStatement();
+				popCallStack();
+				break;
+			case 7:
+				pushCallStack(JavaGrammar.Statement_1_7);
+				ret = parseIfStatement();
+				popCallStack();
+				break;
+			case 8:
+				pushCallStack(JavaGrammar.Statement_1_8);
+				ret = parseWhileStatement();
+				popCallStack();
+				break;
+			case 9:
+				pushCallStack(JavaGrammar.Statement_1_9);
+				ret = parseDoStatement();
+				popCallStack();
+				break;
+			case 10:
+				pushCallStack(JavaGrammar.Statement_1_10);
+				ret = parseForStatement();
+				popCallStack();
+				break;
+			case 11:
+				pushCallStack(JavaGrammar.Statement_1_11);
+				ret = parseBreakStatement();
+				popCallStack();
+				break;
+			case 12:
+				pushCallStack(JavaGrammar.Statement_1_12);
+				ret = parseContinueStatement();
+				popCallStack();
+				break;
+			case 13:
+				pushCallStack(JavaGrammar.Statement_1_13);
+				ret = parseReturnStatement();
+				popCallStack();
+				break;
+			case 14:
+				pushCallStack(JavaGrammar.Statement_1_14);
+				ret = parseThrowStatement();
+				popCallStack();
+				break;
+			case 15:
+				pushCallStack(JavaGrammar.Statement_1_15);
+				ret = parseSynchronizedStatement();
+				popCallStack();
+				break;
+			case 16:
+				pushCallStack(JavaGrammar.Statement_1_16);
+				ret = parseTryStatement();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.ASSERT, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CONTINUE, TokenType.DO, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.FOR, TokenType.IF, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.RETURN, TokenType.SHORT, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.WHILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(2)
-				nonTerminal(ret, LabeledStatement)
-			)
-			nonTerminal(ret, AssertStatement)
-			nonTerminal(ret, Block)
-			nonTerminal(ret, EmptyStatement)
-			nonTerminal(ret, StatementExpression)
-			nonTerminal(ret, SwitchStatement)
-			nonTerminal(ret, IfStatement)
-			nonTerminal(ret, WhileStatement)
-			nonTerminal(ret, DoStatement)
-			nonTerminal(ret, ForStatement)
-			nonTerminal(ret, BreakStatement)
-			nonTerminal(ret, ContinueStatement)
-			nonTerminal(ret, ReturnStatement)
-			nonTerminal(ret, ThrowStatement)
-			nonTerminal(ret, SynchronizedStatement)
-			nonTerminal(ret, TryStatement)
-		)
-	) */
-	private int matchStatement(int lookahead) {
-		lookahead = matchStatement_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(2)
-			nonTerminal(ret, LabeledStatement)
-		)
-		nonTerminal(ret, AssertStatement)
-		nonTerminal(ret, Block)
-		nonTerminal(ret, EmptyStatement)
-		nonTerminal(ret, StatementExpression)
-		nonTerminal(ret, SwitchStatement)
-		nonTerminal(ret, IfStatement)
-		nonTerminal(ret, WhileStatement)
-		nonTerminal(ret, DoStatement)
-		nonTerminal(ret, ForStatement)
-		nonTerminal(ret, BreakStatement)
-		nonTerminal(ret, ContinueStatement)
-		nonTerminal(ret, ReturnStatement)
-		nonTerminal(ret, ThrowStatement)
-		nonTerminal(ret, SynchronizedStatement)
-		nonTerminal(ret, TryStatement)
-	) */
-	private int matchStatement_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchStatement_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAssertStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchBlock(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchEmptyStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatementExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchSwitchStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchIfStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchWhileStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchDoStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchForStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchBreakStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchContinueStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchReturnStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchThrowStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchSynchronizedStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTryStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(ret, LabeledStatement)
-	) */
-	private int matchStatement_1_1(int lookahead) {
-		lookahead = matchLabeledStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(ret, LabeledStatement)
-	) */
-	private int matchStatement_lookahead1(int lookahead) {
-		if (match(0, TokenType.NODE_VARIABLE) != -1) {
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.IDENTIFIER) != -1) {
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -15049,66 +7472,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
 		BUTree<? extends SExpr> check;
 		BUTree<? extends SExpr> msg = null;
+		int __token;
 		run();
 		parse(TokenType.ASSERT);
+		pushCallStack(JavaGrammar.AssertStatement_2);
 		check = parseExpression();
-		if (match(0, TokenType.COLON) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.COLON) {
 			parse(TokenType.COLON);
+			pushCallStack(JavaGrammar.AssertStatement_3_2);
 			msg = parseExpression();
+			popCallStack();
 		}
 		parse(TokenType.SEMICOLON);
 		return dress(SAssertStmt.make(check, optionOf(msg)));
-	}
-
-	/* sequence(
-		terminal(ASSERT)
-		nonTerminal(check, Expression)
-		zeroOrOne(
-			terminal(COLON)
-			nonTerminal(msg, Expression)
-		)
-		terminal(SEMICOLON)
-	) */
-	private int matchAssertStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.ASSERT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAssertStatement_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COLON)
-		nonTerminal(msg, Expression)
-	) */
-	private int matchAssertStatement_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAssertStatement_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COLON)
-		nonTerminal(msg, Expression)
-	) */
-	private int matchAssertStatement_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -15121,29 +7499,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SLabeledStmt> parseLabeledStatement() throws ParseException {
 		BUTree<SName> label;
 		BUTree<? extends SStmt> stmt;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.LabeledStatement_1);
 		label = parseName();
+		popCallStack();
 		parse(TokenType.COLON);
+		pushCallStack(JavaGrammar.LabeledStatement_3);
 		stmt = parseStatement();
+		popCallStack();
 		return dress(SLabeledStmt.make(label, stmt));
-	}
-
-	/* sequence(
-		nonTerminal(label, Name)
-		terminal(COLON)
-		nonTerminal(stmt, Statement)
-	) */
-	private int matchLabeledStatement(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -15155,41 +7520,19 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SBlockStmt> parseBlock() throws ParseException {
 		BUTree<SNodeList> stmts;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
+		pushCallStack(JavaGrammar.Block_2);
 		stmts = parseStatements(false);
+		popCallStack();
 		parse(TokenType.RBRACE);
 		return dress(SBlockStmt.make(ensureNotNull(stmts)));
 	}
 
 	/* sequence(
-		terminal(LBRACE)
-		nonTerminal(stmts, Statements)
-		terminal(RBRACE)
-	) */
-	private int matchBlock(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements(lookahead, false);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					choice(
-						terminal(CLASS)
-						terminal(INTERFACE)
-					)
-				)
 				action({ run(); })
 				action({ run(); })
 				nonTerminal(modifiers, ModifiersNoDefault)
@@ -15197,16 +7540,6 @@ public class ParserImplementation extends ParserNewBase {
 				action({ ret = dress(STypeDeclarationStmt.make(typeDecl)); })
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					choice(
-						terminal(ASSIGN)
-						terminal(COMMA)
-						terminal(SEMICOLON)
-					)
-				)
 				action({ run(); })
 				nonTerminal(expr, VariableDeclExpression)
 				terminal(SEMICOLON)
@@ -15221,224 +7554,36 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> expr;
 		BUTree<? extends STypeDecl> typeDecl;
 		BUTree<SNodeList> modifiers;
-		if (matchBlockStatement_lookahead1(0) != -1) {
-			run();
-			run();
-			modifiers = parseModifiersNoDefault();
-			typeDecl = parseClassOrInterfaceDecl(modifiers);
-			ret = dress(STypeDeclarationStmt.make(typeDecl));
-		} else if (matchBlockStatement_lookahead2(0) != -1) {
-			run();
-			expr = parseVariableDeclExpression();
-			parse(TokenType.SEMICOLON);
-			ret = dress(SExpressionStmt.make(expr));
-		} else if (match(0, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.THIS, TokenType.LPAREN, TokenType.FLOAT, TokenType.DOUBLE, TokenType.SHORT, TokenType.BYTE, TokenType.INT, TokenType.CHAR, TokenType.LONG, TokenType.BOOLEAN, TokenType.VOID, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.WHILE, TokenType.CONTINUE, TokenType.SYNCHRONIZED, TokenType.DO, TokenType.THROW, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.FOR, TokenType.IF, TokenType.ASSERT, TokenType.BREAK, TokenType.RETURN, TokenType.SWITCH, TokenType.TRY) != -1) {
-			ret = parseStatement();
-		} else {
-			throw produceParseException(TokenType.SYNCHRONIZED, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.VOID, TokenType.LPAREN, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.THIS, TokenType.LT, TokenType.NEW, TokenType.SUPER, TokenType.INCR, TokenType.DECR, TokenType.CONTINUE, TokenType.WHILE, TokenType.THROW, TokenType.SEMICOLON, TokenType.RETURN, TokenType.DO, TokenType.LBRACE, TokenType.SWITCH, TokenType.FOR, TokenType.TRY, TokenType.ASSERT, TokenType.IF, TokenType.BREAK, TokenType.VOLATILE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.PRIVATE, TokenType.AT, TokenType.ABSTRACT, TokenType.NATIVE, TokenType.FINAL, TokenType.STATIC, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.INTERFACE, TokenType.CLASS);
+		int __token;
+		switch (predict(JavaGrammar.BLOCK_STATEMENT_1)) {
+			case 1:
+				run();
+				run();
+				pushCallStack(JavaGrammar.BlockStatement_1_1_1);
+				modifiers = parseModifiersNoDefault();
+				popCallStack();
+				pushCallStack(JavaGrammar.BlockStatement_1_1_2);
+				typeDecl = parseClassOrInterfaceDecl(modifiers);
+				popCallStack();
+				ret = dress(STypeDeclarationStmt.make(typeDecl));
+				break;
+			case 2:
+				run();
+				pushCallStack(JavaGrammar.BlockStatement_1_2_1);
+				expr = parseVariableDeclExpression();
+				popCallStack();
+				parse(TokenType.SEMICOLON);
+				ret = dress(SExpressionStmt.make(expr));
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.BlockStatement_1_3);
+				ret = parseStatement();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.ABSTRACT, TokenType.ASSERT, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.CONTINUE, TokenType.DO, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FOR, TokenType.IF, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.RETURN, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TRANSIENT, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.VOLATILE, TokenType.WHILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					choice(
-						terminal(CLASS)
-						terminal(INTERFACE)
-					)
-				)
-				nonTerminal(modifiers, ModifiersNoDefault)
-				nonTerminal(typeDecl, ClassOrInterfaceDecl)
-			)
-			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					choice(
-						terminal(ASSIGN)
-						terminal(COMMA)
-						terminal(SEMICOLON)
-					)
-				)
-				nonTerminal(expr, VariableDeclExpression)
-				terminal(SEMICOLON)
-			)
-			nonTerminal(ret, Statement)
-		)
-	) */
-	private int matchBlockStatement(int lookahead) {
-		lookahead = matchBlockStatement_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(ModifiersNoDefault)
-				choice(
-					terminal(CLASS)
-					terminal(INTERFACE)
-				)
-			)
-			nonTerminal(modifiers, ModifiersNoDefault)
-			nonTerminal(typeDecl, ClassOrInterfaceDecl)
-		)
-		sequence(
-			lookAhead(
-				nonTerminal(ModifiersNoDefault)
-				nonTerminal(Type)
-				nonTerminal(VariableDeclaratorId)
-				choice(
-					terminal(ASSIGN)
-					terminal(COMMA)
-					terminal(SEMICOLON)
-				)
-			)
-			nonTerminal(expr, VariableDeclExpression)
-			terminal(SEMICOLON)
-		)
-		nonTerminal(ret, Statement)
-	) */
-	private int matchBlockStatement_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchBlockStatement_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchBlockStatement_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatement(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(ModifiersNoDefault)
-			choice(
-				terminal(CLASS)
-				terminal(INTERFACE)
-			)
-		)
-		nonTerminal(modifiers, ModifiersNoDefault)
-		nonTerminal(typeDecl, ClassOrInterfaceDecl)
-	) */
-	private int matchBlockStatement_1_1(int lookahead) {
-		lookahead = matchModifiersNoDefault(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(ModifiersNoDefault)
-			nonTerminal(Type)
-			nonTerminal(VariableDeclaratorId)
-			choice(
-				terminal(ASSIGN)
-				terminal(COMMA)
-				terminal(SEMICOLON)
-			)
-		)
-		nonTerminal(expr, VariableDeclExpression)
-		terminal(SEMICOLON)
-	) */
-	private int matchBlockStatement_1_2(int lookahead) {
-		lookahead = matchVariableDeclExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ModifiersNoDefault)
-		choice(
-			terminal(CLASS)
-			terminal(INTERFACE)
-		)
-	) */
-	private int matchBlockStatement_lookahead1(int lookahead) {
-		lookahead = matchModifiersNoDefault(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlockStatement_lookahead1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(CLASS)
-		terminal(INTERFACE)
-	) */
-	private int matchBlockStatement_lookahead1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = match(lookahead, TokenType.CLASS);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.INTERFACE);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(ModifiersNoDefault)
-		nonTerminal(Type)
-		nonTerminal(VariableDeclaratorId)
-		choice(
-			terminal(ASSIGN)
-			terminal(COMMA)
-			terminal(SEMICOLON)
-		)
-	) */
-	private int matchBlockStatement_lookahead2(int lookahead) {
-		lookahead = matchModifiersNoDefault(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclaratorId(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlockStatement_lookahead2_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		terminal(ASSIGN)
-		terminal(COMMA)
-		terminal(SEMICOLON)
-	) */
-	private int matchBlockStatement_lookahead2_4(int lookahead) {
-		int newLookahead;
-		newLookahead = match(lookahead, TokenType.ASSIGN);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.COMMA);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.SEMICOLON);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
@@ -15451,25 +7596,16 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SLocalVariableDecl> variableDecl;
+		int __token;
 		run();
 		run();
+		pushCallStack(JavaGrammar.VariableDeclExpression_1);
 		modifiers = parseModifiersNoDefault();
+		popCallStack();
+		pushCallStack(JavaGrammar.VariableDeclExpression_2);
 		variableDecl = parseVariableDecl(modifiers);
+		popCallStack();
 		return dress(SVariableDeclarationExpr.make(variableDecl));
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, ModifiersNoDefault)
-		nonTerminal(variableDecl, VariableDecl)
-	) */
-	private int matchVariableDeclExpression(int lookahead) {
-		lookahead = matchModifiersNoDefault(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDecl(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -15478,274 +7614,42 @@ public class ParserImplementation extends ParserNewBase {
 		action({ return dress(SEmptyStmt.make()); })
 	) */
 	protected BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
+		int __token;
 		run();
 		parse(TokenType.SEMICOLON);
 		return dress(SEmptyStmt.make());
 	}
 
 	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchEmptyStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		action({ run(); })
-		choice(
-			nonTerminal(expr, PrefixExpression)
-			sequence(
-				nonTerminal(expr, PrimaryExpression)
-				zeroOrOne(
-					choice(
-						sequence(
-							action({ lateRun(); })
-							terminal(INCR)
-							action({ expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr)); })
-						)
-						sequence(
-							action({ lateRun(); })
-							terminal(DECR)
-							action({ expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr)); })
-						)
-						sequence(
-							action({ lateRun(); })
-							nonTerminal(op, AssignmentOperator)
-							nonTerminal(value, Expression)
-							action({ expr = dress(SAssignExpr.make(expr, op, value)); })
-						)
-					)
-				)
-			)
-		)
+		nonTerminal(expr, StatementExpression)
 		terminal(SEMICOLON)
 		action({ return dress(SExpressionStmt.make(expr)); })
 	) */
-	protected BUTree<SExpressionStmt> parseStatementExpression() throws ParseException {
+	protected BUTree<SExpressionStmt> parseExpressionStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		AssignOp op;
 		BUTree<? extends SExpr> value;
+		int __token;
 		run();
-		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
-			expr = parsePrefixExpression();
-		} else if (match(0, TokenType.NEW, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.VOID, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BYTE, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER) != -1) {
-			expr = parsePrimaryExpression();
-			if (match(0, TokenType.INCR) != -1) {
-				lateRun();
-				parse(TokenType.INCR);
-				expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-			} else if (match(0, TokenType.DECR) != -1) {
-				lateRun();
-				parse(TokenType.DECR);
-				expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-			} else if (match(0, TokenType.LSHIFTASSIGN, TokenType.XORASSIGN, TokenType.REMASSIGN, TokenType.ANDASSIGN, TokenType.MINUSASSIGN, TokenType.ASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.STARASSIGN, TokenType.PLUSASSIGN, TokenType.ORASSIGN, TokenType.SLASHASSIGN, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				lateRun();
-				op = parseAssignmentOperator();
-				value = parseExpression();
-				expr = dress(SAssignExpr.make(expr, op, value));
-			}
-		} else {
-			throw produceParseException(TokenType.INCR, TokenType.DECR, TokenType.FLOAT, TokenType.CHAR, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.INT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.THIS, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.LPAREN, TokenType.NEW, TokenType.SUPER, TokenType.LT);
-		}
+		pushCallStack(JavaGrammar.ExpressionStatement_1);
+		expr = parseStatementExpression();
+		popCallStack();
 		parse(TokenType.SEMICOLON);
 		return dress(SExpressionStmt.make(expr));
 	}
 
 	/* sequence(
-		choice(
-			nonTerminal(expr, PrefixExpression)
-			sequence(
-				nonTerminal(expr, PrimaryExpression)
-				zeroOrOne(
-					choice(
-						sequence(
-							terminal(INCR)
-						)
-						sequence(
-							terminal(DECR)
-						)
-						sequence(
-							nonTerminal(op, AssignmentOperator)
-							nonTerminal(value, Expression)
-						)
-					)
-				)
-			)
-		)
-		terminal(SEMICOLON)
+		nonTerminal(ret, Expression)
+		action({ return ret; })
 	) */
-	private int matchStatementExpression(int lookahead) {
-		lookahead = matchStatementExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(expr, PrefixExpression)
-		sequence(
-			nonTerminal(expr, PrimaryExpression)
-			zeroOrOne(
-				choice(
-					sequence(
-						terminal(INCR)
-					)
-					sequence(
-						terminal(DECR)
-					)
-					sequence(
-						nonTerminal(op, AssignmentOperator)
-						nonTerminal(value, Expression)
-					)
-				)
-			)
-		)
-	) */
-	private int matchStatementExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrefixExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatementExpression_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(expr, PrimaryExpression)
-		zeroOrOne(
-			choice(
-				sequence(
-					terminal(INCR)
-				)
-				sequence(
-					terminal(DECR)
-				)
-				sequence(
-					nonTerminal(op, AssignmentOperator)
-					nonTerminal(value, Expression)
-				)
-			)
-		)
-	) */
-	private int matchStatementExpression_2_2(int lookahead) {
-		lookahead = matchPrimaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatementExpression_2_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-			sequence(
-				nonTerminal(op, AssignmentOperator)
-				nonTerminal(value, Expression)
-			)
-		)
-	) */
-	private int matchStatementExpression_2_2_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchStatementExpression_2_2_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(INCR)
-			)
-			sequence(
-				terminal(DECR)
-			)
-			sequence(
-				nonTerminal(op, AssignmentOperator)
-				nonTerminal(value, Expression)
-			)
-		)
-	) */
-	private int matchStatementExpression_2_2_2_1(int lookahead) {
-		lookahead = matchStatementExpression_2_2_2_1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(INCR)
-		)
-		sequence(
-			terminal(DECR)
-		)
-		sequence(
-			nonTerminal(op, AssignmentOperator)
-			nonTerminal(value, Expression)
-		)
-	) */
-	private int matchStatementExpression_2_2_2_1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchStatementExpression_2_2_2_1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatementExpression_2_2_2_1_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchStatementExpression_2_2_2_1_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(INCR)
-	) */
-	private int matchStatementExpression_2_2_2_1_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.INCR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(DECR)
-	) */
-	private int matchStatementExpression_2_2_2_1_1_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.DECR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(op, AssignmentOperator)
-		nonTerminal(value, Expression)
-	) */
-	private int matchStatementExpression_2_2_2_1_1_3(int lookahead) {
-		lookahead = matchAssignmentOperator(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+	protected BUTree<? extends SExpr> parseStatementExpression() throws ParseException {
+		BUTree<? extends SExpr> ret;
+		int __token;
+		pushCallStack(JavaGrammar.StatementExpression_1);
+		ret = parseExpression();
+		popCallStack();
+		return ret;
 	}
 
 	/* sequence(
@@ -15766,77 +7670,25 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> selector;
 		BUTree<SSwitchCase> entry;
 		BUTree<SNodeList> entries = emptyList();
+		int __token;
 		run();
 		parse(TokenType.SWITCH);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.SwitchStatement_3);
 		selector = parseExpression();
+		popCallStack();
 		parse(TokenType.RPAREN);
 		parse(TokenType.LBRACE);
-		while (match(0, TokenType.CASE, TokenType.DEFAULT) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.CASE || __token == TokenType.DEFAULT) {
+			pushCallStack(JavaGrammar.SwitchStatement_6_1);
 			entry = parseSwitchEntry();
+			popCallStack();
 			entries = append(entries, entry);
+			__token = getToken(0).kind;
 		}
 		parse(TokenType.RBRACE);
 		return dress(SSwitchStmt.make(selector, entries));
-	}
-
-	/* sequence(
-		terminal(SWITCH)
-		terminal(LPAREN)
-		nonTerminal(selector, Expression)
-		terminal(RPAREN)
-		terminal(LBRACE)
-		zeroOrMore(
-			nonTerminal(entry, SwitchEntry)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchSwitchStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.SWITCH);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchSwitchStatement_7(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		nonTerminal(entry, SwitchEntry)
-	) */
-	private int matchSwitchStatement_7(int lookahead) {
-		int newLookahead;
-		newLookahead = matchSwitchStatement_7_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchSwitchStatement_7_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(entry, SwitchEntry)
-	) */
-	private int matchSwitchStatement_7_1(int lookahead) {
-		lookahead = matchSwitchEntry(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -15855,74 +7707,23 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
+		int __token;
 		run();
-		if (match(0, TokenType.CASE) != -1) {
-			parse(TokenType.CASE);
-			label = parseExpression();
-		} else if (match(0, TokenType.DEFAULT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.DEFAULT) {
 			parse(TokenType.DEFAULT);
-		} else {
+		} else if (__token == TokenType.CASE) {
+			parse(TokenType.CASE);
+			pushCallStack(JavaGrammar.SwitchEntry_1_1_2);
+			label = parseExpression();
+			popCallStack();
+		} else
 			throw produceParseException(TokenType.CASE, TokenType.DEFAULT);
-		}
 		parse(TokenType.COLON);
+		pushCallStack(JavaGrammar.SwitchEntry_3);
 		stmts = parseStatements(false);
+		popCallStack();
 		return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts)));
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(CASE)
-				nonTerminal(label, Expression)
-			)
-			terminal(DEFAULT)
-		)
-		terminal(COLON)
-		nonTerminal(stmts, Statements)
-	) */
-	private int matchSwitchEntry(int lookahead) {
-		lookahead = matchSwitchEntry_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatements(lookahead, false);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(CASE)
-			nonTerminal(label, Expression)
-		)
-		terminal(DEFAULT)
-	) */
-	private int matchSwitchEntry_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchSwitchEntry_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.DEFAULT);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		terminal(CASE)
-		nonTerminal(label, Expression)
-	) */
-	private int matchSwitchEntry_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.CASE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -15933,7 +7734,6 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		nonTerminal(thenStmt, Statement)
 		zeroOrOne(
-			lookAhead(1)
 			terminal(ELSE)
 			nonTerminal(elseStmt, Statement)
 		)
@@ -15943,91 +7743,25 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> thenStmt;
 		BUTree<? extends SStmt> elseStmt = null;
+		int __token;
 		run();
 		parse(TokenType.IF);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.IfStatement_3);
 		condition = parseExpression();
+		popCallStack();
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.IfStatement_5);
 		thenStmt = parseStatement();
-		if (matchIfStatement_lookahead1(0) != -1) {
+		popCallStack();
+		__token = getToken(0).kind;
+		if (__token == TokenType.ELSE) {
 			parse(TokenType.ELSE);
+			pushCallStack(JavaGrammar.IfStatement_6_2);
 			elseStmt = parseStatement();
+			popCallStack();
 		}
 		return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt)));
-	}
-
-	/* sequence(
-		terminal(IF)
-		terminal(LPAREN)
-		nonTerminal(condition, Expression)
-		terminal(RPAREN)
-		nonTerminal(thenStmt, Statement)
-		zeroOrOne(
-			lookAhead(1)
-			terminal(ELSE)
-			nonTerminal(elseStmt, Statement)
-		)
-	) */
-	private int matchIfStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.IF);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchIfStatement_7(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(1)
-		terminal(ELSE)
-		nonTerminal(elseStmt, Statement)
-	) */
-	private int matchIfStatement_7(int lookahead) {
-		int newLookahead;
-		newLookahead = matchIfStatement_7_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(1)
-		terminal(ELSE)
-		nonTerminal(elseStmt, Statement)
-	) */
-	private int matchIfStatement_7_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.ELSE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(1)
-		terminal(ELSE)
-		nonTerminal(elseStmt, Statement)
-	) */
-	private int matchIfStatement_lookahead1(int lookahead) {
-		if (match(0, TokenType.ELSE) != -1) {
-			return lookahead;
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -16042,39 +7776,18 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.WHILE);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.WhileStatement_3);
 		condition = parseExpression();
+		popCallStack();
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.WhileStatement_5);
 		body = parseStatement();
+		popCallStack();
 		return dress(SWhileStmt.make(condition, body));
-	}
-
-	/* sequence(
-		terminal(WHILE)
-		terminal(LPAREN)
-		nonTerminal(condition, Expression)
-		terminal(RPAREN)
-		nonTerminal(body, Statement)
-	) */
-	private int matchWhileStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.WHILE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16091,49 +7804,20 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SDoStmt> parseDoStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.DO);
+		pushCallStack(JavaGrammar.DoStatement_2);
 		body = parseStatement();
+		popCallStack();
 		parse(TokenType.WHILE);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.DoStatement_5);
 		condition = parseExpression();
+		popCallStack();
 		parse(TokenType.RPAREN);
 		parse(TokenType.SEMICOLON);
 		return dress(SDoStmt.make(body, condition));
-	}
-
-	/* sequence(
-		terminal(DO)
-		nonTerminal(body, Statement)
-		terminal(WHILE)
-		terminal(LPAREN)
-		nonTerminal(condition, Expression)
-		terminal(RPAREN)
-		terminal(SEMICOLON)
-	) */
-	private int matchDoStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.DO);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.WHILE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16142,12 +7826,6 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LPAREN)
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					terminal(COLON)
-				)
 				nonTerminal(varExpr, VariableDeclExpression)
 				terminal(COLON)
 				nonTerminal(expr, Expression)
@@ -16181,30 +7859,49 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> init = null;
 		BUTree<SNodeList> update = null;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.FOR);
 		parse(TokenType.LPAREN);
-		if (matchForStatement_lookahead1(0) != -1) {
-			varExpr = parseVariableDeclExpression();
-			parse(TokenType.COLON);
-			expr = parseExpression();
-		} else if (match(0, TokenType.STATIC, TokenType.NATIVE, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.AT, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.LONG, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.BANG, TokenType.TILDE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.VOID, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON) != -1) {
-			if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.PLUS, TokenType.MINUS, TokenType.LONG, TokenType.INT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.VOID, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LT, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.DECR, TokenType.INCR, TokenType.VOLATILE, TokenType.FINAL, TokenType.AT, TokenType.TRANSIENT, TokenType.SYNCHRONIZED, TokenType.PRIVATE, TokenType.NATIVE, TokenType.PROTECTED, TokenType.STATIC, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.ABSTRACT) != -1) {
-				init = parseForInit();
-			}
-			parse(TokenType.SEMICOLON);
-			if (match(0, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.VOID, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		switch (predict(JavaGrammar.FOR_STATEMENT_3)) {
+			case 1:
+				pushCallStack(JavaGrammar.ForStatement_3_1_1);
+				varExpr = parseVariableDeclExpression();
+				popCallStack();
+				parse(TokenType.COLON);
+				pushCallStack(JavaGrammar.ForStatement_3_1_3);
 				expr = parseExpression();
-			}
-			parse(TokenType.SEMICOLON);
-			if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.PLUS, TokenType.MINUS, TokenType.THIS, TokenType.SUPER, TokenType.VOID, TokenType.FLOAT, TokenType.CHAR, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.INT, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.LT, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR) != -1) {
-				update = parseForUpdate();
-			}
-		} else {
-			throw produceParseException(TokenType.VOLATILE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.STATIC, TokenType.AT, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.FINAL, TokenType.PRIVATE, TokenType.NATIVE, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.CHAR, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.SEMICOLON);
+				popCallStack();
+				break;
+			case 2:
+				__token = getToken(0).kind;
+				if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FALSE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.NEW - 9 | 1L << TokenType.NULL - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SUPER - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.THIS - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.TRUE - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9 | 1L << TokenType.LONG_LITERAL - 9 | 1L << TokenType.INTEGER_LITERAL - 9 | 1L << TokenType.FLOAT_LITERAL - 9 | 1L << TokenType.DOUBLE_LITERAL - 9)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.AT - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+					pushCallStack(JavaGrammar.ForStatement_3_2_1_1);
+					init = parseForInit();
+					popCallStack();
+				}
+				parse(TokenType.SEMICOLON);
+				__token = getToken(0).kind;
+				if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+					pushCallStack(JavaGrammar.ForStatement_3_2_3_1);
+					expr = parseExpression();
+					popCallStack();
+				}
+				parse(TokenType.SEMICOLON);
+				__token = getToken(0).kind;
+				if (predict(JavaGrammar.FOR_STATEMENT_3_2_5) == 1) {
+					pushCallStack(JavaGrammar.ForStatement_3_2_5_1);
+					update = parseForUpdate();
+					popCallStack();
+				}
+				break;
+			default:
+				throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.ForStatement_5);
 		body = parseStatement();
+		popCallStack();
 		if (varExpr != null)
 			return dress(SForeachStmt.make(varExpr, expr, body));
 		else
@@ -16213,428 +7910,82 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		terminal(FOR)
-		terminal(LPAREN)
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					terminal(COLON)
-				)
-				nonTerminal(varExpr, VariableDeclExpression)
-				terminal(COLON)
-				nonTerminal(expr, Expression)
-			)
-			sequence(
-				zeroOrOne(
-					nonTerminal(init, ForInit)
-				)
-				terminal(SEMICOLON)
-				zeroOrOne(
-					nonTerminal(expr, Expression)
-				)
-				terminal(SEMICOLON)
-				zeroOrOne(
-					nonTerminal(update, ForUpdate)
-				)
-			)
-		)
-		terminal(RPAREN)
-		nonTerminal(body, Statement)
-	) */
-	private int matchForStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.FOR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchForStatement_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchStatement(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Modifiers)
-				nonTerminal(Type)
-				nonTerminal(VariableDeclaratorId)
-				terminal(COLON)
-			)
-			nonTerminal(varExpr, VariableDeclExpression)
-			terminal(COLON)
-			nonTerminal(expr, Expression)
-		)
-		sequence(
-			zeroOrOne(
-				nonTerminal(init, ForInit)
-			)
-			terminal(SEMICOLON)
-			zeroOrOne(
-				nonTerminal(expr, Expression)
-			)
-			terminal(SEMICOLON)
-			zeroOrOne(
-				nonTerminal(update, ForUpdate)
-			)
-		)
-	) */
-	private int matchForStatement_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForStatement_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchForStatement_4_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Modifiers)
-			nonTerminal(Type)
-			nonTerminal(VariableDeclaratorId)
-			terminal(COLON)
-		)
-		nonTerminal(varExpr, VariableDeclExpression)
-		terminal(COLON)
-		nonTerminal(expr, Expression)
-	) */
-	private int matchForStatement_4_1(int lookahead) {
-		lookahead = matchVariableDeclExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			nonTerminal(init, ForInit)
-		)
-		terminal(SEMICOLON)
-		zeroOrOne(
-			nonTerminal(expr, Expression)
-		)
-		terminal(SEMICOLON)
-		zeroOrOne(
-			nonTerminal(update, ForUpdate)
-		)
-	) */
-	private int matchForStatement_4_2(int lookahead) {
-		lookahead = matchForStatement_4_2_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchForStatement_4_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchForStatement_4_2_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(init, ForInit)
-	) */
-	private int matchForStatement_4_2_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForStatement_4_2_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(init, ForInit)
-	) */
-	private int matchForStatement_4_2_1_1(int lookahead) {
-		lookahead = matchForInit(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(expr, Expression)
-	) */
-	private int matchForStatement_4_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForStatement_4_2_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(expr, Expression)
-	) */
-	private int matchForStatement_4_2_3_1(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(update, ForUpdate)
-	) */
-	private int matchForStatement_4_2_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForStatement_4_2_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(update, ForUpdate)
-	) */
-	private int matchForStatement_4_2_5_1(int lookahead) {
-		lookahead = matchForUpdate(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Modifiers)
-		nonTerminal(Type)
-		nonTerminal(VariableDeclaratorId)
-		terminal(COLON)
-	) */
-	private int matchForStatement_lookahead1(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclaratorId(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.COLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(Name)
-				)
 				nonTerminal(expr, VariableDeclExpression)
 				action({
 					ret = emptyList();
 					ret = append(ret, expr);
 				})
 			)
-			nonTerminal(ret, ExpressionList)
+			nonTerminal(ret, StatementExpressionList)
 		)
 		action({ return ret; })
 	) */
 	protected BUTree<SNodeList> parseForInit() throws ParseException {
 		BUTree<SNodeList> ret;
 		BUTree<? extends SExpr> expr;
-		if (matchForInit_lookahead1(0) != -1) {
-			expr = parseVariableDeclExpression();
-			ret = emptyList();
-			ret = append(ret, expr);
-		} else if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BANG, TokenType.TILDE, TokenType.NEW, TokenType.DOUBLE, TokenType.SHORT, TokenType.BYTE, TokenType.INT, TokenType.CHAR, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.VOID, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.INCR, TokenType.DECR, TokenType.MINUS, TokenType.PLUS) != -1) {
-			ret = parseExpressionList();
-		} else {
-			throw produceParseException(TokenType.VOLATILE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.STATIC, TokenType.AT, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.FINAL, TokenType.PRIVATE, TokenType.NATIVE, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.CHAR, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.VOID, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LT, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS);
+		int __token;
+		switch (predict(JavaGrammar.FOR_INIT_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.ForInit_1_1_1);
+				expr = parseVariableDeclExpression();
+				popCallStack();
+				ret = emptyList();
+				ret = append(ret, expr);
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.ForInit_1_2);
+				ret = parseStatementExpressionList();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
 
 	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(Name)
-				)
-				nonTerminal(expr, VariableDeclExpression)
-			)
-			nonTerminal(ret, ExpressionList)
-		)
-	) */
-	private int matchForInit(int lookahead) {
-		lookahead = matchForInit_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				nonTerminal(Modifiers)
-				nonTerminal(Type)
-				nonTerminal(Name)
-			)
-			nonTerminal(expr, VariableDeclExpression)
-		)
-		nonTerminal(ret, ExpressionList)
-	) */
-	private int matchForInit_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForInit_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExpressionList(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			nonTerminal(Modifiers)
-			nonTerminal(Type)
-			nonTerminal(Name)
-		)
-		nonTerminal(expr, VariableDeclExpression)
-	) */
-	private int matchForInit_1_1(int lookahead) {
-		lookahead = matchVariableDeclExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(Modifiers)
-		nonTerminal(Type)
-		nonTerminal(Name)
-	) */
-	private int matchForInit_lookahead1(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(expr, Expression)
+		nonTerminal(expr, StatementExpression)
 		action({ ret = append(ret, expr); })
 		zeroOrMore(
 			terminal(COMMA)
-			nonTerminal(expr, Expression)
+			nonTerminal(expr, StatementExpression)
 			action({ ret = append(ret, expr); })
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseExpressionList() throws ParseException {
+	protected BUTree<SNodeList> parseStatementExpressionList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
-		expr = parseExpression();
+		int __token;
+		pushCallStack(JavaGrammar.StatementExpressionList_1);
+		expr = parseStatementExpression();
+		popCallStack();
 		ret = append(ret, expr);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
-			expr = parseExpression();
+			pushCallStack(JavaGrammar.StatementExpressionList_2_2);
+			expr = parseStatementExpression();
+			popCallStack();
 			ret = append(ret, expr);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
 
 	/* sequence(
-		nonTerminal(expr, Expression)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(expr, Expression)
-		)
-	) */
-	private int matchExpressionList(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpressionList_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(expr, Expression)
-	) */
-	private int matchExpressionList_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExpressionList_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchExpressionList_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(expr, Expression)
-	) */
-	private int matchExpressionList_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ExpressionList)
+		nonTerminal(ret, StatementExpressionList)
 		action({ return ret; })
 	) */
 	protected BUTree<SNodeList> parseForUpdate() throws ParseException {
 		BUTree<SNodeList> ret;
-		ret = parseExpressionList();
+		int __token;
+		pushCallStack(JavaGrammar.ForUpdate_1);
+		ret = parseStatementExpressionList();
+		popCallStack();
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ExpressionList)
-	) */
-	private int matchForUpdate(int lookahead) {
-		lookahead = matchExpressionList(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16648,54 +7999,17 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
 		BUTree<SName> id = null;
+		int __token;
 		run();
 		parse(TokenType.BREAK);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.BreakStatement_2_1);
 			id = parseName();
+			popCallStack();
 		}
 		parse(TokenType.SEMICOLON);
 		return dress(SBreakStmt.make(optionOf(id)));
-	}
-
-	/* sequence(
-		terminal(BREAK)
-		zeroOrOne(
-			nonTerminal(id, Name)
-		)
-		terminal(SEMICOLON)
-	) */
-	private int matchBreakStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.BREAK);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBreakStatement_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(id, Name)
-	) */
-	private int matchBreakStatement_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchBreakStatement_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(id, Name)
-	) */
-	private int matchBreakStatement_3_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16709,54 +8023,17 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
 		BUTree<SName> id = null;
+		int __token;
 		run();
 		parse(TokenType.CONTINUE);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ContinueStatement_2_1);
 			id = parseName();
+			popCallStack();
 		}
 		parse(TokenType.SEMICOLON);
 		return dress(SContinueStmt.make(optionOf(id)));
-	}
-
-	/* sequence(
-		terminal(CONTINUE)
-		zeroOrOne(
-			nonTerminal(id, Name)
-		)
-		terminal(SEMICOLON)
-	) */
-	private int matchContinueStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.CONTINUE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchContinueStatement_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(id, Name)
-	) */
-	private int matchContinueStatement_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchContinueStatement_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(id, Name)
-	) */
-	private int matchContinueStatement_3_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16770,54 +8047,17 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
 		BUTree<? extends SExpr> expr = null;
+		int __token;
 		run();
 		parse(TokenType.RETURN);
-		if (match(0, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.VOID, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ReturnStatement_2_1);
 			expr = parseExpression();
+			popCallStack();
 		}
 		parse(TokenType.SEMICOLON);
 		return dress(SReturnStmt.make(optionOf(expr)));
-	}
-
-	/* sequence(
-		terminal(RETURN)
-		zeroOrOne(
-			nonTerminal(expr, Expression)
-		)
-		terminal(SEMICOLON)
-	) */
-	private int matchReturnStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.RETURN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchReturnStatement_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(expr, Expression)
-	) */
-	private int matchReturnStatement_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchReturnStatement_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(expr, Expression)
-	) */
-	private int matchReturnStatement_3_1(int lookahead) {
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16829,29 +8069,14 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
+		int __token;
 		run();
 		parse(TokenType.THROW);
+		pushCallStack(JavaGrammar.ThrowStatement_2);
 		expr = parseExpression();
+		popCallStack();
 		parse(TokenType.SEMICOLON);
 		return dress(SThrowStmt.make(expr));
-	}
-
-	/* sequence(
-		terminal(THROW)
-		nonTerminal(expr, Expression)
-		terminal(SEMICOLON)
-	) */
-	private int matchThrowStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.THROW);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16866,39 +8091,18 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SSynchronizedStmt> parseSynchronizedStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SBlockStmt> block;
+		int __token;
 		run();
 		parse(TokenType.SYNCHRONIZED);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.SynchronizedStatement_3);
 		expr = parseExpression();
+		popCallStack();
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.SynchronizedStatement_5);
 		block = parseBlock();
+		popCallStack();
 		return dress(SSynchronizedStmt.make(expr, block));
-	}
-
-	/* sequence(
-		terminal(SYNCHRONIZED)
-		terminal(LPAREN)
-		nonTerminal(expr, Expression)
-		terminal(RPAREN)
-		nonTerminal(block, Block)
-	) */
-	private int matchSynchronizedStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -16906,7 +8110,6 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(TRY)
 		choice(
 			sequence(
-				lookAhead(1)
 				nonTerminal(resources, ResourceSpecification)
 				nonTerminal(tryBlock, Block)
 				zeroOrOne(
@@ -16918,7 +8121,6 @@ public class ParserImplementation extends ParserNewBase {
 				)
 			)
 			sequence(
-				lookAhead(1)
 				nonTerminal(tryBlock, Block)
 				choice(
 					sequence(
@@ -16943,348 +8145,56 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> tryBlock;
 		BUTree<SBlockStmt> finallyBlock = null;
 		BUTree<SNodeList> catchClauses = null;
+		int __token;
 		run();
 		parse(TokenType.TRY);
-		if (matchTryStatement_lookahead1(0) != -1) {
-			resources = parseResourceSpecification(trailingSemiColon);
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.TryStatement_2_2_1);
 			tryBlock = parseBlock();
-			if (match(0, TokenType.CATCH) != -1) {
-				catchClauses = parseCatchClauses();
-			}
-			if (match(0, TokenType.FINALLY) != -1) {
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.FINALLY) {
 				parse(TokenType.FINALLY);
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
 				finallyBlock = parseBlock();
-			}
-		} else if (matchTryStatement_lookahead2(0) != -1) {
-			tryBlock = parseBlock();
-			if (match(0, TokenType.CATCH) != -1) {
+				popCallStack();
+			} else if (__token == TokenType.CATCH) {
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
 				catchClauses = parseCatchClauses();
-				if (match(0, TokenType.FINALLY) != -1) {
+				popCallStack();
+				__token = getToken(0).kind;
+				if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
 					parse(TokenType.FINALLY);
+					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
 					finallyBlock = parseBlock();
+					popCallStack();
 				}
-			} else if (match(0, TokenType.FINALLY) != -1) {
-				parse(TokenType.FINALLY);
-				finallyBlock = parseBlock();
-			} else {
+			} else
 				throw produceParseException(TokenType.CATCH, TokenType.FINALLY);
+		} else if (__token == TokenType.LPAREN) {
+			pushCallStack(JavaGrammar.TryStatement_2_1_1);
+			resources = parseResourceSpecification(trailingSemiColon);
+			popCallStack();
+			pushCallStack(JavaGrammar.TryStatement_2_1_2);
+			tryBlock = parseBlock();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.CATCH) {
+				pushCallStack(JavaGrammar.TryStatement_2_1_3_1);
+				catchClauses = parseCatchClauses();
+				popCallStack();
 			}
-		} else {
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TRY_STATEMENT_2_1_4) == 1) {
+				parse(TokenType.FINALLY);
+				pushCallStack(JavaGrammar.TryStatement_2_1_4_2);
+				finallyBlock = parseBlock();
+				popCallStack();
+			}
+		} else
 			throw produceParseException(TokenType.LPAREN, TokenType.LBRACE);
-		}
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
-	}
-
-	/* sequence(
-		terminal(TRY)
-		choice(
-			sequence(
-				lookAhead(1)
-				nonTerminal(resources, ResourceSpecification)
-				nonTerminal(tryBlock, Block)
-				zeroOrOne(
-					nonTerminal(catchClauses, CatchClauses)
-				)
-				zeroOrOne(
-					terminal(FINALLY)
-					nonTerminal(finallyBlock, Block)
-				)
-			)
-			sequence(
-				lookAhead(1)
-				nonTerminal(tryBlock, Block)
-				choice(
-					sequence(
-						nonTerminal(catchClauses, CatchClauses)
-						zeroOrOne(
-							terminal(FINALLY)
-							nonTerminal(finallyBlock, Block)
-						)
-					)
-					sequence(
-						terminal(FINALLY)
-						nonTerminal(finallyBlock, Block)
-					)
-				)
-			)
-		)
-	) */
-	private int matchTryStatement(int lookahead) {
-		lookahead = match(lookahead, TokenType.TRY);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(1)
-			nonTerminal(resources, ResourceSpecification)
-			nonTerminal(tryBlock, Block)
-			zeroOrOne(
-				nonTerminal(catchClauses, CatchClauses)
-			)
-			zeroOrOne(
-				terminal(FINALLY)
-				nonTerminal(finallyBlock, Block)
-			)
-		)
-		sequence(
-			lookAhead(1)
-			nonTerminal(tryBlock, Block)
-			choice(
-				sequence(
-					nonTerminal(catchClauses, CatchClauses)
-					zeroOrOne(
-						terminal(FINALLY)
-						nonTerminal(finallyBlock, Block)
-					)
-				)
-				sequence(
-					terminal(FINALLY)
-					nonTerminal(finallyBlock, Block)
-				)
-			)
-		)
-	) */
-	private int matchTryStatement_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTryStatement_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(1)
-		nonTerminal(resources, ResourceSpecification)
-		nonTerminal(tryBlock, Block)
-		zeroOrOne(
-			nonTerminal(catchClauses, CatchClauses)
-		)
-		zeroOrOne(
-			terminal(FINALLY)
-			nonTerminal(finallyBlock, Block)
-		)
-	) */
-	private int matchTryStatement_3_1(int lookahead) {
-		lookahead = matchResourceSpecification(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3_1_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3_1_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(catchClauses, CatchClauses)
-	) */
-	private int matchTryStatement_3_1_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_1_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(catchClauses, CatchClauses)
-	) */
-	private int matchTryStatement_3_1_4_1(int lookahead) {
-		lookahead = matchCatchClauses(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(FINALLY)
-		nonTerminal(finallyBlock, Block)
-	) */
-	private int matchTryStatement_3_1_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_1_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FINALLY)
-		nonTerminal(finallyBlock, Block)
-	) */
-	private int matchTryStatement_3_1_5_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.FINALLY);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(1)
-		nonTerminal(tryBlock, Block)
-		choice(
-			sequence(
-				nonTerminal(catchClauses, CatchClauses)
-				zeroOrOne(
-					terminal(FINALLY)
-					nonTerminal(finallyBlock, Block)
-				)
-			)
-			sequence(
-				terminal(FINALLY)
-				nonTerminal(finallyBlock, Block)
-			)
-		)
-	) */
-	private int matchTryStatement_3_2(int lookahead) {
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(catchClauses, CatchClauses)
-			zeroOrOne(
-				terminal(FINALLY)
-				nonTerminal(finallyBlock, Block)
-			)
-		)
-		sequence(
-			terminal(FINALLY)
-			nonTerminal(finallyBlock, Block)
-		)
-	) */
-	private int matchTryStatement_3_2_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_2_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTryStatement_3_2_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(catchClauses, CatchClauses)
-		zeroOrOne(
-			terminal(FINALLY)
-			nonTerminal(finallyBlock, Block)
-		)
-	) */
-	private int matchTryStatement_3_2_3_1(int lookahead) {
-		lookahead = matchCatchClauses(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3_2_3_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(FINALLY)
-		nonTerminal(finallyBlock, Block)
-	) */
-	private int matchTryStatement_3_2_3_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_2_3_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FINALLY)
-		nonTerminal(finallyBlock, Block)
-	) */
-	private int matchTryStatement_3_2_3_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.FINALLY);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(FINALLY)
-		nonTerminal(finallyBlock, Block)
-	) */
-	private int matchTryStatement_3_2_3_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.FINALLY);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(1)
-		nonTerminal(resources, ResourceSpecification)
-		nonTerminal(tryBlock, Block)
-		zeroOrOne(
-			nonTerminal(catchClauses, CatchClauses)
-		)
-		zeroOrOne(
-			terminal(FINALLY)
-			nonTerminal(finallyBlock, Block)
-		)
-	) */
-	private int matchTryStatement_lookahead1(int lookahead) {
-		if (match(0, TokenType.LPAREN) != -1) {
-			return lookahead;
-		}
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(1)
-		nonTerminal(tryBlock, Block)
-		choice(
-			sequence(
-				nonTerminal(catchClauses, CatchClauses)
-				zeroOrOne(
-					terminal(FINALLY)
-					nonTerminal(finallyBlock, Block)
-				)
-			)
-			sequence(
-				terminal(FINALLY)
-				nonTerminal(finallyBlock, Block)
-			)
-		)
-	) */
-	private int matchTryStatement_lookahead2(int lookahead) {
-		if (match(0, TokenType.LBRACE) != -1) {
-			return lookahead;
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -17297,48 +8207,15 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseCatchClauses() throws ParseException {
 		BUTree<SNodeList> catchClauses = emptyList();
 		BUTree<SCatchClause> catchClause;
+		int __token;
 		do {
+			pushCallStack(JavaGrammar.CatchClauses_1_1);
 			catchClause = parseCatchClause();
+			popCallStack();
 			catchClauses = append(catchClauses, catchClause);
-		} while (match(0, TokenType.CATCH) != -1);
+			__token = getToken(0).kind;
+		} while (__token == TokenType.CATCH);
 		return catchClauses;
-	}
-
-	/* sequence(
-		oneOrMore(
-			nonTerminal(catchClause, CatchClause)
-		)
-	) */
-	private int matchCatchClauses(int lookahead) {
-		lookahead = matchCatchClauses_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		nonTerminal(catchClause, CatchClause)
-	) */
-	private int matchCatchClauses_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCatchClauses_1_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchCatchClauses_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(catchClause, CatchClause)
-	) */
-	private int matchCatchClauses_1_1(int lookahead) {
-		lookahead = matchCatchClause(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -17353,39 +8230,18 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SCatchClause> parseCatchClause() throws ParseException {
 		BUTree<SFormalParameter> param;
 		BUTree<SBlockStmt> catchBlock;
+		int __token;
 		run();
 		parse(TokenType.CATCH);
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.CatchClause_3);
 		param = parseCatchFormalParameter();
+		popCallStack();
 		parse(TokenType.RPAREN);
+		pushCallStack(JavaGrammar.CatchClause_5);
 		catchBlock = parseBlock();
+		popCallStack();
 		return dress(SCatchClause.make(param, catchBlock));
-	}
-
-	/* sequence(
-		terminal(CATCH)
-		terminal(LPAREN)
-		nonTerminal(param, CatchFormalParameter)
-		terminal(RPAREN)
-		nonTerminal(catchBlock, Block)
-	) */
-	private int matchCatchClause(int lookahead) {
-		lookahead = match(lookahead, TokenType.CATCH);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchCatchFormalParameter(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -17394,9 +8250,6 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(exceptType, QualifiedType)
 		action({ exceptTypes = append(exceptTypes, exceptType); })
 		zeroOrOne(
-			lookAhead(
-				terminal(BIT_OR)
-			)
 			action({ lateRun(); })
 			oneOrMore(
 				terminal(BIT_OR)
@@ -17413,124 +8266,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> exceptType;
 		BUTree<SNodeList> exceptTypes = emptyList();
 		BUTree<SVariableDeclaratorId> exceptId;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.CatchFormalParameter_1);
 		modifiers = parseModifiers();
+		popCallStack();
+		pushCallStack(JavaGrammar.CatchFormalParameter_2);
 		exceptType = parseQualifiedType(null);
+		popCallStack();
 		exceptTypes = append(exceptTypes, exceptType);
-		if (matchCatchFormalParameter_lookahead1(0) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.BIT_OR) {
 			lateRun();
 			do {
 				parse(TokenType.BIT_OR);
+				pushCallStack(JavaGrammar.CatchFormalParameter_3_1_2);
 				exceptType = parseAnnotatedQualifiedType();
+				popCallStack();
 				exceptTypes = append(exceptTypes, exceptType);
-			} while (match(0, TokenType.BIT_OR) != -1);
+				__token = getToken(0).kind;
+			} while (__token == TokenType.BIT_OR);
 			exceptType = dress(SUnionType.make(exceptTypes));
 		}
+		pushCallStack(JavaGrammar.CatchFormalParameter_4);
 		exceptId = parseVariableDeclaratorId();
+		popCallStack();
 		return dress(SFormalParameter.make(modifiers, exceptType, false, emptyList(), optionOf(exceptId), false, none()));
-	}
-
-	/* sequence(
-		nonTerminal(modifiers, Modifiers)
-		nonTerminal(exceptType, QualifiedType)
-		zeroOrOne(
-			lookAhead(
-				terminal(BIT_OR)
-			)
-			oneOrMore(
-				terminal(BIT_OR)
-				nonTerminal(exceptType, AnnotatedQualifiedType)
-			)
-		)
-		nonTerminal(exceptId, VariableDeclaratorId)
-	) */
-	private int matchCatchFormalParameter(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchCatchFormalParameter_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclaratorId(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(
-			terminal(BIT_OR)
-		)
-		oneOrMore(
-			terminal(BIT_OR)
-			nonTerminal(exceptType, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchCatchFormalParameter_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCatchFormalParameter_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(BIT_OR)
-		)
-		oneOrMore(
-			terminal(BIT_OR)
-			nonTerminal(exceptType, AnnotatedQualifiedType)
-		)
-	) */
-	private int matchCatchFormalParameter_5_1(int lookahead) {
-		lookahead = matchCatchFormalParameter_5_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* oneOrMore(
-		terminal(BIT_OR)
-		nonTerminal(exceptType, AnnotatedQualifiedType)
-	) */
-	private int matchCatchFormalParameter_5_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchCatchFormalParameter_5_1_3_1(lookahead);
-		if (newLookahead == -1)
-			return -1;
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchCatchFormalParameter_5_1_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_OR)
-		nonTerminal(exceptType, AnnotatedQualifiedType)
-	) */
-	private int matchCatchFormalParameter_5_1_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_OR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotatedQualifiedType(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_OR)
-	) */
-	private int matchCatchFormalParameter_lookahead1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_OR);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -17538,13 +8299,6 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(var, VariableDeclExpression)
 		action({ vars = append(vars, var); })
 		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(SEMICOLON)
-				)
-				terminal(RPAREN)
-			)
-			lookAhead(2)
 			terminal(SEMICOLON)
 			nonTerminal(var, VariableDeclExpression)
 			action({ vars = append(vars, var); })
@@ -17559,158 +8313,28 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
 		BUTree<SNodeList> vars = emptyList();
 		BUTree<SVariableDeclarationExpr> var;
+		int __token;
 		parse(TokenType.LPAREN);
+		pushCallStack(JavaGrammar.ResourceSpecification_2);
 		var = parseVariableDeclExpression();
+		popCallStack();
 		vars = append(vars, var);
-		while (matchResourceSpecification_lookahead1(0) == -1) {
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.RESOURCE_SPECIFICATION_3) == 1) {
 			parse(TokenType.SEMICOLON);
+			pushCallStack(JavaGrammar.ResourceSpecification_3_2);
 			var = parseVariableDeclExpression();
+			popCallStack();
 			vars = append(vars, var);
+			__token = getToken(0).kind;
 		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			trailingSemiColon.value = true;
 		}
 		parse(TokenType.RPAREN);
 		return vars;
-	}
-
-	/* sequence(
-		terminal(LPAREN)
-		nonTerminal(var, VariableDeclExpression)
-		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(SEMICOLON)
-				)
-				terminal(RPAREN)
-			)
-			lookAhead(2)
-			terminal(SEMICOLON)
-			nonTerminal(var, VariableDeclExpression)
-		)
-		zeroOrOne(
-			terminal(SEMICOLON)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchResourceSpecification(int lookahead) {
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchResourceSpecification_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchResourceSpecification_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(SEMICOLON)
-			)
-			terminal(RPAREN)
-		)
-		lookAhead(2)
-		terminal(SEMICOLON)
-		nonTerminal(var, VariableDeclExpression)
-	) */
-	private int matchResourceSpecification_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchResourceSpecification_4_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchResourceSpecification_4_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(SEMICOLON)
-			)
-			terminal(RPAREN)
-		)
-		lookAhead(2)
-		terminal(SEMICOLON)
-		nonTerminal(var, VariableDeclExpression)
-	) */
-	private int matchResourceSpecification_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchVariableDeclExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(SEMICOLON)
-	) */
-	private int matchResourceSpecification_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchResourceSpecification_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchResourceSpecification_5_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			terminal(SEMICOLON)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchResourceSpecification_lookahead1(int lookahead) {
-		lookahead = matchResourceSpecification_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(SEMICOLON)
-	) */
-	private int matchResourceSpecification_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchResourceSpecification_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SEMICOLON)
-	) */
-	private int matchResourceSpecification_lookahead1_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SEMICOLON);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -17720,6 +8344,7 @@ public class ParserImplementation extends ParserNewBase {
 		action({ popNewWhitespaces(2); })
 	) */
 	protected void parseRUNSIGNEDSHIFT() throws ParseException {
+		int __token;
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		parse(TokenType.GT);
@@ -17729,44 +8354,13 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(GT)
 		terminal(GT)
-		terminal(GT)
-	) */
-	private int matchRUNSIGNEDSHIFT(int lookahead) {
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(GT)
-		terminal(GT)
 		action({ popNewWhitespaces(1); })
 	) */
 	protected void parseRSIGNEDSHIFT() throws ParseException {
+		int __token;
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		popNewWhitespaces(1);
-	}
-
-	/* sequence(
-		terminal(GT)
-		terminal(GT)
-	) */
-	private int matchRSIGNEDSHIFT(int lookahead) {
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -17779,329 +8373,49 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
-		while (match(0, TokenType.AT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (__token == TokenType.AT) {
+			pushCallStack(JavaGrammar.Annotations_1_1);
 			annotation = parseAnnotation();
+			popCallStack();
 			annotations = append(annotations, annotation);
+			__token = getToken(0).kind;
 		}
 		return annotations;
 	}
 
 	/* sequence(
-		zeroOrMore(
-			nonTerminal(annotation, Annotation)
-		)
-	) */
-	private int matchAnnotations(int lookahead) {
-		int initialLookahead = lookahead;
-		int memoizedMatch = memoizedMatch(initialLookahead, 0);
-		if (memoizedMatch > -2)
-			return memoizedMatch;
-		lookahead = matchAnnotations_1(lookahead);
-		if (lookahead == -1)
-			return memoizeMatch(initialLookahead, 0, -1);
-		return memoizeMatch(initialLookahead, 0, lookahead);
-	}
-
-	/* zeroOrMore(
-		nonTerminal(annotation, Annotation)
-	) */
-	private int matchAnnotations_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotations_1_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAnnotations_1_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(annotation, Annotation)
-	) */
-	private int matchAnnotations_1_1(int lookahead) {
-		lookahead = matchAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		choice(
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-					choice(
-						sequence(
-							nonTerminal(Name)
-							terminal(ASSIGN)
-						)
-						terminal(RPAREN)
-					)
-				)
-				nonTerminal(ret, NormalAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, SingleMemberAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-				)
-				nonTerminal(ret, MarkerAnnotation)
-			)
+			nonTerminal(ret, NormalAnnotation)
+			nonTerminal(ret, MarkerAnnotation)
+			nonTerminal(ret, SingleElementAnnotation)
 		)
 		action({ return ret; })
 	) */
 	protected BUTree<? extends SAnnotationExpr> parseAnnotation() throws ParseException {
 		BUTree<? extends SAnnotationExpr> ret;
-		if (matchAnnotation_lookahead1(0) != -1) {
-			ret = parseNormalAnnotation();
-		} else if (matchAnnotation_lookahead2(0) != -1) {
-			ret = parseSingleMemberAnnotation();
-		} else if (matchAnnotation_lookahead3(0) != -1) {
-			ret = parseMarkerAnnotation();
-		} else {
-			throw produceParseException(TokenType.AT);
+		int __token;
+		switch (predict(JavaGrammar.ANNOTATION_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.Annotation_1_1);
+				ret = parseNormalAnnotation();
+				popCallStack();
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.Annotation_1_2);
+				ret = parseMarkerAnnotation();
+				popCallStack();
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.Annotation_1_3);
+				ret = parseSingleElementAnnotation();
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.AT);
 		}
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-					choice(
-						sequence(
-							nonTerminal(Name)
-							terminal(ASSIGN)
-						)
-						terminal(RPAREN)
-					)
-				)
-				nonTerminal(ret, NormalAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, SingleMemberAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-				)
-				nonTerminal(ret, MarkerAnnotation)
-			)
-		)
-	) */
-	private int matchAnnotation(int lookahead) {
-		lookahead = matchAnnotation_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			lookAhead(
-				terminal(AT)
-				nonTerminal(QualifiedName)
-				terminal(LPAREN)
-				choice(
-					sequence(
-						nonTerminal(Name)
-						terminal(ASSIGN)
-					)
-					terminal(RPAREN)
-				)
-			)
-			nonTerminal(ret, NormalAnnotation)
-		)
-		sequence(
-			lookAhead(
-				terminal(AT)
-				nonTerminal(QualifiedName)
-				terminal(LPAREN)
-			)
-			nonTerminal(ret, SingleMemberAnnotation)
-		)
-		sequence(
-			lookAhead(
-				terminal(AT)
-				nonTerminal(QualifiedName)
-			)
-			nonTerminal(ret, MarkerAnnotation)
-		)
-	) */
-	private int matchAnnotation_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotation_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotation_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotation_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(AT)
-			nonTerminal(QualifiedName)
-			terminal(LPAREN)
-			choice(
-				sequence(
-					nonTerminal(Name)
-					terminal(ASSIGN)
-				)
-				terminal(RPAREN)
-			)
-		)
-		nonTerminal(ret, NormalAnnotation)
-	) */
-	private int matchAnnotation_1_1(int lookahead) {
-		lookahead = matchNormalAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(AT)
-			nonTerminal(QualifiedName)
-			terminal(LPAREN)
-		)
-		nonTerminal(ret, SingleMemberAnnotation)
-	) */
-	private int matchAnnotation_1_2(int lookahead) {
-		lookahead = matchSingleMemberAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(
-			terminal(AT)
-			nonTerminal(QualifiedName)
-		)
-		nonTerminal(ret, MarkerAnnotation)
-	) */
-	private int matchAnnotation_1_3(int lookahead) {
-		lookahead = matchMarkerAnnotation(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(AT)
-		nonTerminal(QualifiedName)
-		terminal(LPAREN)
-		choice(
-			sequence(
-				nonTerminal(Name)
-				terminal(ASSIGN)
-			)
-			terminal(RPAREN)
-		)
-	) */
-	private int matchAnnotation_lookahead1(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotation_lookahead1_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			nonTerminal(Name)
-			terminal(ASSIGN)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchAnnotation_lookahead1_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotation_lookahead1_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = match(lookahead, TokenType.RPAREN);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(Name)
-		terminal(ASSIGN)
-	) */
-	private int matchAnnotation_lookahead1_4_1(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ASSIGN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(AT)
-		nonTerminal(QualifiedName)
-		terminal(LPAREN)
-	) */
-	private int matchAnnotation_lookahead2(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(AT)
-		nonTerminal(QualifiedName)
-	) */
-	private int matchAnnotation_lookahead3(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -18110,7 +8424,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, QualifiedName)
 		terminal(LPAREN)
 		zeroOrOne(
-			nonTerminal(pairs, MemberValuePairs)
+			nonTerminal(pairs, ElementValuePairList)
 		)
 		terminal(RPAREN)
 		action({ return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); })
@@ -18118,64 +8432,21 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNormalAnnotationExpr> parseNormalAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<SNodeList> pairs = null;
+		int __token;
 		run();
 		parse(TokenType.AT);
+		pushCallStack(JavaGrammar.NormalAnnotation_2);
 		name = parseQualifiedName();
+		popCallStack();
 		parse(TokenType.LPAREN);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
-			pairs = parseMemberValuePairs();
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.NormalAnnotation_4_1);
+			pairs = parseElementValuePairList();
+			popCallStack();
 		}
 		parse(TokenType.RPAREN);
 		return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs)));
-	}
-
-	/* sequence(
-		terminal(AT)
-		nonTerminal(name, QualifiedName)
-		terminal(LPAREN)
-		zeroOrOne(
-			nonTerminal(pairs, MemberValuePairs)
-		)
-		terminal(RPAREN)
-	) */
-	private int matchNormalAnnotation(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchNormalAnnotation_5(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(pairs, MemberValuePairs)
-	) */
-	private int matchNormalAnnotation_5(int lookahead) {
-		int newLookahead;
-		newLookahead = matchNormalAnnotation_5_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(pairs, MemberValuePairs)
-	) */
-	private int matchNormalAnnotation_5_1(int lookahead) {
-		lookahead = matchMemberValuePairs(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
@@ -18186,454 +8457,183 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	protected BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
+		int __token;
 		run();
 		parse(TokenType.AT);
+		pushCallStack(JavaGrammar.MarkerAnnotation_2);
 		name = parseQualifiedName();
+		popCallStack();
 		return dress(SMarkerAnnotationExpr.make(name));
 	}
 
 	/* sequence(
-		terminal(AT)
-		nonTerminal(name, QualifiedName)
-	) */
-	private int matchMarkerAnnotation(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		action({ run(); })
 		terminal(AT)
 		nonTerminal(name, QualifiedName)
 		terminal(LPAREN)
-		nonTerminal(memberVal, MemberValue)
+		nonTerminal(value, ElementValue)
 		terminal(RPAREN)
-		action({ return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); })
+		action({ return dress(SSingleMemberAnnotationExpr.make(name, value)); })
 	) */
-	protected BUTree<SSingleMemberAnnotationExpr> parseSingleMemberAnnotation() throws ParseException {
+	protected BUTree<SSingleMemberAnnotationExpr> parseSingleElementAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
-		BUTree<? extends SExpr> memberVal;
+		BUTree<? extends SExpr> value;
+		int __token;
 		run();
 		parse(TokenType.AT);
+		pushCallStack(JavaGrammar.SingleElementAnnotation_2);
 		name = parseQualifiedName();
+		popCallStack();
 		parse(TokenType.LPAREN);
-		memberVal = parseMemberValue();
+		pushCallStack(JavaGrammar.SingleElementAnnotation_4);
+		value = parseElementValue();
+		popCallStack();
 		parse(TokenType.RPAREN);
-		return dress(SSingleMemberAnnotationExpr.make(name, memberVal));
+		return dress(SSingleMemberAnnotationExpr.make(name, value));
 	}
 
 	/* sequence(
-		terminal(AT)
-		nonTerminal(name, QualifiedName)
-		terminal(LPAREN)
-		nonTerminal(memberVal, MemberValue)
-		terminal(RPAREN)
-	) */
-	private int matchSingleMemberAnnotation(int lookahead) {
-		lookahead = match(lookahead, TokenType.AT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchQualifiedName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValue(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RPAREN);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(pair, MemberValuePair)
+		nonTerminal(pair, ElementValuePair)
 		action({ ret = append(ret, pair); })
 		zeroOrMore(
 			terminal(COMMA)
-			nonTerminal(pair, MemberValuePair)
+			nonTerminal(pair, ElementValuePair)
 			action({ ret = append(ret, pair); })
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseMemberValuePairs() throws ParseException {
+	protected BUTree<SNodeList> parseElementValuePairList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SMemberValuePair> pair;
-		pair = parseMemberValuePair();
+		int __token;
+		pushCallStack(JavaGrammar.ElementValuePairList_1);
+		pair = parseElementValuePair();
+		popCallStack();
 		ret = append(ret, pair);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
-			pair = parseMemberValuePair();
+			pushCallStack(JavaGrammar.ElementValuePairList_2_2);
+			pair = parseElementValuePair();
+			popCallStack();
 			ret = append(ret, pair);
+			__token = getToken(0).kind;
 		}
 		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(pair, MemberValuePair)
-		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(pair, MemberValuePair)
-		)
-	) */
-	private int matchMemberValuePairs(int lookahead) {
-		lookahead = matchMemberValuePair(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValuePairs_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(COMMA)
-		nonTerminal(pair, MemberValuePair)
-	) */
-	private int matchMemberValuePairs_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMemberValuePairs_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchMemberValuePairs_3_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-		nonTerminal(pair, MemberValuePair)
-	) */
-	private int matchMemberValuePairs_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValuePair(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
 	}
 
 	/* sequence(
 		action({ run(); })
 		nonTerminal(name, Name)
 		terminal(ASSIGN)
-		nonTerminal(value, MemberValue)
+		nonTerminal(value, ElementValue)
 		action({ return dress(SMemberValuePair.make(name, value)); })
 	) */
-	protected BUTree<SMemberValuePair> parseMemberValuePair() throws ParseException {
+	protected BUTree<SMemberValuePair> parseElementValuePair() throws ParseException {
 		BUTree<SName> name;
 		BUTree<? extends SExpr> value;
+		int __token;
 		run();
+		pushCallStack(JavaGrammar.ElementValuePair_1);
 		name = parseName();
+		popCallStack();
 		parse(TokenType.ASSIGN);
-		value = parseMemberValue();
+		pushCallStack(JavaGrammar.ElementValuePair_3);
+		value = parseElementValue();
+		popCallStack();
 		return dress(SMemberValuePair.make(name, value));
 	}
 
 	/* sequence(
-		nonTerminal(name, Name)
-		terminal(ASSIGN)
-		nonTerminal(value, MemberValue)
-	) */
-	private int matchMemberValuePair(int lookahead) {
-		lookahead = matchName(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.ASSIGN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValue(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		choice(
-			nonTerminal(ret, Annotation)
-			nonTerminal(ret, MemberValueArrayInitializer)
 			nonTerminal(ret, ConditionalExpression)
+			nonTerminal(ret, ElementValueArrayInitializer)
+			nonTerminal(ret, Annotation)
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<? extends SExpr> parseMemberValue() throws ParseException {
+	protected BUTree<? extends SExpr> parseElementValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, TokenType.AT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.AT) {
+			pushCallStack(JavaGrammar.ElementValue_1_3);
 			ret = parseAnnotation();
-		} else if (match(0, TokenType.LBRACE) != -1) {
-			ret = parseMemberValueArrayInitializer();
-		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.VOID, TokenType.THIS, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.LONG_LITERAL, TokenType.LT, TokenType.SUPER, TokenType.NEW, TokenType.INCR, TokenType.DECR) != -1) {
+			popCallStack();
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.ElementValue_1_2);
+			ret = parseElementValueArrayInitializer();
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ElementValue_1_1);
 			ret = parseConditionalExpression();
-		} else {
-			throw produceParseException(TokenType.INCR, TokenType.DECR, TokenType.LPAREN, TokenType.TILDE, TokenType.BANG, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.DOUBLE, TokenType.LONG, TokenType.BOOLEAN, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.THIS, TokenType.LT, TokenType.SUPER, TokenType.NEW, TokenType.PLUS, TokenType.MINUS, TokenType.AT, TokenType.LBRACE);
-		}
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
-	}
-
-	/* sequence(
-		choice(
-			nonTerminal(ret, Annotation)
-			nonTerminal(ret, MemberValueArrayInitializer)
-			nonTerminal(ret, ConditionalExpression)
-		)
-	) */
-	private int matchMemberValue(int lookahead) {
-		lookahead = matchMemberValue_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		nonTerminal(ret, Annotation)
-		nonTerminal(ret, MemberValueArrayInitializer)
-		nonTerminal(ret, ConditionalExpression)
-	) */
-	private int matchMemberValue_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotation(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMemberValueArrayInitializer(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchConditionalExpression(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
 	}
 
 	/* sequence(
 		action({ run(); })
 		terminal(LBRACE)
 		zeroOrOne(
-			nonTerminal(member, MemberValue)
-			action({ ret = append(ret, member); })
-			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
-				terminal(COMMA)
-				nonTerminal(member, MemberValue)
-				action({ ret = append(ret, member); })
-			)
+			nonTerminal(values, ElementValueList)
 		)
 		zeroOrOne(
 			terminal(COMMA)
 			action({ trailingComma = true; })
 		)
 		terminal(RBRACE)
-		action({ return dress(SArrayInitializerExpr.make(ret, trailingComma)); })
+		action({ return dress(SArrayInitializerExpr.make(ensureNotNull(values), trailingComma)); })
 	) */
-	protected BUTree<? extends SExpr> parseMemberValueArrayInitializer() throws ParseException {
-		BUTree<SNodeList> ret = emptyList();
-		BUTree<? extends SExpr> member;
+	protected BUTree<? extends SExpr> parseElementValueArrayInitializer() throws ParseException {
+		BUTree<SNodeList> values = null;
 		boolean trailingComma = false;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.AT, TokenType.SUPER, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.INT, TokenType.BYTE, TokenType.FLOAT, TokenType.SHORT, TokenType.CHAR, TokenType.NEW, TokenType.LT, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.LPAREN, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR, TokenType.LBRACE) != -1) {
-			member = parseMemberValue();
-			ret = append(ret, member);
-			while (matchMemberValueArrayInitializer_lookahead1(0) == -1) {
-				parse(TokenType.COMMA);
-				member = parseMemberValue();
-				ret = append(ret, member);
-			}
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.AT - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ElementValueArrayInitializer_2_1);
+			values = parseElementValueList();
+			popCallStack();
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
 		parse(TokenType.RBRACE);
-		return dress(SArrayInitializerExpr.make(ret, trailingComma));
+		return dress(SArrayInitializerExpr.make(ensureNotNull(values), trailingComma));
 	}
 
 	/* sequence(
-		terminal(LBRACE)
-		zeroOrOne(
-			nonTerminal(member, MemberValue)
-			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
-				terminal(COMMA)
-				nonTerminal(member, MemberValue)
-			)
-		)
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchMemberValueArrayInitializer(int lookahead) {
-		lookahead = match(lookahead, TokenType.LBRACE);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValueArrayInitializer_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValueArrayInitializer_4(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		nonTerminal(member, MemberValue)
+		nonTerminal(value, ElementValue)
+		action({ ret = append(ret, value); })
 		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(COMMA)
-				)
-				terminal(RBRACE)
-			)
 			terminal(COMMA)
-			nonTerminal(member, MemberValue)
+			nonTerminal(value, ElementValue)
+			action({ ret = append(ret, value); })
 		)
+		action({ return ret; })
 	) */
-	private int matchMemberValueArrayInitializer_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMemberValueArrayInitializer_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(member, MemberValue)
-		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(COMMA)
-				)
-				terminal(RBRACE)
-			)
-			terminal(COMMA)
-			nonTerminal(member, MemberValue)
-		)
-	) */
-	private int matchMemberValueArrayInitializer_3_1(int lookahead) {
-		lookahead = matchMemberValue(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValueArrayInitializer_3_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			terminal(RBRACE)
-		)
-		terminal(COMMA)
-		nonTerminal(member, MemberValue)
-	) */
-	private int matchMemberValueArrayInitializer_3_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMemberValueArrayInitializer_3_1_3_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchMemberValueArrayInitializer_3_1_3_1(lookahead);
+	protected BUTree<SNodeList> parseElementValueList() throws ParseException {
+		BUTree<SNodeList> ret = emptyList();
+		BUTree<? extends SExpr> value;
+		int __token;
+		pushCallStack(JavaGrammar.ElementValueList_1);
+		value = parseElementValue();
+		popCallStack();
+		ret = append(ret, value);
+		__token = getToken(0).kind;
+		while (predict(JavaGrammar.ELEMENT_VALUE_LIST_2) == 1) {
+			parse(TokenType.COMMA);
+			pushCallStack(JavaGrammar.ElementValueList_2_2);
+			value = parseElementValue();
+			popCallStack();
+			ret = append(ret, value);
+			__token = getToken(0).kind;
 		}
-		return lookahead;
-	}
-
-	/* sequence(
-		negativeLookAhead(
-			zeroOrOne(
-				terminal(COMMA)
-			)
-			terminal(RBRACE)
-		)
-		terminal(COMMA)
-		nonTerminal(member, MemberValue)
-	) */
-	private int matchMemberValueArrayInitializer_3_1_3_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMemberValue(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchMemberValueArrayInitializer_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMemberValueArrayInitializer_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchMemberValueArrayInitializer_4_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		zeroOrOne(
-			terminal(COMMA)
-		)
-		terminal(RBRACE)
-	) */
-	private int matchMemberValueArrayInitializer_lookahead1(int lookahead) {
-		lookahead = matchMemberValueArrayInitializer_lookahead1_1(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.RBRACE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
-		terminal(COMMA)
-	) */
-	private int matchMemberValueArrayInitializer_lookahead1_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMemberValueArrayInitializer_lookahead1_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(COMMA)
-	) */
-	private int matchMemberValueArrayInitializer_lookahead1_1_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.COMMA);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		return ret;
 	}
 }
