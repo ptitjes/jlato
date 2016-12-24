@@ -29,19 +29,23 @@ import java.util.*;
  */
 public abstract class Grammar {
 
-	private int stateCount = 0;
-	private final Map<Integer, GrammarState> startStates = new HashMap<Integer, GrammarState>();
-	private final Map<Integer, Set<GrammarState>> perNonTerminalUseEndStates = new HashMap<Integer, Set<GrammarState>>();
+	private int nextStateId = 0;
+	private final GrammarState[] states;
+	private final GrammarState[] startStates;
+	private final Set<GrammarState>[] perNonTerminalUseEndStates;
 	private final Map<Integer, Map<Integer, Set<GrammarState>>> perEntryPointNonTerminalUseEndState = new HashMap<Integer, Map<Integer, Set<GrammarState>>>();
 
-	public Grammar() {
+	public Grammar(int stateCount, int constantCount) {
+		states = new GrammarState[stateCount];
+		startStates = new GrammarState[constantCount];
+		perNonTerminalUseEndStates = (Set<GrammarState>[]) new Set[constantCount];
 		initializeProductions();
 	}
 
 	protected abstract void initializeProductions();
 
 	private int newStateId() {
-		return stateCount++;
+		return nextStateId++;
 	}
 
 	GrammarState newGrammarState(Expansion expansion) {
@@ -53,18 +57,18 @@ public abstract class Grammar {
 		GrammarState end = new GrammarState(newStateId(), expansion.name, nonTerminal);
 		expansion.initializeStates(start, end, this, entryPoint ? nonTerminal : -1);
 
-		startStates.put(nonTerminal, start);
+		startStates[nonTerminal] = start;
 	}
 
-	protected void addChoicePoint(int constant, ChoicePoint expansion) {
-		startStates.put(constant, expansion.choice());
+	protected void addChoicePoint(int choicePoint, ChoicePoint expansion) {
+		startStates[choicePoint] = expansion.choice();
 	}
 
 	void addNonTerminalEndState(int symbol, GrammarState end) {
-		Set<GrammarState> useEndStates = perNonTerminalUseEndStates.get(symbol);
+		Set<GrammarState> useEndStates = perNonTerminalUseEndStates[symbol];
 		if (useEndStates == null) {
 			useEndStates = new HashSet<GrammarState>();
-			perNonTerminalUseEndStates.put(symbol, useEndStates);
+			perNonTerminalUseEndStates[symbol] = useEndStates;
 		}
 		useEndStates.add(end);
 	}
@@ -85,11 +89,11 @@ public abstract class Grammar {
 	}
 
 	public GrammarState getStartState(int nonTerminal) {
-		return startStates.get(nonTerminal);
+		return startStates[nonTerminal];
 	}
 
 	public Set<GrammarState> getUseEndStates(int nonTerminal) {
-		return perNonTerminalUseEndStates.get(nonTerminal);
+		return perNonTerminalUseEndStates[nonTerminal];
 	}
 
 	public Set<GrammarState> getEntryPointUseEndStates(int entryPoint, int nonTerminal) {

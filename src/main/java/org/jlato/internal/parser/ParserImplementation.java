@@ -48,681 +48,685 @@ class ParserImplementation extends ParserBaseALL {
 
 	private static class JavaGrammar extends Grammar {
 
-		static final int ADDITIVE_EXPRESSION = 213;
+		JavaGrammar() {
+			super(1020, 338);
+		}
 
-		static final int ADDITIVE_EXPRESSION_2 = 219;
+		static final int ADDITIVE_EXPRESSION = 212;
 
-		static final int ADDITIVE_EXPRESSION_2_1 = 220;
+		static final int ADDITIVE_EXPRESSION_2 = 218;
 
-		static final int AND_EXPRESSION = 201;
+		static final int ADDITIVE_EXPRESSION_2_1 = 219;
 
-		static final int AND_EXPRESSION_2 = 204;
+		static final int AND_EXPRESSION = 200;
 
-		static final int ANNOTATED_QUALIFIED_TYPE = 66;
+		static final int AND_EXPRESSION_2 = 203;
 
-		static final int ANNOTATION = 53;
+		static final int ANNOTATED_QUALIFIED_TYPE = 65;
 
-		static final int ANNOTATIONS = 17;
+		static final int ANNOTATION = 52;
 
-		static final int ANNOTATIONS_1 = 324;
+		static final int ANNOTATIONS = 16;
 
-		static final int ANNOTATIONS_ENTRY = 16;
+		static final int ANNOTATIONS_1 = 323;
 
-		static final int ANNOTATION_1 = 325;
+		static final int ANNOTATIONS_ENTRY = 15;
 
-		static final int ANNOTATION_ELEMENT_DECL_ENTRY = 22;
+		static final int ANNOTATION_1 = 324;
 
-		static final int ANNOTATION_MEMBER_DECL_ENTRY = 12;
+		static final int ANNOTATION_ELEMENT_DECL_ENTRY = 21;
 
-		static final int ANNOTATION_TYPE_BODY = 87;
+		static final int ANNOTATION_MEMBER_DECL_ENTRY = 11;
 
-		static final int ANNOTATION_TYPE_BODY_2 = 88;
+		static final int ANNOTATION_TYPE_BODY = 86;
 
-		static final int ANNOTATION_TYPE_BODY_2_1 = 89;
+		static final int ANNOTATION_TYPE_BODY_2 = 87;
 
-		static final int ANNOTATION_TYPE_BODY_2_1_2 = 90;
+		static final int ANNOTATION_TYPE_BODY_2_1 = 88;
 
-		static final int ANNOTATION_TYPE_BODY_DECL = 13;
+		static final int ANNOTATION_TYPE_BODY_2_1_2 = 89;
 
-		static final int ANNOTATION_TYPE_BODY_DECL_1 = 91;
+		static final int ANNOTATION_TYPE_BODY_DECL = 12;
 
-		static final int ANNOTATION_TYPE_BODY_DECL_1_2_2 = 92;
+		static final int ANNOTATION_TYPE_BODY_DECL_1 = 90;
 
-		static final int ANNOTATION_TYPE_DECL = 61;
+		static final int ANNOTATION_TYPE_BODY_DECL_1_2_2 = 91;
 
-		static final int ANNOTATION_TYPE_MEMBER_DECL = 23;
+		static final int ANNOTATION_TYPE_DECL = 60;
 
-		static final int ANNOTATION_TYPE_MEMBER_DECL_6 = 94;
+		static final int ANNOTATION_TYPE_MEMBER_DECL = 22;
 
-		static final int ARGUMENTS = 85;
+		static final int ANNOTATION_TYPE_MEMBER_DECL_6 = 93;
 
-		static final int ARGUMENTS_2 = 260;
+		static final int ARGUMENTS = 84;
 
-		static final int ARGUMENTS_2_1 = 261;
+		static final int ARGUMENTS_2 = 259;
 
-		static final int ARGUMENTS_2_1_2_2 = 262;
+		static final int ARGUMENTS_2_1 = 260;
 
-		static final int ARRAY_CREATION_EXPR = 243;
+		static final int ARGUMENTS_2_1_2_2 = 261;
 
-		static final int ARRAY_CREATION_EXPR_2 = 267;
+		static final int ARRAY_CREATION_EXPR = 242;
 
-		static final int ARRAY_CREATION_EXPR_4 = 268;
+		static final int ARRAY_CREATION_EXPR_2 = 266;
 
-		static final int ARRAY_CREATION_EXPR_REST = 269;
+		static final int ARRAY_CREATION_EXPR_4 = 267;
 
-		static final int ARRAY_DIMS = 93;
+		static final int ARRAY_CREATION_EXPR_REST = 268;
 
-		static final int ARRAY_DIMS_1 = 116;
+		static final int ARRAY_DIMS = 92;
 
-		static final int ARRAY_DIMS_MANDATORY = 153;
+		static final int ARRAY_DIMS_1 = 115;
 
-		static final int ARRAY_DIMS_MANDATORY_1 = 272;
+		static final int ARRAY_DIMS_MANDATORY = 152;
 
-		static final int ARRAY_DIM_EXPRS_MANDATORY = 270;
+		static final int ARRAY_DIMS_MANDATORY_1 = 271;
 
-		static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 271;
+		static final int ARRAY_DIM_EXPRS_MANDATORY = 269;
 
-		static final int ARRAY_INITIALIZER = 118;
+		static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 270;
 
-		static final int ARRAY_INITIALIZER_2 = 119;
+		static final int ARRAY_INITIALIZER = 117;
 
-		static final int ARRAY_INITIALIZER_2_2 = 120;
+		static final int ARRAY_INITIALIZER_2 = 118;
 
-		static final int ARRAY_INITIALIZER_3 = 121;
+		static final int ARRAY_INITIALIZER_2_2 = 119;
 
-		static final int ASSERT_STATEMENT = 276;
+		static final int ARRAY_INITIALIZER_3 = 120;
 
-		static final int ASSERT_STATEMENT_3 = 290;
+		static final int ASSERT_STATEMENT = 275;
 
-		static final int ASSIGNMENT_EXPRESSION = 177;
+		static final int ASSERT_STATEMENT_3 = 289;
 
-		static final int ASSIGNMENT_EXPRESSION_2 = 180;
+		static final int ASSIGNMENT_EXPRESSION = 176;
 
-		static final int ASSIGNMENT_OPERATOR = 181;
+		static final int ASSIGNMENT_EXPRESSION_2 = 179;
 
-		static final int ASSIGNMENT_OPERATOR_1 = 191;
+		static final int ASSIGNMENT_OPERATOR = 180;
 
-		static final int BLOCK = 128;
+		static final int ASSIGNMENT_OPERATOR_1 = 190;
 
-		static final int BLOCK_STATEMENT = 33;
+		static final int BLOCK = 127;
 
-		static final int BLOCK_STATEMENT_1 = 291;
+		static final int BLOCK_STATEMENT = 32;
 
-		static final int BLOCK_STATEMENT_ENTRY = 32;
+		static final int BLOCK_STATEMENT_1 = 290;
 
-		static final int BREAK_STATEMENT = 284;
+		static final int BLOCK_STATEMENT_ENTRY = 31;
 
-		static final int BREAK_STATEMENT_2 = 307;
+		static final int BREAK_STATEMENT = 283;
 
-		static final int CAST_EXPRESSION = 231;
+		static final int BREAK_STATEMENT_2 = 306;
 
-		static final int CAST_EXPRESSION_3 = 236;
+		static final int CAST_EXPRESSION = 230;
 
-		static final int CATCH_CLAUSE = 318;
+		static final int CAST_EXPRESSION_3 = 235;
 
-		static final int CATCH_CLAUSES = 313;
+		static final int CATCH_CLAUSE = 317;
 
-		static final int CATCH_CLAUSES_1 = 317;
+		static final int CATCH_CLAUSES = 312;
 
-		static final int CATCH_FORMAL_PARAMETER = 319;
+		static final int CATCH_CLAUSES_1 = 316;
 
-		static final int CATCH_FORMAL_PARAMETER_3 = 320;
+		static final int CATCH_FORMAL_PARAMETER = 318;
 
-		static final int CATCH_FORMAL_PARAMETER_3_1 = 321;
+		static final int CATCH_FORMAL_PARAMETER_3 = 319;
 
-		static final int CLASS_CREATION_EXPR = 255;
+		static final int CATCH_FORMAL_PARAMETER_3_1 = 320;
 
-		static final int CLASS_CREATION_EXPR_2 = 265;
+		static final int CLASS_CREATION_EXPR = 254;
 
-		static final int CLASS_CREATION_EXPR_6 = 266;
+		static final int CLASS_CREATION_EXPR_2 = 264;
 
-		static final int CLASS_OR_INTERFACE_BODY = 72;
+		static final int CLASS_CREATION_EXPR_6 = 265;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECL = 11;
+		static final int CLASS_OR_INTERFACE_BODY = 71;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECLS = 83;
+		static final int CLASS_OR_INTERFACE_BODY_DECL = 10;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECLS_1 = 102;
+		static final int CLASS_OR_INTERFACE_BODY_DECLS = 82;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1 = 103;
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1 = 101;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_2 = 104;
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1 = 102;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECL_1 = 105;
+		static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_2 = 103;
 
-		static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_2 = 106;
+		static final int CLASS_OR_INTERFACE_BODY_DECL_1 = 104;
 
-		static final int CLASS_OR_INTERFACE_DECL = 59;
+		static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_2 = 105;
 
-		static final int CLASS_OR_INTERFACE_DECL_1 = 62;
+		static final int CLASS_OR_INTERFACE_DECL = 58;
 
-		static final int CLASS_OR_INTERFACE_DECL_1_1_3 = 63;
+		static final int CLASS_OR_INTERFACE_DECL_1 = 61;
 
-		static final int CLASS_OR_INTERFACE_DECL_1_1_4 = 65;
+		static final int CLASS_OR_INTERFACE_DECL_1_1_3 = 62;
 
-		static final int CLASS_OR_INTERFACE_DECL_1_1_5 = 67;
+		static final int CLASS_OR_INTERFACE_DECL_1_1_4 = 64;
 
-		static final int CLASS_OR_INTERFACE_DECL_1_2_3 = 69;
+		static final int CLASS_OR_INTERFACE_DECL_1_1_5 = 66;
 
-		static final int CLASS_OR_INTERFACE_DECL_1_2_4 = 70;
+		static final int CLASS_OR_INTERFACE_DECL_1_2_3 = 68;
 
-		static final int COMPILATION_UNIT = 2;
+		static final int CLASS_OR_INTERFACE_DECL_1_2_4 = 69;
 
-		static final int COMPILATION_UNIT_1 = 44;
+		static final int COMPILATION_UNIT = 1;
 
-		static final int COMPILATION_UNIT_ENTRY = 1;
+		static final int COMPILATION_UNIT_1 = 43;
 
-		static final int CONDITIONAL_AND_EXPRESSION = 195;
+		static final int COMPILATION_UNIT_ENTRY = 0;
 
-		static final int CONDITIONAL_AND_EXPRESSION_2 = 198;
+		static final int CONDITIONAL_AND_EXPRESSION = 194;
 
-		static final int CONDITIONAL_EXPRESSION = 179;
+		static final int CONDITIONAL_AND_EXPRESSION_2 = 197;
 
-		static final int CONDITIONAL_EXPRESSION_2 = 193;
+		static final int CONDITIONAL_EXPRESSION = 178;
 
-		static final int CONDITIONAL_EXPRESSION_2_4 = 194;
+		static final int CONDITIONAL_EXPRESSION_2 = 192;
 
-		static final int CONDITIONAL_OR_EXPRESSION = 192;
+		static final int CONDITIONAL_EXPRESSION_2_4 = 193;
 
-		static final int CONDITIONAL_OR_EXPRESSION_2 = 196;
+		static final int CONDITIONAL_OR_EXPRESSION = 191;
 
-		static final int CONSTRUCTOR_DECL = 108;
+		static final int CONDITIONAL_OR_EXPRESSION_2 = 195;
 
-		static final int CONSTRUCTOR_DECL_1 = 137;
+		static final int CONSTRUCTOR_DECL = 107;
 
-		static final int CONSTRUCTOR_DECL_4 = 138;
+		static final int CONSTRUCTOR_DECL_1 = 136;
 
-		static final int CONTINUE_STATEMENT = 285;
+		static final int CONSTRUCTOR_DECL_4 = 137;
 
-		static final int CONTINUE_STATEMENT_2 = 308;
+		static final int CONTINUE_STATEMENT = 284;
 
-		static final int DO_STATEMENT = 282;
+		static final int CONTINUE_STATEMENT_2 = 307;
 
-		static final int ELEMENT_VALUE = 95;
+		static final int DO_STATEMENT = 281;
 
-		static final int ELEMENT_VALUE_1 = 333;
+		static final int ELEMENT_VALUE = 94;
 
-		static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 334;
+		static final int ELEMENT_VALUE_1 = 332;
 
-		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 335;
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 333;
 
-		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 337;
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 334;
 
-		static final int ELEMENT_VALUE_LIST = 336;
+		static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 336;
 
-		static final int ELEMENT_VALUE_LIST_2 = 338;
+		static final int ELEMENT_VALUE_LIST = 335;
 
-		static final int ELEMENT_VALUE_PAIR = 331;
+		static final int ELEMENT_VALUE_LIST_2 = 337;
 
-		static final int ELEMENT_VALUE_PAIR_LIST = 330;
+		static final int ELEMENT_VALUE_PAIR = 330;
 
-		static final int ELEMENT_VALUE_PAIR_LIST_2 = 332;
+		static final int ELEMENT_VALUE_PAIR_LIST = 329;
 
-		static final int EMPTY_STATEMENT = 277;
+		static final int ELEMENT_VALUE_PAIR_LIST_2 = 331;
 
-		static final int ENUM_CONSTANT_DECL = 25;
+		static final int EMPTY_STATEMENT = 276;
 
-		static final int ENUM_CONSTANT_DECL_3 = 84;
+		static final int ENUM_CONSTANT_DECL = 24;
 
-		static final int ENUM_CONSTANT_DECL_4 = 86;
+		static final int ENUM_CONSTANT_DECL_3 = 83;
 
-		static final int ENUM_CONSTANT_DECL_ENTRY = 24;
+		static final int ENUM_CONSTANT_DECL_4 = 85;
 
-		static final int ENUM_DECL = 60;
+		static final int ENUM_CONSTANT_DECL_ENTRY = 23;
 
-		static final int ENUM_DECL_3 = 77;
+		static final int ENUM_DECL = 59;
 
-		static final int ENUM_DECL_5 = 78;
+		static final int ENUM_DECL_3 = 76;
 
-		static final int ENUM_DECL_5_1 = 79;
+		static final int ENUM_DECL_5 = 77;
 
-		static final int ENUM_DECL_5_1_2_2 = 80;
+		static final int ENUM_DECL_5_1 = 78;
 
-		static final int ENUM_DECL_6 = 81;
+		static final int ENUM_DECL_5_1_2_2 = 79;
 
-		static final int ENUM_DECL_7 = 82;
+		static final int ENUM_DECL_6 = 80;
 
-		static final int EPILOG = 5;
+		static final int ENUM_DECL_7 = 81;
 
-		static final int EQUALITY_EXPRESSION = 203;
+		static final int EPILOG = 4;
 
-		static final int EQUALITY_EXPRESSION_2 = 206;
+		static final int EQUALITY_EXPRESSION = 202;
 
-		static final int EQUALITY_EXPRESSION_2_1 = 207;
+		static final int EQUALITY_EXPRESSION_2 = 205;
 
-		static final int EXCLUSIVE_OR_EXPRESSION = 199;
+		static final int EQUALITY_EXPRESSION_2_1 = 206;
 
-		static final int EXCLUSIVE_OR_EXPRESSION_2 = 202;
+		static final int EXCLUSIVE_OR_EXPRESSION = 198;
 
-		static final int EXPLICIT_CONSTRUCTOR_INVOCATION = 139;
+		static final int EXCLUSIVE_OR_EXPRESSION_2 = 201;
 
-		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1 = 140;
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION = 138;
 
-		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_1_1 = 141;
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1 = 139;
 
-		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1 = 143;
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_1_1 = 140;
 
-		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_2 = 145;
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1 = 142;
 
-		static final int EXPRESSION = 35;
+		static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_2 = 144;
 
-		static final int EXPRESSION_1 = 176;
+		static final int EXPRESSION = 34;
 
-		static final int EXPRESSION_ENTRY = 34;
+		static final int EXPRESSION_1 = 175;
 
-		static final int EXPRESSION_STATEMENT = 278;
+		static final int EXPRESSION_ENTRY = 33;
 
-		static final int EXTENDS_LIST = 71;
+		static final int EXPRESSION_STATEMENT = 277;
 
-		static final int EXTENDS_LIST_2 = 73;
+		static final int EXTENDS_LIST = 70;
 
-		static final int EXTENDS_LIST_2_2_2 = 74;
+		static final int EXTENDS_LIST_2 = 72;
 
-		static final int FIELD_ACCESS = 253;
+		static final int EXTENDS_LIST_2_2_2 = 73;
 
-		static final int FIELD_DECL = 21;
+		static final int FIELD_ACCESS = 252;
 
-		static final int FIELD_DECL_ENTRY = 20;
+		static final int FIELD_DECL = 20;
 
-		static final int FORMAL_PARAMETER = 27;
+		static final int FIELD_DECL_ENTRY = 19;
 
-		static final int FORMAL_PARAMETERS = 124;
+		static final int FORMAL_PARAMETER = 26;
 
-		static final int FORMAL_PARAMETERS_2 = 129;
+		static final int FORMAL_PARAMETERS = 123;
 
-		static final int FORMAL_PARAMETER_3 = 133;
+		static final int FORMAL_PARAMETERS_2 = 128;
 
-		static final int FORMAL_PARAMETER_4 = 134;
+		static final int FORMAL_PARAMETER_3 = 132;
 
-		static final int FORMAL_PARAMETER_4_1_1 = 135;
+		static final int FORMAL_PARAMETER_4 = 133;
 
-		static final int FORMAL_PARAMETER_ENTRY = 26;
+		static final int FORMAL_PARAMETER_4_1_1 = 134;
 
-		static final int FORMAL_PARAMETER_LIST = 130;
+		static final int FORMAL_PARAMETER_ENTRY = 25;
 
-		static final int FORMAL_PARAMETER_LIST_1 = 131;
+		static final int FORMAL_PARAMETER_LIST = 129;
 
-		static final int FORMAL_PARAMETER_LIST_1_2_2 = 132;
+		static final int FORMAL_PARAMETER_LIST_1 = 130;
 
-		static final int FOR_INIT = 300;
+		static final int FORMAL_PARAMETER_LIST_1_2_2 = 131;
 
-		static final int FOR_INIT_1 = 304;
+		static final int FOR_INIT = 299;
 
-		static final int FOR_STATEMENT = 283;
+		static final int FOR_INIT_1 = 303;
 
-		static final int FOR_STATEMENT_3 = 298;
+		static final int FOR_STATEMENT = 282;
 
-		static final int FOR_STATEMENT_3_2_1 = 299;
+		static final int FOR_STATEMENT_3 = 297;
 
-		static final int FOR_STATEMENT_3_2_3 = 301;
+		static final int FOR_STATEMENT_3_2_1 = 298;
 
-		static final int FOR_STATEMENT_3_2_5 = 302;
+		static final int FOR_STATEMENT_3_2_3 = 300;
 
-		static final int FOR_UPDATE = 303;
+		static final int FOR_STATEMENT_3_2_5 = 301;
 
-		static final int IF_STATEMENT = 280;
+		static final int FOR_UPDATE = 302;
 
-		static final int IF_STATEMENT_6 = 297;
+		static final int IF_STATEMENT = 279;
 
-		static final int IMPLEMENTS_LIST = 68;
+		static final int IF_STATEMENT_6 = 296;
 
-		static final int IMPLEMENTS_LIST_2 = 75;
+		static final int IMPLEMENTS_LIST = 67;
 
-		static final int IMPLEMENTS_LIST_2_2_2 = 76;
+		static final int IMPLEMENTS_LIST_2 = 74;
 
-		static final int IMPORT_DECL = 7;
+		static final int IMPLEMENTS_LIST_2_2_2 = 75;
 
-		static final int IMPORT_DECLS = 45;
+		static final int IMPORT_DECL = 6;
 
-		static final int IMPORT_DECLS_1 = 47;
+		static final int IMPORT_DECLS = 44;
 
-		static final int IMPORT_DECL_2 = 48;
+		static final int IMPORT_DECLS_1 = 46;
 
-		static final int IMPORT_DECL_4 = 49;
+		static final int IMPORT_DECL_2 = 47;
 
-		static final int IMPORT_DECL_ENTRY = 6;
+		static final int IMPORT_DECL_4 = 48;
 
-		static final int INCLUSIVE_OR_EXPRESSION = 197;
+		static final int IMPORT_DECL_ENTRY = 5;
 
-		static final int INCLUSIVE_OR_EXPRESSION_2 = 200;
+		static final int INCLUSIVE_OR_EXPRESSION = 196;
 
-		static final int INFERRED_FORMAL_PARAMETER = 189;
+		static final int INCLUSIVE_OR_EXPRESSION_2 = 199;
 
-		static final int INFERRED_FORMAL_PARAMETER_LIST = 187;
+		static final int INFERRED_FORMAL_PARAMETER = 188;
 
-		static final int INFERRED_FORMAL_PARAMETER_LIST_2 = 190;
+		static final int INFERRED_FORMAL_PARAMETER_LIST = 186;
 
-		static final int INITIALIZER_DECL = 107;
+		static final int INFERRED_FORMAL_PARAMETER_LIST_2 = 189;
 
-		static final int INSTANCE_OF_EXPRESSION = 205;
+		static final int INITIALIZER_DECL = 106;
 
-		static final int INSTANCE_OF_EXPRESSION_2 = 209;
+		static final int INSTANCE_OF_EXPRESSION = 204;
 
-		static final int LABELED_STATEMENT = 275;
+		static final int INSTANCE_OF_EXPRESSION_2 = 208;
 
-		static final int LAMBDA_BODY = 186;
+		static final int LABELED_STATEMENT = 274;
 
-		static final int LAMBDA_BODY_1 = 188;
+		static final int LAMBDA_BODY = 185;
 
-		static final int LAMBDA_EXPRESSION = 178;
+		static final int LAMBDA_BODY_1 = 187;
 
-		static final int LAMBDA_EXPRESSION_1 = 182;
+		static final int LAMBDA_EXPRESSION = 177;
 
-		static final int LAMBDA_EXPRESSION_WITHOUT_CAST = 184;
+		static final int LAMBDA_EXPRESSION_1 = 181;
 
-		static final int LAMBDA_EXPRESSION_WITHOUT_CAST_1 = 185;
+		static final int LAMBDA_EXPRESSION_WITHOUT_CAST = 183;
 
-		static final int LITERAL = 239;
+		static final int LAMBDA_EXPRESSION_WITHOUT_CAST_1 = 184;
 
-		static final int LITERAL_1 = 240;
+		static final int LITERAL = 238;
 
-		static final int MARKER_ANNOTATION = 327;
+		static final int LITERAL_1 = 239;
 
-		static final int MEMBER_DECL_ENTRY = 10;
+		static final int MARKER_ANNOTATION = 326;
 
-		static final int METHOD_DECL = 19;
+		static final int MEMBER_DECL_ENTRY = 9;
 
-		static final int METHOD_DECL_1 = 122;
+		static final int METHOD_DECL = 18;
 
-		static final int METHOD_DECL_6 = 125;
+		static final int METHOD_DECL_1 = 121;
 
-		static final int METHOD_DECL_7 = 127;
+		static final int METHOD_DECL_6 = 124;
 
-		static final int METHOD_DECL_ENTRY = 18;
+		static final int METHOD_DECL_7 = 126;
 
-		static final int METHOD_INVOCATION = 252;
+		static final int METHOD_DECL_ENTRY = 17;
 
-		static final int METHOD_INVOCATION_1 = 259;
+		static final int METHOD_INVOCATION = 251;
 
-		static final int METHOD_REFERENCE_SUFFIX = 254;
+		static final int METHOD_INVOCATION_1 = 258;
 
-		static final int METHOD_REFERENCE_SUFFIX_2 = 263;
+		static final int METHOD_REFERENCE_SUFFIX = 253;
 
-		static final int METHOD_REFERENCE_SUFFIX_3 = 264;
+		static final int METHOD_REFERENCE_SUFFIX_2 = 262;
 
-		static final int MODIFIERS = 15;
+		static final int METHOD_REFERENCE_SUFFIX_3 = 263;
 
-		static final int MODIFIERS_1 = 51;
+		static final int MODIFIERS = 14;
 
-		static final int MODIFIERS_1_1 = 52;
+		static final int MODIFIERS_1 = 50;
 
-		static final int MODIFIERS_ENTRY = 14;
+		static final int MODIFIERS_1_1 = 51;
 
-		static final int MODIFIERS_NO_DEFAULT = 54;
+		static final int MODIFIERS_ENTRY = 13;
 
-		static final int MODIFIERS_NO_DEFAULT_1 = 55;
+		static final int MODIFIERS_NO_DEFAULT = 53;
 
-		static final int MODIFIERS_NO_DEFAULT_1_1 = 56;
+		static final int MODIFIERS_NO_DEFAULT_1 = 54;
 
-		static final int MULTIPLICATIVE_EXPRESSION = 218;
+		static final int MODIFIERS_NO_DEFAULT_1_1 = 55;
 
-		static final int MULTIPLICATIVE_EXPRESSION_2 = 222;
+		static final int MULTIPLICATIVE_EXPRESSION = 217;
 
-		static final int MULTIPLICATIVE_EXPRESSION_2_1 = 223;
+		static final int MULTIPLICATIVE_EXPRESSION_2 = 221;
 
-		static final int NAME = 41;
+		static final int MULTIPLICATIVE_EXPRESSION_2_1 = 222;
 
-		static final int NAME_1 = 175;
+		static final int NAME = 40;
 
-		static final int NAME_ENTRY = 40;
+		static final int NAME_1 = 174;
 
-		static final int NODE_LIST_VAR = 42;
+		static final int NAME_ENTRY = 39;
 
-		static final int NODE_VAR = 43;
+		static final int NODE_LIST_VAR = 41;
 
-		static final int NORMAL_ANNOTATION = 326;
+		static final int NODE_VAR = 42;
 
-		static final int NORMAL_ANNOTATION_4 = 329;
+		static final int NORMAL_ANNOTATION = 325;
 
-		static final int PACKAGE_DECL = 4;
+		static final int NORMAL_ANNOTATION_4 = 328;
 
-		static final int PACKAGE_DECL_ENTRY = 3;
+		static final int PACKAGE_DECL = 3;
 
-		static final int POSTFIX_EXPRESSION = 232;
+		static final int PACKAGE_DECL_ENTRY = 2;
 
-		static final int POSTFIX_EXPRESSION_2 = 234;
+		static final int POSTFIX_EXPRESSION = 231;
 
-		static final int POSTFIX_EXPRESSION_2_1 = 235;
+		static final int POSTFIX_EXPRESSION_2 = 233;
 
-		static final int PREFIX_EXPRESSION = 225;
+		static final int POSTFIX_EXPRESSION_2_1 = 234;
 
-		static final int PREFIX_EXPRESSION_1 = 228;
+		static final int PREFIX_EXPRESSION = 224;
 
-		static final int PRIMARY_EXPRESSION = 233;
+		static final int PREFIX_EXPRESSION_1 = 227;
 
-		static final int PRIMARY_EXPRESSION_1 = 241;
+		static final int PRIMARY_EXPRESSION = 232;
 
-		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX = 144;
+		static final int PRIMARY_EXPRESSION_1 = 240;
 
-		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 247;
+		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX = 143;
 
-		static final int PRIMARY_NO_NEW_ARRAY = 242;
+		static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 246;
 
-		static final int PRIMARY_NO_NEW_ARRAY_2 = 245;
+		static final int PRIMARY_NO_NEW_ARRAY = 241;
 
-		static final int PRIMARY_PREFIX = 244;
+		static final int PRIMARY_NO_NEW_ARRAY_2 = 244;
 
-		static final int PRIMARY_PREFIX_1 = 249;
+		static final int PRIMARY_PREFIX = 243;
 
-		static final int PRIMARY_PREFIX_1_3_2 = 250;
+		static final int PRIMARY_PREFIX_1 = 248;
 
-		static final int PRIMARY_PREFIX_1_3_2_1_2 = 251;
+		static final int PRIMARY_PREFIX_1_3_2 = 249;
 
-		static final int PRIMARY_SUFFIX = 246;
+		static final int PRIMARY_PREFIX_1_3_2_1_2 = 250;
 
-		static final int PRIMARY_SUFFIX_1 = 256;
+		static final int PRIMARY_SUFFIX = 245;
 
-		static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 248;
+		static final int PRIMARY_SUFFIX_1 = 255;
 
-		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 257;
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 247;
 
-		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 258;
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 256;
 
-		static final int PRIMITIVE_TYPE = 151;
+		static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 257;
 
-		static final int PRIMITIVE_TYPE_1 = 172;
+		static final int PRIMITIVE_TYPE = 150;
 
-		static final int QUALIFIED_NAME = 39;
+		static final int PRIMITIVE_TYPE_1 = 171;
 
-		static final int QUALIFIED_NAME_2 = 174;
+		static final int QUALIFIED_NAME = 38;
 
-		static final int QUALIFIED_NAME_ENTRY = 38;
+		static final int QUALIFIED_NAME_2 = 173;
 
-		static final int QUALIFIED_TYPE = 154;
+		static final int QUALIFIED_NAME_ENTRY = 37;
 
-		static final int QUALIFIED_TYPE_2 = 159;
+		static final int QUALIFIED_TYPE = 153;
 
-		static final int QUALIFIED_TYPE_3 = 161;
+		static final int QUALIFIED_TYPE_2 = 158;
 
-		static final int QUALIFIED_TYPE_3_4 = 162;
+		static final int QUALIFIED_TYPE_3 = 160;
 
-		static final int REFERENCE_CAST_TYPE_REST = 183;
+		static final int QUALIFIED_TYPE_3_4 = 161;
 
-		static final int REFERENCE_CAST_TYPE_REST_1 = 237;
+		static final int REFERENCE_CAST_TYPE_REST = 182;
 
-		static final int REFERENCE_CAST_TYPE_REST_1_1 = 238;
+		static final int REFERENCE_CAST_TYPE_REST_1 = 236;
 
-		static final int REFERENCE_TYPE = 156;
+		static final int REFERENCE_CAST_TYPE_REST_1_1 = 237;
 
-		static final int REFERENCE_TYPE_1 = 157;
+		static final int REFERENCE_TYPE = 155;
 
-		static final int REFERENCE_TYPE_1_2_2 = 158;
+		static final int REFERENCE_TYPE_1 = 156;
 
-		static final int RELATIONAL_EXPRESSION = 208;
+		static final int REFERENCE_TYPE_1_2_2 = 157;
 
-		static final int RELATIONAL_EXPRESSION_2 = 211;
+		static final int RELATIONAL_EXPRESSION = 207;
 
-		static final int RELATIONAL_EXPRESSION_2_1 = 212;
+		static final int RELATIONAL_EXPRESSION_2 = 210;
 
-		static final int RESOURCE_SPECIFICATION = 311;
+		static final int RELATIONAL_EXPRESSION_2_1 = 211;
 
-		static final int RESOURCE_SPECIFICATION_3 = 322;
+		static final int RESOURCE_SPECIFICATION = 310;
 
-		static final int RESOURCE_SPECIFICATION_4 = 323;
+		static final int RESOURCE_SPECIFICATION_3 = 321;
 
-		static final int RESULT_TYPE = 123;
+		static final int RESOURCE_SPECIFICATION_4 = 322;
 
-		static final int RESULT_TYPE_1 = 173;
+		static final int RESULT_TYPE = 122;
 
-		static final int RETURN_STATEMENT = 286;
+		static final int RESULT_TYPE_1 = 172;
 
-		static final int RETURN_STATEMENT_2 = 309;
+		static final int RETURN_STATEMENT = 285;
 
-		static final int R_S_I_G_N_E_D_S_H_I_F_T = 217;
+		static final int RETURN_STATEMENT_2 = 308;
 
-		static final int R_U_N_S_I_G_N_E_D_S_H_I_F_T = 216;
+		static final int R_S_I_G_N_E_D_S_H_I_F_T = 216;
 
-		static final int SHIFT_EXPRESSION = 210;
+		static final int R_U_N_S_I_G_N_E_D_S_H_I_F_T = 215;
 
-		static final int SHIFT_EXPRESSION_2 = 214;
+		static final int SHIFT_EXPRESSION = 209;
 
-		static final int SHIFT_EXPRESSION_2_1 = 215;
+		static final int SHIFT_EXPRESSION_2 = 213;
 
-		static final int SINGLE_ELEMENT_ANNOTATION = 328;
+		static final int SHIFT_EXPRESSION_2_1 = 214;
 
-		static final int STATEMENT = 273;
+		static final int SINGLE_ELEMENT_ANNOTATION = 327;
 
-		static final int STATEMENTS = 31;
+		static final int STATEMENT = 272;
 
-		static final int STATEMENTS_1 = 146;
+		static final int STATEMENTS = 30;
 
-		static final int STATEMENTS_1_1 = 147;
+		static final int STATEMENTS_1 = 145;
 
-		static final int STATEMENTS_1_1_2_1 = 148;
+		static final int STATEMENTS_1_1 = 146;
 
-		static final int STATEMENTS_1_1_2_2 = 149;
+		static final int STATEMENTS_1_1_2_1 = 147;
 
-		static final int STATEMENTS_ENTRY = 30;
+		static final int STATEMENTS_1_1_2_2 = 148;
 
-		static final int STATEMENT_1 = 274;
+		static final int STATEMENTS_ENTRY = 29;
 
-		static final int STATEMENT_EXPRESSION = 293;
+		static final int STATEMENT_1 = 273;
 
-		static final int STATEMENT_EXPRESSION_LIST = 305;
+		static final int STATEMENT_EXPRESSION = 292;
 
-		static final int STATEMENT_EXPRESSION_LIST_2 = 306;
+		static final int STATEMENT_EXPRESSION_LIST = 304;
 
-		static final int SWITCH_ENTRY = 295;
+		static final int STATEMENT_EXPRESSION_LIST_2 = 305;
 
-		static final int SWITCH_ENTRY_1 = 296;
+		static final int SWITCH_ENTRY = 294;
 
-		static final int SWITCH_STATEMENT = 279;
+		static final int SWITCH_ENTRY_1 = 295;
 
-		static final int SWITCH_STATEMENT_6 = 294;
+		static final int SWITCH_STATEMENT = 278;
 
-		static final int SYNCHRONIZED_STATEMENT = 288;
+		static final int SWITCH_STATEMENT_6 = 293;
 
-		static final int THROWS_CLAUSE = 126;
+		static final int SYNCHRONIZED_STATEMENT = 287;
 
-		static final int THROWS_CLAUSE_3 = 136;
+		static final int THROWS_CLAUSE = 125;
 
-		static final int THROW_STATEMENT = 287;
+		static final int THROWS_CLAUSE_3 = 135;
 
-		static final int TRY_STATEMENT = 289;
+		static final int THROW_STATEMENT = 286;
 
-		static final int TRY_STATEMENT_2 = 310;
+		static final int TRY_STATEMENT = 288;
 
-		static final int TRY_STATEMENT_2_1_3 = 312;
+		static final int TRY_STATEMENT_2 = 309;
 
-		static final int TRY_STATEMENT_2_1_4 = 314;
+		static final int TRY_STATEMENT_2_1_3 = 311;
 
-		static final int TRY_STATEMENT_2_2_2 = 315;
+		static final int TRY_STATEMENT_2_1_4 = 313;
 
-		static final int TRY_STATEMENT_2_2_2_1_2 = 316;
+		static final int TRY_STATEMENT_2_2_2 = 314;
 
-		static final int TYPE = 37;
+		static final int TRY_STATEMENT_2_2_2_1_2 = 315;
 
-		static final int TYPE_1 = 150;
+		static final int TYPE = 36;
 
-		static final int TYPE_1_1_2 = 152;
+		static final int TYPE_1 = 149;
 
-		static final int TYPE_1_2_2 = 155;
+		static final int TYPE_1_1_2 = 151;
 
-		static final int TYPE_ARGUMENT = 166;
+		static final int TYPE_1_2_2 = 154;
 
-		static final int TYPE_ARGUMENTS = 142;
+		static final int TYPE_ARGUMENT = 165;
 
-		static final int TYPE_ARGUMENTS_2 = 163;
+		static final int TYPE_ARGUMENTS = 141;
 
-		static final int TYPE_ARGUMENTS_OR_DIAMOND = 160;
+		static final int TYPE_ARGUMENTS_2 = 162;
 
-		static final int TYPE_ARGUMENTS_OR_DIAMOND_2 = 165;
+		static final int TYPE_ARGUMENTS_OR_DIAMOND = 159;
 
-		static final int TYPE_ARGUMENT_2 = 168;
+		static final int TYPE_ARGUMENTS_OR_DIAMOND_2 = 164;
 
-		static final int TYPE_ARGUMENT_LIST = 164;
+		static final int TYPE_ARGUMENT_2 = 167;
 
-		static final int TYPE_ARGUMENT_LIST_2_2 = 167;
+		static final int TYPE_ARGUMENT_LIST = 163;
 
-		static final int TYPE_BOUNDS = 99;
+		static final int TYPE_ARGUMENT_LIST_2_2 = 166;
 
-		static final int TYPE_BOUNDS_2 = 100;
+		static final int TYPE_BOUNDS = 98;
 
-		static final int TYPE_BOUNDS_2_2_2 = 101;
+		static final int TYPE_BOUNDS_2 = 99;
 
-		static final int TYPE_DECL = 9;
+		static final int TYPE_BOUNDS_2_2_2 = 100;
 
-		static final int TYPE_DECLS = 46;
+		static final int TYPE_DECL = 8;
 
-		static final int TYPE_DECLS_1 = 50;
+		static final int TYPE_DECLS = 45;
 
-		static final int TYPE_DECL_1 = 57;
+		static final int TYPE_DECLS_1 = 49;
 
-		static final int TYPE_DECL_1_2_2 = 58;
+		static final int TYPE_DECL_1 = 56;
 
-		static final int TYPE_DECL_ENTRY = 8;
+		static final int TYPE_DECL_1_2_2 = 57;
 
-		static final int TYPE_ENTRY = 36;
+		static final int TYPE_DECL_ENTRY = 7;
 
-		static final int TYPE_PARAMETER = 29;
+		static final int TYPE_ENTRY = 35;
 
-		static final int TYPE_PARAMETERS = 64;
+		static final int TYPE_PARAMETER = 28;
 
-		static final int TYPE_PARAMETERS_2 = 96;
+		static final int TYPE_PARAMETERS = 63;
 
-		static final int TYPE_PARAMETERS_2_2_2 = 97;
+		static final int TYPE_PARAMETERS_2 = 95;
 
-		static final int TYPE_PARAMETER_3 = 98;
+		static final int TYPE_PARAMETERS_2_2_2 = 96;
 
-		static final int TYPE_PARAMETER_ENTRY = 28;
+		static final int TYPE_PARAMETER_3 = 97;
 
-		static final int UNARY_EXPRESSION = 221;
+		static final int TYPE_PARAMETER_ENTRY = 27;
 
-		static final int UNARY_EXPRESSION_1 = 224;
+		static final int UNARY_EXPRESSION = 220;
 
-		static final int UNARY_EXPRESSION_1_2_1 = 226;
+		static final int UNARY_EXPRESSION_1 = 223;
 
-		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS = 227;
+		static final int UNARY_EXPRESSION_1_2_1 = 225;
 
-		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1 = 229;
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS = 226;
 
-		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1_1_1 = 230;
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1 = 228;
 
-		static final int VARIABLE_DECL = 110;
+		static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1_1_1 = 229;
 
-		static final int VARIABLE_DECLARATOR = 111;
+		static final int VARIABLE_DECL = 109;
 
-		static final int VARIABLE_DECLARATORS = 109;
+		static final int VARIABLE_DECLARATOR = 110;
 
-		static final int VARIABLE_DECLARATORS_2 = 112;
+		static final int VARIABLE_DECLARATORS = 108;
 
-		static final int VARIABLE_DECLARATOR_2 = 114;
+		static final int VARIABLE_DECLARATORS_2 = 111;
 
-		static final int VARIABLE_DECLARATOR_ID = 113;
+		static final int VARIABLE_DECLARATOR_2 = 113;
 
-		static final int VARIABLE_DECL_EXPRESSION = 292;
+		static final int VARIABLE_DECLARATOR_ID = 112;
 
-		static final int VARIABLE_INITIALIZER = 115;
+		static final int VARIABLE_DECL_EXPRESSION = 291;
 
-		static final int VARIABLE_INITIALIZER_1 = 117;
+		static final int VARIABLE_INITIALIZER = 114;
 
-		static final int WHILE_STATEMENT = 281;
+		static final int VARIABLE_INITIALIZER_1 = 116;
 
-		static final int WILDCARD = 169;
+		static final int WHILE_STATEMENT = 280;
 
-		static final int WILDCARD_2 = 170;
+		static final int WILDCARD = 168;
 
-		static final int WILDCARD_2_1 = 171;
+		static final int WILDCARD_2 = 169;
+
+		static final int WILDCARD_2_1 = 170;
 
 		static final NonTerminal CompilationUnitEntry_1 = nonTerminal("CompilationUnitEntry_1", COMPILATION_UNIT);
 
