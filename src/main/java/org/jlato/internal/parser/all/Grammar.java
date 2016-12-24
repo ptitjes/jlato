@@ -44,8 +44,8 @@ public abstract class Grammar {
 		return stateCount++;
 	}
 
-	GrammarState newGrammarState(Expansion location) {
-		return new GrammarState(newStateId(), location.name);
+	GrammarState newGrammarState(Expansion expansion) {
+		return new GrammarState(newStateId(), expansion.name);
 	}
 
 	protected void addProduction(int nonTerminal, Expansion expansion, boolean entryPoint) {

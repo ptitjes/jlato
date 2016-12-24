@@ -32,24 +32,25 @@ public class GrammarState {
 
 	public final int id;
 	public final String name;
-	public final boolean end;
-	public final int nonTerminal;
-	public final Map<Integer, GrammarState> choiceTransitions = new HashMap<Integer, GrammarState>();
-	public final Map<Integer, GrammarState> nonTerminalTransitions = new HashMap<Integer, GrammarState>();
-	public final Map<Integer, GrammarState> terminalTransitions = new HashMap<Integer, GrammarState>();
+
+	public final int nonTerminalEnd;
+
+	public final GrammarState[] choiceTransitions = new GrammarState[17];
+
+	public int nonTerminalTransition = -1;
+	public GrammarState nonTerminalTransitionEnd;
+
+	public int terminalTransition = -1;
+	public GrammarState terminalTransitionEnd;
 
 	public GrammarState(int id, String name) {
-		this.id = id;
-		this.name = name;
-		this.nonTerminal = -1;
-		this.end = false;
+		this(id, name, -1);
 	}
 
-	public GrammarState(int id, String name, int nonTerminal) {
+	public GrammarState(int id, String name, int nonTerminalEnd) {
 		this.id = id;
 		this.name = name;
-		this.nonTerminal = nonTerminal;
-		this.end = true;
+		this.nonTerminalEnd = nonTerminalEnd;
 	}
 
 	@Override
@@ -68,23 +69,25 @@ public class GrammarState {
 	}
 
 	void addChoice(int index, GrammarState target) {
-		choiceTransitions.put(index, target);
+		choiceTransitions[index] = target;
 	}
 
 	void setNonTerminal(int symbol, GrammarState target) {
-		if (nonTerminalTransitions.containsKey(symbol))
+		if (nonTerminalTransition != -1)
 			throw new IllegalStateException("Already defined non-terminal " + symbol + " transition for state " + name);
-		nonTerminalTransitions.put(symbol, target);
+		nonTerminalTransition = symbol;
+		nonTerminalTransitionEnd = target;
 	}
 
 	void setTerminal(int tokenType, GrammarState target) {
-		if (terminalTransitions.containsKey(tokenType))
+		if (terminalTransition != -1)
 			throw new IllegalStateException("Already defined terminal " + tokenType + " transition for state " + name);
-		terminalTransitions.put(tokenType, target);
+		terminalTransition = tokenType;
+		terminalTransitionEnd = target;
 	}
 
 	public GrammarState match(Token token) {
-		return terminalTransitions.get(token.kind);
+		return terminalTransition == token.kind ? terminalTransitionEnd : null;
 	}
 
 	@Override
@@ -92,23 +95,18 @@ public class GrammarState {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("(" + name + ")");
-		if (!choiceTransitions.isEmpty()) {
-			builder.append(" ");
-			for (Map.Entry<Integer, GrammarState> entry : choiceTransitions.entrySet()) {
-				builder.append("[c:" + entry.getKey() + "->" + entry.getValue().name + "]");
-			}
+		builder.append(" ");
+		for (int choice = 0; choice < choiceTransitions.length; choice++) {
+			GrammarState target = choiceTransitions[choice];
+			if (target != null) builder.append("[c:" + choice + "->" + target.name + "]");
 		}
-		if (!terminalTransitions.isEmpty()) {
+		if (terminalTransition != -1) {
 			builder.append(" ");
-			for (Map.Entry<Integer, GrammarState> entry : terminalTransitions.entrySet()) {
-				builder.append("[tok:" + TokenType.tokenImage[entry.getKey()] + "->" + entry.getValue().name + "]");
-			}
+			builder.append("[tok:" + TokenType.tokenImage[terminalTransition] + "->" + terminalTransitionEnd.name + "]");
 		}
-		if (!nonTerminalTransitions.isEmpty()) {
+		if (nonTerminalTransition != -1) {
 			builder.append(" ");
-			for (Map.Entry<Integer, GrammarState> entry : nonTerminalTransitions.entrySet()) {
-				builder.append("[nt:" + entry.getKey() + "->" + entry.getValue().name + "]");
-			}
+			builder.append("[nt:" + nonTerminalTransition + "->" + nonTerminalTransitionEnd.name + "]");
 		}
 
 		return builder.toString();

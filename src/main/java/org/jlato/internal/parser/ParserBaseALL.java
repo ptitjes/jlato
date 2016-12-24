@@ -305,13 +305,13 @@ public abstract class ParserBaseALL extends ParserBase {
 		newConfigurations.add(configuration);
 
 		// Return from non-terminal call
-		if (state.end) {
+		int nonTerminalEnd = state.nonTerminalEnd;
+		if (nonTerminalEnd != -1) {
 			// SLL wildcard call stack
 			if (callStack == CallStack.WILDCARD) {
-				int nonTerminal = state.nonTerminal;
 
 				// End states
-				Set<GrammarState> useEndStates = grammar.getUseEndStates(nonTerminal);
+				Set<GrammarState> useEndStates = grammar.getUseEndStates(nonTerminalEnd);
 				if (useEndStates != null) {
 					for (GrammarState useEndState : useEndStates) {
 						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
@@ -320,7 +320,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				}
 
 				// Specific end states for the entry point
-				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminal);
+				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminalEnd);
 				if (useEndStates != null) {
 					for (GrammarState useEndState : useEndStates) {
 						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
@@ -358,18 +358,20 @@ public abstract class ParserBaseALL extends ParserBase {
 			}
 		} else {
 			// Handle choice transitions
-			for (Map.Entry<Integer, GrammarState> entry : state.choiceTransitions.entrySet()) {
-				int realPrediction = prediction == -1 ? entry.getKey() : prediction;
-
-				Configuration newConfiguration = new Configuration(entry.getValue(), realPrediction, callStack);
-				closureOf(newConfiguration, newConfigurations, busy);
-			}
-			// Handle non-terminal call
-			for (Map.Entry<Integer, GrammarState> entry : state.nonTerminalTransitions.entrySet()) {
-				GrammarState target = entry.getValue();
+			for (int choice = 0; choice < state.choiceTransitions.length; choice++) {
+				GrammarState target = state.choiceTransitions[choice];
 				if (target == null) continue;
 
-				Integer symbol = entry.getKey();
+				int realPrediction = prediction == -1 ? choice : prediction;
+
+				Configuration newConfiguration = new Configuration(target, realPrediction, callStack);
+				closureOf(newConfiguration, newConfigurations, busy);
+			}
+
+			// Handle non-terminal call
+			int symbol = state.nonTerminalTransition;
+			GrammarState target = state.nonTerminalTransitionEnd;
+			if (symbol != -1 && target != null) {
 				GrammarState start = grammar.getStartState(symbol);
 
 				Configuration newConfiguration = new Configuration(start, prediction, callStack.push(target));
