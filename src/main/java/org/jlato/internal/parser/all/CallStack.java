@@ -20,7 +20,6 @@
 package org.jlato.internal.parser.all;
 
 import com.github.andrewoma.dexx.collection.Builder;
-import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Set;
 import com.github.andrewoma.dexx.collection.Sets;
 
@@ -194,7 +193,7 @@ public class CallStack {
 
 		@Override
 		public String toString() {
-			return "(" + head.location.name + "):" + tails.toString();
+			return "(" + head.name + "):" + tails.toString();
 		}
 	}
 

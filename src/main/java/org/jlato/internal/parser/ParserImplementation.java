@@ -35,6 +35,8 @@ import org.jlato.tree.expr.BinaryOp;
 import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
 
+import static org.jlato.internal.parser.all.GrammarProduction.*;
+
 /**
  * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */

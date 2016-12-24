@@ -21,7 +21,6 @@ package org.jlato.internal.parser;
 
 import org.jlato.internal.parser.all.*;
 
-import java.io.Reader;
 import java.util.*;
 
 /**
@@ -77,7 +76,7 @@ public abstract class ParserBaseALL extends ParserBase {
 		}
 	}
 
-	protected void pushCallStack(Grammar.NonTerminal ntCall) {
+	protected void pushCallStack(GrammarProduction.NonTerminal ntCall) {
 		if (forceLL) return;
 
 		GrammarState state = ntCall.end();
