@@ -38,7 +38,7 @@ import org.jlato.tree.type.Primitive;
 /**
  * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */
-class ParserImplementation extends ParserNewBase {
+class ParserImplementation extends ParserBaseALL {
 
 	protected Grammar initializeGrammar() {
 		return new JavaGrammar();

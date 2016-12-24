@@ -82,8 +82,6 @@ public abstract class ParserBase {
 			runStack.clear();
 			runStack.push(Vector.<WTokenRun>empty());
 		}
-
-		resetStats();
 	}
 
 	// Parser interface
@@ -267,38 +265,21 @@ public abstract class ParserBase {
 
 	// Base parse methods
 
-	protected int memoizedProductionCount() {
-		return 0;
-	}
-
-	private final int memoizedProductionCount = memoizedProductionCount();
-	private final short[] emptyMatches = new short[memoizedProductionCount()];
-
-	{
-		for (int i = 0; i < memoizedProductionCount; i++) {
-			emptyMatches[i] = -2;
-		}
-	}
-
 	static class LookaheadCell {
 		public Token token;
 		public WTokenRun whitespace;
-		public short[] matches;
 	}
 
 	private CircularBuffer<LookaheadCell> lookaheadCells = new CircularBuffer<LookaheadCell>(20, 10) {
 		@Override
 		protected LookaheadCell createCell() {
-			LookaheadCell cell = new LookaheadCell();
-			cell.matches = new short[memoizedProductionCount];
-			return cell;
+			return new LookaheadCell();
 		}
 
 		@Override
 		protected void clearCell(LookaheadCell cell) {
 			cell.token = null;
 			cell.whitespace = null;
-			System.arraycopy(emptyMatches, 0, cell.matches, 0, memoizedProductionCount);
 		}
 	};
 	protected int matchLookahead;
@@ -375,8 +356,6 @@ public abstract class ParserBase {
 			lastProcessedToken--;
 		}
 
-		if (STATISTICS) validateMatches();
-
 		Token token = getToken(0);
 		if (token.kind != tokenType) {
 			String found = token.kind == TokenType.EOF ? "<EOF>" : token.image;
@@ -390,177 +369,21 @@ public abstract class ParserBase {
 	}
 
 	protected int match(int lookahead, int tokenType) {
-		if (STATISTICS) {
-			historizeMatches(new int[]{tokenType});
-			matchCount++;
-		}
-
 		return getToken(lookahead).kind == tokenType ? lookahead + 1 : -1;
 	}
 
 	protected int match(int lookahead, int... tokenTypes) {
-		if (STATISTICS) historizeMatches(tokenTypes);
-
 		for (int tokenType : tokenTypes) {
-			if (STATISTICS) matchCount++;
-
 			if (getToken(lookahead).kind == tokenType) return lookahead + 1;
 		}
 		return -1;
-	}
-
-	protected int memoizeMatch(int lookahead, int productionNumber, int match) {
-		advance(lookahead);
-		lookaheadCells.get(lookahead).matches[productionNumber] = match == -1 ? -1 : (short) (match - lookahead);
-		return match;
-	}
-
-	protected int memoizedMatch(int lookahead, int productionNumber) {
-		advance(lookahead);
-		short match = lookaheadCells.get(lookahead).matches[productionNumber];
-
-		if (STATISTICS) {
-			if (match > -2) hit(productionNumber);
-			else miss(productionNumber);
-			call(productionNumber);
-		}
-
-		return match < 0 ? match : lookahead + match;
-	}
-
-	private final static boolean STATISTICS = false;
-
-	private void resetStats() {
-		matchCount = 0;
-	}
-
-	private int totalMatchCount = 0;
-	private int matchCount = 0;
-	private int maxMatchCount = -1;
-	private int[] allMatchCounts = new int[0];
-
-	private List<String> matchHistory = new LinkedList<String>();
-
-	protected void historize(String matchMethod) {
-		matchHistory.add(matchMethod);
-	}
-
-	protected void historizeMatches(int[] matches) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("  >> ");
-		for (int match : matches) {
-			builder.append(TokenType.tokenImage[match] + " ");
-		}
-		historize(builder.toString());
-	}
-
-	protected void validateMatches() {
-		// Stats
-		if (matchCount == 505) {
-			System.out.println();
-			Token token = lookaheadCells.get(0).token;
-			System.out.println("At " + token.beginLine + ":" + token.beginColumn);
-			System.out.print(matchCount + ": ");
-			dumpTokens();
-			dumpMatchHistory();
-		}
-
-		matchHistory.clear();
-
-		if (matchCount > maxMatchCount) {
-			int[] newMatchCounts = new int[matchCount + 1];
-			System.arraycopy(allMatchCounts, 0, newMatchCounts, 0, maxMatchCount + 1);
-			allMatchCounts = newMatchCounts;
-			maxMatchCount = matchCount;
-		}
-		allMatchCounts[matchCount]++;
-		totalMatchCount += matchCount;
-		matchCount = 0;
-	}
-
-	private void dumpMatchHistory() {
-		int indent = 0;
-		for (String matches : matchHistory) {
-			if (matches.startsWith("Out")) indent--;
-			System.out.println(indent(indent) + matches);
-			if (matches.startsWith("In")) indent++;
-		}
-	}
-
-	private String indent(int indent) {
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < indent; i++) {
-			builder.append(" ");
-		}
-		return builder.toString();
-	}
-
-	private void dumpTokens() {
-		int count = lookaheadCells.size();
-		for (int i = 0; i < count; i++) {
-			System.out.print(lookaheadCells.get(i).token.toString() + " ");
-		}
-		System.out.println();
-	}
-
-	private void hit(int productionNumber) {
-		Integer hits = hitStats.get(productionNumber);
-		hitStats.put(productionNumber, hits == null ? 1 : hits + 1);
-	}
-
-	private void miss(int productionNumber) {
-		Integer misses = missStats.get(productionNumber);
-		missStats.put(productionNumber, misses == null ? 1 : misses + 1);
-	}
-
-	private void call(int productionNumber) {
-		Integer calls = callStats.get(productionNumber);
-		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
 	}
 
 	public void clearStats() {
 	}
 
 	public void printStats() {
-		if (STATISTICS) {
-			System.out.println("Total match count: " + totalMatchCount);
-			for (int i = 0; i <= maxMatchCount; i++) {
-				int count = allMatchCounts[i];
-				if (count != 0) System.out.println("" + i + " matches: " + count + " times");
-			}
-
-			java.util.ArrayList<Map.Entry<Integer, Integer>> hits = new java.util.ArrayList<Map.Entry<Integer, Integer>>(hitStats.entrySet());
-			java.util.ArrayList<Map.Entry<Integer, Integer>> misses = new java.util.ArrayList<Map.Entry<Integer, Integer>>(missStats.entrySet());
-			Comparator<Map.Entry<Integer, Integer>> comparator = new Comparator<Map.Entry<Integer, Integer>>() {
-				@Override
-				public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-					return -o1.getValue().compareTo(o2.getValue());
-				}
-			};
-			Collections.sort(hits, comparator);
-			Collections.sort(misses, comparator);
-
-			System.out.println("Productions covered: " + callStats.size());
-			System.out.println("Hits: ");
-			for (Map.Entry<Integer, Integer> hit : hits) {
-				System.out.println("Production " + hit.getKey() +
-						" - hits: " + hit.getValue() +
-						" - misses: " + missStats.get(hit.getKey()) +
-						" - calls: " + callStats.get(hit.getKey()));
-			}
-			System.out.println("Misses: ");
-			for (Map.Entry<Integer, Integer> miss : misses) {
-				System.out.println("Production " + miss.getKey() +
-						" - misses: " + miss.getValue() +
-						" - hits: " + hitStats.get(miss.getKey()) +
-						" - calls: " + callStats.get(miss.getKey()));
-			}
-		}
 	}
-
-	public Map<Integer, Integer> hitStats = new java.util.HashMap<Integer, Integer>();
-	public Map<Integer, Integer> missStats = new java.util.HashMap<Integer, Integer>();
-	public Map<Integer, Integer> callStats = new java.util.HashMap<Integer, Integer>();
 
 	protected ParseException produceParseException(int... expectedTokenTypes) {
 		String eol = System.getProperty("line.separator", "\n");
@@ -615,20 +438,6 @@ public abstract class ParserBase {
 
 		public ByRef(T value) {
 			this.value = value;
-		}
-	}
-
-	boolean isLambda(int initialLookahead) {
-		for (int lookahead = initialLookahead; ; lookahead++) {
-			int kind = getToken(lookahead).kind;
-			switch (kind) {
-				case LPAREN:
-					// ( after ( => Expr
-					return false;
-				case RPAREN:
-					if (lookahead == initialLookahead) return true;
-					else return getToken(lookahead + 1).kind == ARROW;
-			}
 		}
 	}
 

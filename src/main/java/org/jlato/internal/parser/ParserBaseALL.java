@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * @author Didier Villevalois
  */
-public abstract class ParserNewBase extends ParserBase {
+public abstract class ParserBaseALL extends ParserBase {
 
 	private static final boolean CACHE_STATS = false;
 	private static final boolean MERGE_STATS = false;
