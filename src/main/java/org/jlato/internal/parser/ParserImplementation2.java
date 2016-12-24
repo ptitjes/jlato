@@ -2557,6 +2557,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException {
 		BUTree<SCompilationUnit> ret;
+		int __token;
 		entryPoint = JavaGrammar.COMPILATION_UNIT_ENTRY;
 		pushCallStack(JavaGrammar.CompilationUnitEntry_1);
 		ret = parseCompilationUnit();
@@ -2572,6 +2573,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException {
 		BUTree<SPackageDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.PACKAGE_DECL_ENTRY;
 		pushCallStack(JavaGrammar.PackageDeclEntry_1);
 		ret = parsePackageDecl();
@@ -2590,6 +2592,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SImportDecl> parseImportDeclEntry() throws ParseException {
 		BUTree<SImportDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.IMPORT_DECL_ENTRY;
 		pushCallStack(JavaGrammar.ImportDeclEntry_1);
 		ret = parseImportDecl();
@@ -2608,6 +2611,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException {
 		BUTree<? extends STypeDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.TYPE_DECL_ENTRY;
 		pushCallStack(JavaGrammar.TypeDeclEntry_1);
 		ret = parseTypeDecl();
@@ -2626,6 +2630,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.MEMBER_DECL_ENTRY;
 		pushCallStack(JavaGrammar.MemberDeclEntry_1);
 		ret = parseClassOrInterfaceBodyDecl(typeKind);
@@ -2644,6 +2649,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException {
 		BUTree<? extends SMemberDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.ANNOTATION_MEMBER_DECL_ENTRY;
 		pushCallStack(JavaGrammar.AnnotationMemberDeclEntry_1);
 		ret = parseAnnotationTypeBodyDecl();
@@ -2662,6 +2668,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SNodeList> parseModifiersEntry() throws ParseException {
 		BUTree<SNodeList> ret;
+		int __token;
 		entryPoint = JavaGrammar.MODIFIERS_ENTRY;
 		pushCallStack(JavaGrammar.ModifiersEntry_1);
 		ret = parseModifiers();
@@ -2680,6 +2687,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SNodeList> parseAnnotationsEntry() throws ParseException {
 		BUTree<SNodeList> ret;
+		int __token;
 		entryPoint = JavaGrammar.ANNOTATIONS_ENTRY;
 		pushCallStack(JavaGrammar.AnnotationsEntry_1);
 		ret = parseAnnotations();
@@ -2701,6 +2709,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SMethodDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.METHOD_DECL_ENTRY;
 		run();
 		pushCallStack(JavaGrammar.MethodDeclEntry_1);
@@ -2726,6 +2735,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SFieldDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.FIELD_DECL_ENTRY;
 		run();
 		pushCallStack(JavaGrammar.FieldDeclEntry_1);
@@ -2751,6 +2761,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SAnnotationMemberDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.ANNOTATION_ELEMENT_DECL_ENTRY;
 		run();
 		pushCallStack(JavaGrammar.AnnotationElementDeclEntry_1);
@@ -2773,6 +2784,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException {
 		BUTree<SEnumConstantDecl> ret;
+		int __token;
 		entryPoint = JavaGrammar.ENUM_CONSTANT_DECL_ENTRY;
 		pushCallStack(JavaGrammar.EnumConstantDeclEntry_1);
 		ret = parseEnumConstantDecl();
@@ -2791,6 +2803,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException {
 		BUTree<SFormalParameter> ret;
+		int __token;
 		entryPoint = JavaGrammar.FORMAL_PARAMETER_ENTRY;
 		pushCallStack(JavaGrammar.FormalParameterEntry_1);
 		ret = parseFormalParameter();
@@ -2809,6 +2822,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException {
 		BUTree<STypeParameter> ret;
+		int __token;
 		entryPoint = JavaGrammar.TYPE_PARAMETER_ENTRY;
 		pushCallStack(JavaGrammar.TypeParameterEntry_1);
 		ret = parseTypeParameter();
@@ -2827,6 +2841,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SNodeList> parseStatementsEntry() throws ParseException {
 		BUTree<SNodeList> ret;
+		int __token;
 		entryPoint = JavaGrammar.STATEMENTS_ENTRY;
 		pushCallStack(JavaGrammar.StatementsEntry_1);
 		ret = parseStatements(false);
@@ -2845,6 +2860,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException {
 		BUTree<? extends SStmt> ret;
+		int __token;
 		entryPoint = JavaGrammar.BLOCK_STATEMENT_ENTRY;
 		pushCallStack(JavaGrammar.BlockStatementEntry_1);
 		ret = parseBlockStatement();
@@ -2863,6 +2879,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseExpressionEntry() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		entryPoint = JavaGrammar.EXPRESSION_ENTRY;
 		pushCallStack(JavaGrammar.ExpressionEntry_1);
 		ret = parseExpression();
@@ -2884,6 +2901,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SType> parseTypeEntry() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> ret;
+		int __token;
 		entryPoint = JavaGrammar.TYPE_ENTRY;
 		run();
 		pushCallStack(JavaGrammar.TypeEntry_1);
@@ -2906,6 +2924,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException {
 		BUTree<SQualifiedName> ret;
+		int __token;
 		entryPoint = JavaGrammar.QUALIFIED_NAME_ENTRY;
 		pushCallStack(JavaGrammar.QualifiedNameEntry_1);
 		ret = parseQualifiedName();
@@ -2924,6 +2943,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SName> parseNameEntry() throws ParseException {
 		BUTree<SName> ret;
+		int __token;
 		entryPoint = JavaGrammar.NAME_ENTRY;
 		pushCallStack(JavaGrammar.NameEntry_1);
 		ret = parseName();
@@ -2938,6 +2958,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		terminal(EOF)
 	) */
 	protected void parseEpilog() throws ParseException {
+		int __token;
 		parse(TokenType.EOF);
 	}
 
@@ -2947,6 +2968,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SNodeList> parseNodeListVar() throws ParseException {
 		Token id;
+		int __token;
 		id = parse(TokenType.NODE_LIST_VARIABLE);
 		return makeVar(id);
 	}
@@ -2957,6 +2979,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SName> parseNodeVar() throws ParseException {
 		Token id;
+		int __token;
 		id = parse(TokenType.NODE_VARIABLE);
 		return makeVar(id);
 	}
@@ -2977,7 +3000,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> imports;
 		BUTree<SNodeList> types;
 		BUTree<SCompilationUnit> compilationUnit;
+		int __token;
 		run();
+		__token = getToken(0).kind;
 		if (predict(JavaGrammar.COMPILATION_UNIT_1) == 1) {
 			pushCallStack(JavaGrammar.CompilationUnit_1_1);
 			packageDecl = parsePackageDecl();
@@ -3007,6 +3032,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SQualifiedName> name;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.PackageDecl_1);
 		annotations = parseAnnotations();
@@ -3029,11 +3055,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseImportDecls() throws ParseException {
 		BUTree<SNodeList> imports = emptyList();
 		BUTree<SImportDecl> importDecl = null;
-		while (match(0, TokenType.IMPORT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (__token == TokenType.IMPORT) {
 			pushCallStack(JavaGrammar.ImportDecls_1_1);
 			importDecl = parseImportDecl();
 			popCallStack();
 			imports = append(imports, importDecl);
+			__token = getToken(0).kind;
 		}
 		return imports;
 	}
@@ -3058,16 +3087,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SQualifiedName> name;
 		boolean isStatic = false;
 		boolean isAsterisk = false;
+		int __token;
 		run();
 		parse(TokenType.IMPORT);
-		if (match(0, TokenType.STATIC) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.STATIC) {
 			parse(TokenType.STATIC);
 			isStatic = true;
 		}
 		pushCallStack(JavaGrammar.ImportDecl_3);
 		name = parseQualifiedName();
 		popCallStack();
-		if (match(0, TokenType.DOT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.DOT) {
 			parse(TokenType.DOT);
 			parse(TokenType.STAR);
 			isAsterisk = true;
@@ -3086,11 +3118,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
-		while (match(0, TokenType.ABSTRACT, TokenType.AT, TokenType.CLASS, TokenType.DEFAULT, TokenType.ENUM, TokenType.FINAL, TokenType.INTERFACE, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86)) != 0)) {
 			pushCallStack(JavaGrammar.TypeDecls_1_1);
 			typeDecl = parseTypeDecl();
 			popCallStack();
 			types = append(types, typeDecl);
+			__token = getToken(0).kind;
 		}
 		return types;
 	}
@@ -3157,65 +3192,54 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseModifiers() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
+		int __token;
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.MODIFIERS_1) == 1) {
-			switch (getToken(0).kind) {
-				case TokenType.PUBLIC:
-					parse(TokenType.PUBLIC);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					break;
-				case TokenType.PROTECTED:
-					parse(TokenType.PROTECTED);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					break;
-				case TokenType.PRIVATE:
-					parse(TokenType.PRIVATE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					break;
-				case TokenType.ABSTRACT:
-					parse(TokenType.ABSTRACT);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					break;
-				case TokenType.DEFAULT:
-					parse(TokenType.DEFAULT);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-					break;
-				case TokenType.STATIC:
-					parse(TokenType.STATIC);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					break;
-				case TokenType.FINAL:
-					parse(TokenType.FINAL);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					break;
-				case TokenType.TRANSIENT:
-					parse(TokenType.TRANSIENT);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					break;
-				case TokenType.VOLATILE:
-					parse(TokenType.VOLATILE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					break;
-				case TokenType.SYNCHRONIZED:
-					parse(TokenType.SYNCHRONIZED);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					break;
-				case TokenType.NATIVE:
-					parse(TokenType.NATIVE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					break;
-				case TokenType.STRICTFP:
-					parse(TokenType.STRICTFP);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					break;
-				case TokenType.AT:
-					pushCallStack(JavaGrammar.Modifiers_1_1_13_1);
-					ann = parseAnnotation();
-					popCallStack();
-					modifiers = append(modifiers, ann);
-					break;
-				default:
-					throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.DEFAULT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.Modifiers_1_1_13_1);
+				ann = parseAnnotation();
+				popCallStack();
+				modifiers = append(modifiers, ann);
+			} else if (__token == TokenType.STRICTFP) {
+				parse(TokenType.STRICTFP);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+			} else if (__token == TokenType.NATIVE) {
+				parse(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				parse(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.VOLATILE) {
+				parse(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.TRANSIENT) {
+				parse(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.FINAL) {
+				parse(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.STATIC) {
+				parse(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.DEFAULT) {
+				parse(TokenType.DEFAULT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
+			} else if (__token == TokenType.ABSTRACT) {
+				parse(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.PRIVATE) {
+				parse(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.PROTECTED) {
+				parse(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PUBLIC) {
+				parse(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else
+				throw produceParseException(TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
+			__token = getToken(0).kind;
 		}
 		return modifiers;
 	}
@@ -3278,61 +3302,51 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
-		while (match(0, TokenType.ABSTRACT, TokenType.AT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE) != -1) {
-			switch (getToken(0).kind) {
-				case TokenType.PUBLIC:
-					parse(TokenType.PUBLIC);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					break;
-				case TokenType.PROTECTED:
-					parse(TokenType.PROTECTED);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					break;
-				case TokenType.PRIVATE:
-					parse(TokenType.PRIVATE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					break;
-				case TokenType.ABSTRACT:
-					parse(TokenType.ABSTRACT);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					break;
-				case TokenType.STATIC:
-					parse(TokenType.STATIC);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					break;
-				case TokenType.FINAL:
-					parse(TokenType.FINAL);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					break;
-				case TokenType.TRANSIENT:
-					parse(TokenType.TRANSIENT);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					break;
-				case TokenType.VOLATILE:
-					parse(TokenType.VOLATILE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					break;
-				case TokenType.SYNCHRONIZED:
-					parse(TokenType.SYNCHRONIZED);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					break;
-				case TokenType.NATIVE:
-					parse(TokenType.NATIVE);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					break;
-				case TokenType.STRICTFP:
-					parse(TokenType.STRICTFP);
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					break;
-				case TokenType.AT:
-					pushCallStack(JavaGrammar.ModifiersNoDefault_1_1_12_1);
-					ann = parseAnnotation();
-					popCallStack();
-					modifiers = append(modifiers, ann);
-					break;
-				default:
-					throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE);
-			}
+		int __token;
+		__token = getToken(0).kind;
+		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.ModifiersNoDefault_1_1_12_1);
+				ann = parseAnnotation();
+				popCallStack();
+				modifiers = append(modifiers, ann);
+			} else if (__token == TokenType.STRICTFP) {
+				parse(TokenType.STRICTFP);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+			} else if (__token == TokenType.NATIVE) {
+				parse(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				parse(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.VOLATILE) {
+				parse(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.TRANSIENT) {
+				parse(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.FINAL) {
+				parse(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.STATIC) {
+				parse(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.ABSTRACT) {
+				parse(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.PRIVATE) {
+				parse(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.PROTECTED) {
+				parse(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PUBLIC) {
+				parse(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else
+				throw produceParseException(TokenType.ABSTRACT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
+			__token = getToken(0).kind;
 		}
 		return modifiers;
 	}
@@ -3358,55 +3372,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.SEMICOLON:
-				parse(TokenType.SEMICOLON);
-				ret = dress(SEmptyTypeDecl.make());
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.CLASS:
-			case TokenType.DEFAULT:
-			case TokenType.ENUM:
-			case TokenType.FINAL:
-			case TokenType.INTERFACE:
-			case TokenType.NATIVE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOLATILE:
-				pushCallStack(JavaGrammar.TypeDecl_1_2_1);
-				modifiers = parseModifiers();
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeDecl_1_2_1);
+			modifiers = parseModifiers();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
+				ret = parseAnnotationTypeDecl(modifiers);
 				popCallStack();
-				switch (getToken(0).kind) {
-					case TokenType.CLASS:
-					case TokenType.INTERFACE:
-						pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
-						ret = parseClassOrInterfaceDecl(modifiers);
-						popCallStack();
-						break;
-					case TokenType.ENUM:
-						pushCallStack(JavaGrammar.TypeDecl_1_2_2_2);
-						ret = parseEnumDecl(modifiers);
-						popCallStack();
-						break;
-					case TokenType.AT:
-						pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
-						ret = parseAnnotationTypeDecl(modifiers);
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.AT, TokenType.CLASS, TokenType.ENUM, TokenType.INTERFACE);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.CLASS, TokenType.DEFAULT, TokenType.ENUM, TokenType.FINAL, TokenType.INTERFACE, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE);
-		}
+			} else if (__token == TokenType.ENUM) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_2);
+				ret = parseEnumDecl(modifiers);
+				popCallStack();
+			} else if (__token == TokenType.CLASS || __token == TokenType.INTERFACE) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
+				ret = parseClassOrInterfaceDecl(modifiers);
+				popCallStack();
+			} else
+				throw produceParseException(TokenType.CLASS, TokenType.ENUM, TokenType.INTERFACE, TokenType.AT);
+		} else if (__token == TokenType.SEMICOLON) {
+			parse(TokenType.SEMICOLON);
+			ret = dress(SEmptyTypeDecl.make());
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.CLASS, TokenType.DEFAULT, TokenType.ENUM, TokenType.FINAL, TokenType.INTERFACE, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT);
 		return ret;
 	}
 
@@ -3457,50 +3449,53 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> implementsClause = null;
 		BUTree<SNodeList> members;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
-		switch (getToken(0).kind) {
-			case TokenType.CLASS:
-				parse(TokenType.CLASS);
-				typeKind = TypeKind.Class;
-				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_2);
-				name = parseName();
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.INTERFACE) {
+			parse(TokenType.INTERFACE);
+			typeKind = TypeKind.Interface;
+			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
+			name = parseName();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.LT) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_3_1);
+				typeParams = parseTypeParameters();
 				popCallStack();
-				if (match(0, TokenType.LT) != -1) {
-					pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_3_1);
-					typeParams = parseTypeParameters();
-					popCallStack();
-				}
-				if (match(0, TokenType.EXTENDS) != -1) {
-					parse(TokenType.EXTENDS);
-					pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_4_2);
-					superClassType = parseAnnotatedQualifiedType();
-					popCallStack();
-				}
-				if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_1_5) == 1) {
-					pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_5_1);
-					implementsClause = parseImplementsList(typeKind, problem);
-					popCallStack();
-				}
-				break;
-			case TokenType.INTERFACE:
-				parse(TokenType.INTERFACE);
-				typeKind = TypeKind.Interface;
-				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
-				name = parseName();
+			}
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_2_4) == 1) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_4_1);
+				extendsClause = parseExtendsList();
 				popCallStack();
-				if (match(0, TokenType.LT) != -1) {
-					pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_3_1);
-					typeParams = parseTypeParameters();
-					popCallStack();
-				}
-				if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_2_4) == 1) {
-					pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_4_1);
-					extendsClause = parseExtendsList();
-					popCallStack();
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.CLASS, TokenType.INTERFACE);
-		}
+			}
+		} else if (__token == TokenType.CLASS) {
+			parse(TokenType.CLASS);
+			typeKind = TypeKind.Class;
+			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_2);
+			name = parseName();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.LT) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_3_1);
+				typeParams = parseTypeParameters();
+				popCallStack();
+			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.EXTENDS) {
+				parse(TokenType.EXTENDS);
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_4_2);
+				superClassType = parseAnnotatedQualifiedType();
+				popCallStack();
+			}
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_1_5) == 1) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_5_1);
+				implementsClause = parseImplementsList(typeKind, problem);
+				popCallStack();
+			}
+		} else
+			throw produceParseException(TokenType.CLASS, TokenType.INTERFACE);
 		pushCallStack(JavaGrammar.ClassOrInterfaceDecl_2);
 		members = parseClassOrInterfaceBody(typeKind);
 		popCallStack();
@@ -3534,31 +3529,29 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.EXTENDS);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.ExtendsList_2_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.AT:
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.ExtendsList_2_2_1);
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.ExtendsList_2_2_1);
+			cit = parseAnnotatedQualifiedType();
+			popCallStack();
+			ret = append(ret, cit);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.EXTENDS_LIST_2_2_2) == 1) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.ExtendsList_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
-				while (predict(JavaGrammar.EXTENDS_LIST_2_2_2) == 1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.ExtendsList_2_2_2_2);
-					cit = parseAnnotatedQualifiedType();
-					popCallStack();
-					ret = append(ret, cit);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE);
-		}
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ExtendsList_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -3588,33 +3581,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.IMPLEMENTS);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.ImplementsList_2_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.AT:
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.ImplementsList_2_2_1);
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.ImplementsList_2_2_1);
+			cit = parseAnnotatedQualifiedType();
+			popCallStack();
+			ret = append(ret, cit);
+			__token = getToken(0).kind;
+			while (__token == TokenType.COMMA) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.ImplementsList_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
-				while (match(0, TokenType.COMMA) != -1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.ImplementsList_2_2_2_2);
-					cit = parseAnnotatedQualifiedType();
-					popCallStack();
-					ret = append(ret, cit);
-				}
-				if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
+				__token = getToken(0).kind;
+			}
+			if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
 
-				break;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE);
-		}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ImplementsList_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -3661,55 +3652,45 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		boolean trailingComma = false;
 		BUTree<SNodeList> members = null;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
+		int __token;
 		parse(TokenType.ENUM);
 		pushCallStack(JavaGrammar.EnumDecl_2);
 		name = parseName();
 		popCallStack();
-		if (match(0, TokenType.IMPLEMENTS) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.IMPLEMENTS) {
 			pushCallStack(JavaGrammar.EnumDecl_3_1);
 			implementsClause = parseImplementsList(TypeKind.Enum, problem);
 			popCallStack();
 		}
 		parse(TokenType.LBRACE);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.EnumDecl_5_1_1_1);
-				constants = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.DEFAULT:
-			case TokenType.FINAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOLATILE:
-				pushCallStack(JavaGrammar.EnumDecl_5_1_2_1);
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.EnumDecl_5_1_2_1);
+			entry = parseEnumConstantDecl();
+			popCallStack();
+			constants = append(constants, entry);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.ENUM_DECL_5_1_2_2) == 1) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.EnumDecl_5_1_2_2_2);
 				entry = parseEnumConstantDecl();
 				popCallStack();
 				constants = append(constants, entry);
-				while (predict(JavaGrammar.ENUM_DECL_5_1_2_2) == 1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.EnumDecl_5_1_2_2_2);
-					entry = parseEnumConstantDecl();
-					popCallStack();
-					constants = append(constants, entry);
-				}
-				break;
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.EnumDecl_5_1_1_1);
+			constants = parseNodeListVar();
+			popCallStack();
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			pushCallStack(JavaGrammar.EnumDecl_7_2);
 			members = parseClassOrInterfaceBodyDecls(TypeKind.Enum);
@@ -3736,6 +3717,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
 		BUTree<SNodeList> classBody = null;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.EnumConstantDecl_1);
 		modifiers = parseModifiers();
@@ -3743,12 +3725,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.EnumConstantDecl_2);
 		name = parseName();
 		popCallStack();
-		if (match(0, TokenType.LPAREN) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LPAREN) {
 			pushCallStack(JavaGrammar.EnumConstantDecl_3_1);
 			args = parseArguments();
 			popCallStack();
 		}
-		if (match(0, TokenType.LBRACE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.EnumConstantDecl_4_1);
 			classBody = parseClassOrInterfaceBody(TypeKind.Class);
 			popCallStack();
@@ -3766,6 +3750,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> members;
+		int __token;
 		parse(TokenType.AT);
 		parse(TokenType.INTERFACE);
 		pushCallStack(JavaGrammar.AnnotationTypeDecl_3);
@@ -3797,47 +3782,21 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
+		int __token;
 		parse(TokenType.LBRACE);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1_1);
-				ret = parseNodeListVar();
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86 | 1L << TokenType.NODE_VARIABLE - 86 | 1L << TokenType.IDENTIFIER - 86)) != 0)) {
+			do {
+				pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_2_1);
+				member = parseAnnotationTypeBodyDecl();
 				popCallStack();
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CLASS:
-			case TokenType.DEFAULT:
-			case TokenType.DOUBLE:
-			case TokenType.ENUM:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.INTERFACE:
-			case TokenType.LONG:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.SEMICOLON:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOLATILE:
-				do {
-					pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_2_1);
-					member = parseAnnotationTypeBodyDecl();
-					popCallStack();
-					ret = append(ret, member);
-				} while (predict(JavaGrammar.ANNOTATION_TYPE_BODY_2_1_2) == 1);
-				break;
+				ret = append(ret, member);
+				__token = getToken(0).kind;
+			} while (predict(JavaGrammar.ANNOTATION_TYPE_BODY_2_1_2) == 1);
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		parse(TokenType.RBRACE);
 		return ret;
@@ -3866,74 +3825,47 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.SEMICOLON:
-				parse(TokenType.SEMICOLON);
-				ret = dress(SEmptyTypeDecl.make());
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CLASS:
-			case TokenType.DEFAULT:
-			case TokenType.DOUBLE:
-			case TokenType.ENUM:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.INTERFACE:
-			case TokenType.LONG:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOLATILE:
-				pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_1);
-				modifiers = parseModifiers();
-				popCallStack();
-				switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_DECL_1_2_2)) {
-					case 1:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_1);
-						ret = parseAnnotationTypeMemberDecl(modifiers);
-						popCallStack();
-						break;
-					case 2:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_2);
-						ret = parseClassOrInterfaceDecl(modifiers);
-						popCallStack();
-						break;
-					case 3:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_3);
-						ret = parseEnumDecl(modifiers);
-						popCallStack();
-						break;
-					case 4:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_4);
-						ret = parseAnnotationTypeDecl(modifiers);
-						popCallStack();
-						break;
-					case 5:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_5);
-						ret = parseFieldDecl(modifiers);
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.NODE_VARIABLE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE);
-		}
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_1);
+			modifiers = parseModifiers();
+			popCallStack();
+			switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_DECL_1_2_2)) {
+				case 1:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_1);
+					ret = parseAnnotationTypeMemberDecl(modifiers);
+					popCallStack();
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_2);
+					ret = parseClassOrInterfaceDecl(modifiers);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_3);
+					ret = parseEnumDecl(modifiers);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_4);
+					ret = parseAnnotationTypeDecl(modifiers);
+					popCallStack();
+					break;
+				case 5:
+					pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_5);
+					ret = parseFieldDecl(modifiers);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
+		} else if (__token == TokenType.SEMICOLON) {
+			parse(TokenType.SEMICOLON);
+			ret = dress(SEmptyTypeDecl.make());
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -3957,6 +3889,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> dims;
 		BUTree<SNodeOption> defaultValue = none();
 		BUTree<? extends SExpr> value = null;
+		int __token;
 		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_1);
 		type = parseType(null);
 		popCallStack();
@@ -3968,7 +3901,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_5);
 		dims = parseArrayDims();
 		popCallStack();
-		if (match(0, TokenType.DEFAULT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.DEFAULT) {
 			parse(TokenType.DEFAULT);
 			pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_6_2);
 			value = parseElementValue();
@@ -4002,31 +3936,29 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeParameters() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
+		int __token;
 		parse(TokenType.LT);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.TypeParameters_2_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.AT:
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.TypeParameters_2_2_1);
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.TypeParameters_2_2_1);
+			tp = parseTypeParameter();
+			popCallStack();
+			ret = append(ret, tp);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.TYPE_PARAMETERS_2_2_2) == 1) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.TypeParameters_2_2_2_2);
 				tp = parseTypeParameter();
 				popCallStack();
 				ret = append(ret, tp);
-				while (predict(JavaGrammar.TYPE_PARAMETERS_2_2_2) == 1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.TypeParameters_2_2_2_2);
-					tp = parseTypeParameter();
-					popCallStack();
-					ret = append(ret, tp);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE);
-		}
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeParameters_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		parse(TokenType.GT);
 		return ret;
 	}
@@ -4044,6 +3976,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeBounds = null;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.TypeParameter_1);
 		annotations = parseAnnotations();
@@ -4051,6 +3984,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.TypeParameter_2);
 		name = parseName();
 		popCallStack();
+		__token = getToken(0).kind;
 		if (predict(JavaGrammar.TYPE_PARAMETER_3) == 1) {
 			pushCallStack(JavaGrammar.TypeParameter_3_1);
 			typeBounds = parseTypeBounds();
@@ -4082,31 +4016,29 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		parse(TokenType.EXTENDS);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.TypeBounds_2_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.AT:
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.TypeBounds_2_2_1);
+		__token = getToken(0).kind;
+		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+			pushCallStack(JavaGrammar.TypeBounds_2_2_1);
+			cit = parseAnnotatedQualifiedType();
+			popCallStack();
+			ret = append(ret, cit);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.TYPE_BOUNDS_2_2_2) == 1) {
+				parse(TokenType.BIT_AND);
+				pushCallStack(JavaGrammar.TypeBounds_2_2_2_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
-				while (predict(JavaGrammar.TYPE_BOUNDS_2_2_2) == 1) {
-					parse(TokenType.BIT_AND);
-					pushCallStack(JavaGrammar.TypeBounds_2_2_2_2);
-					cit = parseAnnotatedQualifiedType();
-					popCallStack();
-					ret = append(ret, cit);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE);
-		}
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeBounds_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -4119,6 +4051,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
+		int __token;
 		parse(TokenType.LBRACE);
 		pushCallStack(JavaGrammar.ClassOrInterfaceBody_2);
 		ret = parseClassOrInterfaceBodyDecls(typeKind);
@@ -4145,49 +4078,20 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1_1);
-				ret = parseNodeListVar();
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.SEMICOLON - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
+			do {
+				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_2_1);
+				member = parseClassOrInterfaceBodyDecl(typeKind);
 				popCallStack();
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CLASS:
-			case TokenType.DEFAULT:
-			case TokenType.DOUBLE:
-			case TokenType.ENUM:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.INTERFACE:
-			case TokenType.LBRACE:
-			case TokenType.LONG:
-			case TokenType.LT:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.SEMICOLON:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOID:
-			case TokenType.VOLATILE:
-				do {
-					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_2_1);
-					member = parseClassOrInterfaceBodyDecl(typeKind);
-					popCallStack();
-					ret = append(ret, member);
-				} while (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECLS_1_1_2) == 1);
-				break;
+				ret = append(ret, member);
+				__token = getToken(0).kind;
+			} while (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECLS_1_1_2) == 1);
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		return ret;
 	}
@@ -4233,93 +4137,63 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		BUProblem problem = null;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.SEMICOLON:
-				parse(TokenType.SEMICOLON);
-				ret = dress(SEmptyMemberDecl.make());
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CLASS:
-			case TokenType.DEFAULT:
-			case TokenType.DOUBLE:
-			case TokenType.ENUM:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.INTERFACE:
-			case TokenType.LBRACE:
-			case TokenType.LONG:
-			case TokenType.LT:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOID:
-			case TokenType.VOLATILE:
-				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
-				modifiers = parseModifiers();
-				popCallStack();
-				if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
+			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
+			modifiers = parseModifiers();
+			popCallStack();
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
 
-				switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECL_1_2_2)) {
-					case 1:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_1_1);
-						ret = parseInitializerDecl(modifiers);
-						popCallStack();
-						if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
+			switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECL_1_2_2)) {
+				case 1:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_1_1);
+					ret = parseInitializerDecl(modifiers);
+					popCallStack();
+					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 
-						break;
-					case 2:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_2);
-						ret = parseClassOrInterfaceDecl(modifiers);
-						popCallStack();
-						break;
-					case 3:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_3);
-						ret = parseEnumDecl(modifiers);
-						popCallStack();
-						break;
-					case 4:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_4);
-						ret = parseAnnotationTypeDecl(modifiers);
-						popCallStack();
-						break;
-					case 5:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_5_1);
-						ret = parseConstructorDecl(modifiers);
-						popCallStack();
-						if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_2);
+					ret = parseClassOrInterfaceDecl(modifiers);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_3);
+					ret = parseEnumDecl(modifiers);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_4);
+					ret = parseAnnotationTypeDecl(modifiers);
+					popCallStack();
+					break;
+				case 5:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_5_1);
+					ret = parseConstructorDecl(modifiers);
+					popCallStack();
+					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 
-						break;
-					case 6:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_6_1);
-						ret = parseFieldDecl(modifiers);
-						popCallStack();
-						break;
-					case 7:
-						pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_7);
-						ret = parseMethodDecl(modifiers);
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTERFACE, TokenType.LBRACE, TokenType.LONG, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.VOID);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTERFACE, TokenType.LBRACE, TokenType.LONG, TokenType.LT, TokenType.NATIVE, TokenType.NODE_VARIABLE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOID, TokenType.VOLATILE);
-		}
+					break;
+				case 6:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_6_1);
+					ret = parseFieldDecl(modifiers);
+					popCallStack();
+					break;
+				case 7:
+					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_7);
+					ret = parseMethodDecl(modifiers);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
+		} else if (__token == TokenType.SEMICOLON) {
+			parse(TokenType.SEMICOLON);
+			ret = dress(SEmptyMemberDecl.make());
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOID, TokenType.VOLATILE, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret.withProblem(problem);
 	}
 
@@ -4333,6 +4207,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
+		int __token;
 		pushCallStack(JavaGrammar.FieldDecl_1);
 		type = parseType(null);
 		popCallStack();
@@ -4351,6 +4226,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SLocalVariableDecl> parseVariableDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
+		int __token;
 		pushCallStack(JavaGrammar.VariableDecl_1);
 		type = parseType(null);
 		popCallStack();
@@ -4373,16 +4249,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseVariableDeclarators() throws ParseException {
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
+		int __token;
 		pushCallStack(JavaGrammar.VariableDeclarators_1);
 		val = parseVariableDeclarator();
 		popCallStack();
 		variables = append(variables, val);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.VariableDeclarators_2_2);
 			val = parseVariableDeclarator();
 			popCallStack();
 			variables = append(variables, val);
+			__token = getToken(0).kind;
 		}
 		return variables;
 	}
@@ -4401,11 +4280,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SVariableDeclaratorId> id;
 		BUTree<SNodeOption> init = none();
 		BUTree<? extends SExpr> initExpr = null;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.VariableDeclarator_1);
 		id = parseVariableDeclaratorId();
 		popCallStack();
-		if (match(0, TokenType.ASSIGN) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.ASSIGN) {
 			parse(TokenType.ASSIGN);
 			pushCallStack(JavaGrammar.VariableDeclarator_2_2);
 			initExpr = parseVariableInitializer();
@@ -4424,6 +4305,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SVariableDeclaratorId> parseVariableDeclaratorId() throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> arrayDims;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.VariableDeclaratorId_1);
 		name = parseName();
@@ -4447,6 +4329,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseArrayDims() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
+		int __token;
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.ARRAY_DIMS_1) == 1) {
 			run();
 			pushCallStack(JavaGrammar.ArrayDims_1_1);
@@ -4455,6 +4339,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			parse(TokenType.LBRACKET);
 			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
+			__token = getToken(0).kind;
 		}
 		return arrayDims;
 	}
@@ -4468,50 +4353,18 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		switch (getToken(0).kind) {
-			case TokenType.LBRACE:
-				pushCallStack(JavaGrammar.VariableInitializer_1_1);
-				ret = parseArrayInitializer();
-				popCallStack();
-				break;
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.DECR:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.FALSE:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.INCR:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.MINUS:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.PLUS:
-			case TokenType.SHORT:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.THIS:
-			case TokenType.TILDE:
-			case TokenType.TRUE:
-			case TokenType.VOID:
-				pushCallStack(JavaGrammar.VariableInitializer_1_2);
-				ret = parseExpression();
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.VariableInitializer_1_2);
+			ret = parseExpression();
+			popCallStack();
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.VariableInitializer_1_1);
+			ret = parseArrayInitializer();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -4538,22 +4391,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> values = emptyList();
 		BUTree<? extends SExpr> val;
 		boolean trailingComma = false;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 			pushCallStack(JavaGrammar.ArrayInitializer_2_1);
 			val = parseVariableInitializer();
 			popCallStack();
 			values = append(values, val);
+			__token = getToken(0).kind;
 			while (predict(JavaGrammar.ARRAY_INITIALIZER_2_2) == 1) {
 				parse(TokenType.COMMA);
 				pushCallStack(JavaGrammar.ArrayInitializer_2_2_2);
 				val = parseVariableInitializer();
 				popCallStack();
 				values = append(values, val);
+				__token = getToken(0).kind;
 			}
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
@@ -4594,7 +4452,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> throwsClause = null;
 		BUTree<SBlockStmt> block = null;
 		BUProblem problem = null;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.MethodDecl_1_1);
 			typeParameters = parseTypeParameters();
 			popCallStack();
@@ -4614,25 +4474,23 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.MethodDecl_5);
 		arrayDims = parseArrayDims();
 		popCallStack();
-		if (match(0, TokenType.THROWS) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.THROWS) {
 			pushCallStack(JavaGrammar.MethodDecl_6_1);
 			throwsClause = parseThrowsClause();
 			popCallStack();
 		}
-		switch (getToken(0).kind) {
-			case TokenType.LBRACE:
-				pushCallStack(JavaGrammar.MethodDecl_7_1);
-				block = parseBlock();
-				popCallStack();
-				break;
-			case TokenType.SEMICOLON:
-				parse(TokenType.SEMICOLON);
-				if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
+			parse(TokenType.SEMICOLON);
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
-				break;
-			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.SEMICOLON);
-		}
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.MethodDecl_7_1);
+			block = parseBlock();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.LBRACE, TokenType.SEMICOLON);
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
 
@@ -4647,8 +4505,10 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseFormalParameters() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
+		int __token;
 		parse(TokenType.LPAREN);
-		if (match(0, TokenType.ABSTRACT, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.FINAL, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.FormalParameters_2_1);
 			ret = parseFormalParameterList();
 			popCallStack();
@@ -4678,50 +4538,28 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.FormalParameterList_1_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DEFAULT:
-			case TokenType.DOUBLE:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.NATIVE:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.TRANSIENT:
-			case TokenType.VOLATILE:
-				pushCallStack(JavaGrammar.FormalParameterList_1_2_1);
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.FormalParameterList_1_2_1);
+			par = parseFormalParameter();
+			popCallStack();
+			ret = append(ret, par);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.FORMAL_PARAMETER_LIST_1_2_2) == 1) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.FormalParameterList_1_2_2_2);
 				par = parseFormalParameter();
 				popCallStack();
 				ret = append(ret, par);
-				while (predict(JavaGrammar.FORMAL_PARAMETER_LIST_1_2_2) == 1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.FormalParameterList_1_2_2_2);
-					par = parseFormalParameter();
-					popCallStack();
-					ret = append(ret, par);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.FINAL, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE);
-		}
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.FormalParameterList_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -4755,6 +4593,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SVariableDeclaratorId> id = null;
 		boolean isReceiver = false;
 		BUTree<SName> receiverTypeName = null;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.FormalParameter_1);
 		modifiers = parseModifiers();
@@ -4762,7 +4601,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.FormalParameter_2);
 		type = parseType(null);
 		popCallStack();
-		if (match(0, TokenType.AT, TokenType.ELLIPSIS) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.AT || __token == TokenType.ELLIPSIS) {
 			pushCallStack(JavaGrammar.FormalParameter_3_1);
 			ellipsisAnnotations = parseAnnotations();
 			popCallStack();
@@ -4771,7 +4611,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		}
 		switch (predict(JavaGrammar.FORMAL_PARAMETER_4)) {
 			case 1:
-				if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+				__token = getToken(0).kind;
+				if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 					pushCallStack(JavaGrammar.FormalParameter_4_1_1_1);
 					receiverTypeName = parseName();
 					popCallStack();
@@ -4786,7 +4627,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.THIS);
+				throw produceParseException(TokenType.THIS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return dress(SFormalParameter.make(modifiers, type, isVarArg, ensureNotNull(ellipsisAnnotations), optionOf(id), isReceiver, optionOf(receiverTypeName)));
 	}
@@ -4805,17 +4646,20 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseThrowsClause() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
+		int __token;
 		parse(TokenType.THROWS);
 		pushCallStack(JavaGrammar.ThrowsClause_2);
 		cit = parseAnnotatedQualifiedType();
 		popCallStack();
 		ret = append(ret, cit);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.ThrowsClause_3_2);
 			cit = parseAnnotatedQualifiedType();
 			popCallStack();
 			ret = append(ret, cit);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -4845,7 +4689,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SBlockStmt> block;
 		BUTree<SNodeList> stmts = emptyList();
 		BUTree<? extends SStmt> stmt;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.ConstructorDecl_1_1);
 			typeParameters = parseTypeParameters();
 			popCallStack();
@@ -4856,7 +4702,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ConstructorDecl_3);
 		parameters = parseFormalParameters();
 		popCallStack();
-		if (match(0, TokenType.THROWS) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.THROWS) {
 			pushCallStack(JavaGrammar.ConstructorDecl_4_1);
 			throwsClause = parseThrowsClause();
 			popCallStack();
@@ -4903,10 +4750,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> args;
 		BUTree<? extends SExpr> expr = null;
 		BUTree<SNodeList> typeArgs = null;
+		int __token;
 		run();
 		switch (predict(JavaGrammar.EXPLICIT_CONSTRUCTOR_INVOCATION_1)) {
 			case 1:
-				if (match(0, TokenType.LT) != -1) {
+				__token = getToken(0).kind;
+				if (__token == TokenType.LT) {
 					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_1_1_1);
 					typeArgs = parseTypeArguments();
 					popCallStack();
@@ -4919,13 +4768,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				parse(TokenType.SEMICOLON);
 				break;
 			case 2:
+				__token = getToken(0).kind;
 				if (predict(JavaGrammar.EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1) == 1) {
 					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_1_1);
 					expr = parsePrimaryExpressionWithoutSuperSuffix();
 					popCallStack();
 					parse(TokenType.DOT);
 				}
-				if (match(0, TokenType.LT) != -1) {
+				__token = getToken(0).kind;
+				if (__token == TokenType.LT) {
 					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_2_1);
 					typeArgs = parseTypeArguments();
 					popCallStack();
@@ -4937,7 +4788,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				parse(TokenType.SEMICOLON);
 				break;
 			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -4966,85 +4817,28 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.Statements_1_1_1_1);
-				ret = parseNodeListVar();
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 0 & ~63) == 0 && (1L << __token - 0 & (1L << TokenType.EOF - 0 | 1L << TokenType.ABSTRACT - 0 | 1L << TokenType.ASSERT - 0 | 1L << TokenType.BOOLEAN - 0 | 1L << TokenType.BREAK - 0 | 1L << TokenType.BYTE - 0 | 1L << TokenType.CHAR - 0 | 1L << TokenType.CLASS - 0 | 1L << TokenType.CONTINUE - 0 | 1L << TokenType.DO - 0 | 1L << TokenType.DOUBLE - 0 | 1L << TokenType.FALSE - 0 | 1L << TokenType.FINAL - 0 | 1L << TokenType.FLOAT - 0 | 1L << TokenType.FOR - 0 | 1L << TokenType.IF - 0 | 1L << TokenType.INT - 0 | 1L << TokenType.INTERFACE - 0 | 1L << TokenType.LONG - 0 | 1L << TokenType.NATIVE - 0 | 1L << TokenType.NEW - 0 | 1L << TokenType.NULL - 0 | 1L << TokenType.PRIVATE - 0 | 1L << TokenType.PROTECTED - 0 | 1L << TokenType.PUBLIC - 0 | 1L << TokenType.RETURN - 0 | 1L << TokenType.SHORT - 0 | 1L << TokenType.STATIC - 0 | 1L << TokenType.STRICTFP - 0 | 1L << TokenType.SUPER - 0 | 1L << TokenType.SWITCH - 0 | 1L << TokenType.SYNCHRONIZED - 0 | 1L << TokenType.THIS - 0 | 1L << TokenType.THROW - 0 | 1L << TokenType.TRANSIENT - 0 | 1L << TokenType.TRUE - 0 | 1L << TokenType.TRY - 0 | 1L << TokenType.VOID - 0 | 1L << TokenType.VOLATILE - 0 | 1L << TokenType.WHILE - 0 | 1L << TokenType.LONG_LITERAL - 0 | 1L << TokenType.INTEGER_LITERAL - 0)) != 0 || (__token - 68 & ~63) == 0 && (1L << __token - 68 & (1L << TokenType.FLOAT_LITERAL - 68 | 1L << TokenType.DOUBLE_LITERAL - 68 | 1L << TokenType.CHARACTER_LITERAL - 68 | 1L << TokenType.STRING_LITERAL - 68 | 1L << TokenType.LPAREN - 68 | 1L << TokenType.LBRACE - 68 | 1L << TokenType.RBRACE - 68 | 1L << TokenType.SEMICOLON - 68 | 1L << TokenType.AT - 68 | 1L << TokenType.LT - 68 | 1L << TokenType.BANG - 68 | 1L << TokenType.TILDE - 68 | 1L << TokenType.INCR - 68 | 1L << TokenType.DECR - 68 | 1L << TokenType.PLUS - 68 | 1L << TokenType.MINUS - 68 | 1L << TokenType.NODE_VARIABLE - 68)) != 0) || ((__token - 132 & ~63) == 0 && (1L << __token - 132 & (1L << TokenType.IDENTIFIER - 132)) != 0)) {
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.STATEMENTS_1_1_2_1) == 1) {
+				pushCallStack(JavaGrammar.Statements_1_1_2_1_1);
+				stmt = parseExplicitConstructorInvocation();
 				popCallStack();
-				break;
-			case TokenType.ABSTRACT:
-			case TokenType.ASSERT:
-			case TokenType.AT:
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BREAK:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.CLASS:
-			case TokenType.CONTINUE:
-			case TokenType.DECR:
-			case TokenType.DO:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.EOF:
-			case TokenType.FALSE:
-			case TokenType.FINAL:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.FOR:
-			case TokenType.IDENTIFIER:
-			case TokenType.IF:
-			case TokenType.INCR:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.INTERFACE:
-			case TokenType.LBRACE:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.MINUS:
-			case TokenType.NATIVE:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.PLUS:
-			case TokenType.PRIVATE:
-			case TokenType.PROTECTED:
-			case TokenType.PUBLIC:
-			case TokenType.RBRACE:
-			case TokenType.RETURN:
-			case TokenType.SEMICOLON:
-			case TokenType.SHORT:
-			case TokenType.STATIC:
-			case TokenType.STRICTFP:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.SWITCH:
-			case TokenType.SYNCHRONIZED:
-			case TokenType.THIS:
-			case TokenType.THROW:
-			case TokenType.TILDE:
-			case TokenType.TRANSIENT:
-			case TokenType.TRUE:
-			case TokenType.TRY:
-			case TokenType.VOID:
-			case TokenType.VOLATILE:
-			case TokenType.WHILE:
-				if (predict(JavaGrammar.STATEMENTS_1_1_2_1) == 1) {
-					pushCallStack(JavaGrammar.Statements_1_1_2_1_1);
-					stmt = parseExplicitConstructorInvocation();
-					popCallStack();
-					ret = append(ret, stmt);
-				}
-				while (predict(JavaGrammar.STATEMENTS_1_1_2_2) == 1) {
-					pushCallStack(JavaGrammar.Statements_1_1_2_2_1);
-					stmt = parseBlockStatement();
-					popCallStack();
-					ret = append(ret, stmt);
-				}
-				break;
+				ret = append(ret, stmt);
+			}
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.STATEMENTS_1_1_2_2) == 1) {
+				pushCallStack(JavaGrammar.Statements_1_1_2_2_1);
+				stmt = parseBlockStatement();
+				popCallStack();
+				ret = append(ret, stmt);
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Statements_1_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		return ensureNotNull(ret);
 	}
@@ -5055,6 +4849,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SBlockStmt> block;
+		int __token;
 		pushCallStack(JavaGrammar.InitializerDecl_1);
 		block = parseBlock();
 		popCallStack();
@@ -5086,42 +4881,34 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
 		BUTree<SNodeList> arrayDims;
-		switch (getToken(0).kind) {
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.Type_1_1_1);
-				primitiveType = parsePrimitiveType(annotations);
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.Type_1_2_1);
+			type = parseQualifiedType(annotations);
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TYPE_1_2_2) == 1) {
+				lateRun();
+				pushCallStack(JavaGrammar.Type_1_2_2_1);
+				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
-				if (predict(JavaGrammar.TYPE_1_1_2) == 1) {
-					lateRun();
-					pushCallStack(JavaGrammar.Type_1_1_2_1);
-					arrayDims = parseArrayDimsMandatory();
-					popCallStack();
-					type = dress(SArrayType.make(primitiveType, arrayDims));
-				}
-				break;
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.Type_1_2_1);
-				type = parseQualifiedType(annotations);
+				type = dress(SArrayType.make(type, arrayDims));
+			}
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.Type_1_1_1);
+			primitiveType = parsePrimitiveType(annotations);
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TYPE_1_1_2) == 1) {
+				lateRun();
+				pushCallStack(JavaGrammar.Type_1_1_2_1);
+				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
-				if (predict(JavaGrammar.TYPE_1_2_2) == 1) {
-					lateRun();
-					pushCallStack(JavaGrammar.Type_1_2_2_1);
-					arrayDims = parseArrayDimsMandatory();
-					popCallStack();
-					type = dress(SArrayType.make(type, arrayDims));
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
-		}
+				type = dress(SArrayType.make(primitiveType, arrayDims));
+			}
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return type == null ? primitiveType : type;
 	}
 
@@ -5148,40 +4935,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
 		BUTree<SNodeList> arrayDims;
-		switch (getToken(0).kind) {
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.ReferenceType_1_1_1);
-				primitiveType = parsePrimitiveType(annotations);
-				popCallStack();
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ReferenceType_1_2_1);
+			type = parseQualifiedType(annotations);
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.REFERENCE_TYPE_1_2_2) == 1) {
 				lateRun();
-				pushCallStack(JavaGrammar.ReferenceType_1_1_2);
+				pushCallStack(JavaGrammar.ReferenceType_1_2_2_1);
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-				break;
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.ReferenceType_1_2_1);
-				type = parseQualifiedType(annotations);
-				popCallStack();
-				if (predict(JavaGrammar.REFERENCE_TYPE_1_2_2) == 1) {
-					lateRun();
-					pushCallStack(JavaGrammar.ReferenceType_1_2_2_1);
-					arrayDims = parseArrayDimsMandatory();
-					popCallStack();
-					type = dress(SArrayType.make(type, arrayDims));
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
-		}
+				type = dress(SArrayType.make(type, arrayDims));
+			}
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.ReferenceType_1_1_1);
+			primitiveType = parsePrimitiveType(annotations);
+			popCallStack();
+			lateRun();
+			pushCallStack(JavaGrammar.ReferenceType_1_1_2);
+			arrayDims = parseArrayDimsMandatory();
+			popCallStack();
+			type = dress(SArrayType.make(primitiveType, arrayDims));
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return type;
 	}
 
@@ -5215,6 +4993,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SQualifiedType> ret;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeArgs = null;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
@@ -5222,12 +5001,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.QualifiedType_1);
 		name = parseName();
 		popCallStack();
+		__token = getToken(0).kind;
 		if (predict(JavaGrammar.QUALIFIED_TYPE_2) == 1) {
 			pushCallStack(JavaGrammar.QualifiedType_2_1);
 			typeArgs = parseTypeArgumentsOrDiamond();
 			popCallStack();
 		}
 		ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.QUALIFIED_TYPE_3) == 1) {
 			lateRun();
 			parse(TokenType.DOT);
@@ -5238,12 +5019,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			pushCallStack(JavaGrammar.QualifiedType_3_3);
 			name = parseName();
 			popCallStack();
+			__token = getToken(0).kind;
 			if (predict(JavaGrammar.QUALIFIED_TYPE_3_4) == 1) {
 				pushCallStack(JavaGrammar.QualifiedType_3_4_1);
 				typeArgs = parseTypeArgumentsOrDiamond();
 				popCallStack();
 			}
 			ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -5259,8 +5042,10 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
+		int __token;
 		parse(TokenType.LT);
-		if (match(0, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE, TokenType.SHORT) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.TypeArguments_2_1);
 			ret = parseTypeArgumentList();
 			popCallStack();
@@ -5280,8 +5065,10 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
+		int __token;
 		parse(TokenType.LT);
-		if (match(0, TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE, TokenType.SHORT) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.NODE_LIST_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.TypeArgumentsOrDiamond_2_1);
 			ret = parseTypeArgumentList();
 			popCallStack();
@@ -5310,39 +5097,30 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.TypeArgumentList_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				return ret;
-			case TokenType.AT:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.HOOK:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.TypeArgumentList_2_1);
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArgumentList_2_1);
+			type = parseTypeArgument();
+			popCallStack();
+			ret = append(ret, type);
+			__token = getToken(0).kind;
+			while (__token == TokenType.COMMA) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.TypeArgumentList_2_2_2);
 				type = parseTypeArgument();
 				popCallStack();
 				ret = append(ret, type);
-				while (match(0, TokenType.COMMA) != -1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.TypeArgumentList_2_2_2);
-					type = parseTypeArgument();
-					popCallStack();
-					ret = append(ret, type);
-				}
-				return ret;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_LIST_VARIABLE, TokenType.NODE_VARIABLE, TokenType.SHORT);
-		}
+				__token = getToken(0).kind;
+			}
+			return ret;
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeArgumentList_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+			return ret;
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 	}
 
 	/* sequence(
@@ -5357,33 +5135,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SType> parseTypeArgument() throws ParseException {
 		BUTree<? extends SType> ret;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.TypeArgument_1);
 		annotations = parseAnnotations();
 		popCallStack();
-		switch (getToken(0).kind) {
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.TypeArgument_2_1);
-				ret = parseReferenceType(annotations);
-				popCallStack();
-				break;
-			case TokenType.HOOK:
-				pushCallStack(JavaGrammar.TypeArgument_2_2);
-				ret = parseWildcard(annotations);
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.HOOK) {
+			pushCallStack(JavaGrammar.TypeArgument_2_2);
+			ret = parseWildcard(annotations);
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+			pushCallStack(JavaGrammar.TypeArgument_2_1);
+			ret = parseReferenceType(annotations);
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -5417,32 +5184,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SReferenceType> ext = null;
 		BUTree<? extends SReferenceType> sup = null;
 		BUTree<SNodeList> boundAnnotations = null;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
 		}
 		parse(TokenType.HOOK);
-		switch (getToken(0).kind) {
-			case TokenType.EXTENDS:
-				parse(TokenType.EXTENDS);
-				run();
-				pushCallStack(JavaGrammar.Wildcard_2_1_1_2);
-				boundAnnotations = parseAnnotations();
-				popCallStack();
-				pushCallStack(JavaGrammar.Wildcard_2_1_1_3);
-				ext = parseReferenceType(boundAnnotations);
-				popCallStack();
-				break;
-			case TokenType.SUPER:
-				parse(TokenType.SUPER);
-				run();
-				pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
-				boundAnnotations = parseAnnotations();
-				popCallStack();
-				pushCallStack(JavaGrammar.Wildcard_2_1_2_3);
-				sup = parseReferenceType(boundAnnotations);
-				popCallStack();
-				break;
+		__token = getToken(0).kind;
+		if (__token == TokenType.SUPER) {
+			parse(TokenType.SUPER);
+			run();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
+			boundAnnotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_3);
+			sup = parseReferenceType(boundAnnotations);
+			popCallStack();
+		} else if (__token == TokenType.EXTENDS) {
+			parse(TokenType.EXTENDS);
+			run();
+			pushCallStack(JavaGrammar.Wildcard_2_1_1_2);
+			boundAnnotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.Wildcard_2_1_1_3);
+			ext = parseReferenceType(boundAnnotations);
+			popCallStack();
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
 	}
@@ -5492,46 +5258,38 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SPrimitiveType> parsePrimitiveType(BUTree<SNodeList> annotations) throws ParseException {
 		Primitive primitive;
+		int __token;
 		if (annotations == null) {
 			run();
 			annotations = emptyList();
 		}
-		switch (getToken(0).kind) {
-			case TokenType.BOOLEAN:
-				parse(TokenType.BOOLEAN);
-				primitive = Primitive.Boolean;
-				break;
-			case TokenType.CHAR:
-				parse(TokenType.CHAR);
-				primitive = Primitive.Char;
-				break;
-			case TokenType.BYTE:
-				parse(TokenType.BYTE);
-				primitive = Primitive.Byte;
-				break;
-			case TokenType.SHORT:
-				parse(TokenType.SHORT);
-				primitive = Primitive.Short;
-				break;
-			case TokenType.INT:
-				parse(TokenType.INT);
-				primitive = Primitive.Int;
-				break;
-			case TokenType.LONG:
-				parse(TokenType.LONG);
-				primitive = Primitive.Long;
-				break;
-			case TokenType.FLOAT:
-				parse(TokenType.FLOAT);
-				primitive = Primitive.Float;
-				break;
-			case TokenType.DOUBLE:
-				parse(TokenType.DOUBLE);
-				primitive = Primitive.Double;
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.DOUBLE) {
+			parse(TokenType.DOUBLE);
+			primitive = Primitive.Double;
+		} else if (__token == TokenType.FLOAT) {
+			parse(TokenType.FLOAT);
+			primitive = Primitive.Float;
+		} else if (__token == TokenType.LONG) {
+			parse(TokenType.LONG);
+			primitive = Primitive.Long;
+		} else if (__token == TokenType.INT) {
+			parse(TokenType.INT);
+			primitive = Primitive.Int;
+		} else if (__token == TokenType.SHORT) {
+			parse(TokenType.SHORT);
+			primitive = Primitive.Short;
+		} else if (__token == TokenType.BYTE) {
+			parse(TokenType.BYTE);
+			primitive = Primitive.Byte;
+		} else if (__token == TokenType.CHAR) {
+			parse(TokenType.CHAR);
+			primitive = Primitive.Char;
+		} else if (__token == TokenType.BOOLEAN) {
+			parse(TokenType.BOOLEAN);
+			primitive = Primitive.Boolean;
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT);
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
 
@@ -5548,29 +5306,18 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
-		switch (getToken(0).kind) {
-			case TokenType.VOID:
-				run();
-				parse(TokenType.VOID);
-				ret = dress(SVoidType.make());
-				break;
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.ResultType_1_2);
-				ret = parseType(null);
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.VOID);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+			pushCallStack(JavaGrammar.ResultType_1_2);
+			ret = parseType(null);
+			popCallStack();
+		} else if (__token == TokenType.VOID) {
+			run();
+			parse(TokenType.VOID);
+			ret = dress(SVoidType.make());
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -5583,6 +5330,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<SQualifiedType> ret;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.AnnotatedQualifiedType_1);
 		annotations = parseAnnotations();
@@ -5610,11 +5358,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeOption> qualifier = none();
 		BUTree<SQualifiedName> ret = null;
 		BUTree<SName> name;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.QualifiedName_1);
 		name = parseName();
 		popCallStack();
 		ret = dress(SQualifiedName.make(qualifier, name));
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.QUALIFIED_NAME_2) == 1) {
 			lateRun();
 			parse(TokenType.DOT);
@@ -5623,6 +5373,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			name = parseName();
 			popCallStack();
 			ret = dress(SQualifiedName.make(qualifier, name));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -5644,20 +5395,18 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
-		switch (getToken(0).kind) {
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.Name_1_1_1);
-				name = parseNodeVar();
-				popCallStack();
-				break;
-			case TokenType.IDENTIFIER:
-				run();
-				id = parse(TokenType.IDENTIFIER);
-				name = dress(SName.make(id.image));
-				break;
-			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.IDENTIFIER) {
+			run();
+			id = parse(TokenType.IDENTIFIER);
+			name = dress(SName.make(id.image));
+		} else if (__token == TokenType.NODE_VARIABLE) {
+			pushCallStack(JavaGrammar.Name_1_1_1);
+			name = parseNodeVar();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return name;
 	}
 
@@ -5670,6 +5419,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		switch (predict(JavaGrammar.EXPRESSION_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.Expression_1_1);
@@ -5682,7 +5432,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -5701,10 +5451,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		AssignOp op;
 		BUTree<? extends SExpr> expr;
+		int __token;
 		pushCallStack(JavaGrammar.AssignmentExpression_1);
 		ret = parseConditionalExpression();
 		popCallStack();
-		if (match(0, TokenType.ANDASSIGN, TokenType.ASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.ORASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.XORASSIGN) != -1) {
+		__token = getToken(0).kind;
+		if ((__token - 90 & ~63) == 0 && (1L << __token - 90 & (1L << TokenType.ASSIGN - 90 | 1L << TokenType.PLUSASSIGN - 90 | 1L << TokenType.MINUSASSIGN - 90 | 1L << TokenType.STARASSIGN - 90 | 1L << TokenType.SLASHASSIGN - 90 | 1L << TokenType.ANDASSIGN - 90 | 1L << TokenType.ORASSIGN - 90 | 1L << TokenType.XORASSIGN - 90 | 1L << TokenType.REMASSIGN - 90 | 1L << TokenType.LSHIFTASSIGN - 90 | 1L << TokenType.RSIGNEDSHIFTASSIGN - 90 | 1L << TokenType.RUNSIGNEDSHIFTASSIGN - 90)) != 0) {
 			lateRun();
 			pushCallStack(JavaGrammar.AssignmentExpression_2_1);
 			op = parseAssignmentOperator();
@@ -5738,6 +5490,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		switch (predict(JavaGrammar.LAMBDA_EXPRESSION_1)) {
 			case 1:
 				run();
@@ -5764,7 +5517,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.NODE_VARIABLE);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -5804,6 +5557,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SLambdaExpr> ret;
 		BUTree<SName> name;
 		BUTree<SNodeList> params;
+		int __token;
 		run();
 		switch (predict(JavaGrammar.LAMBDA_EXPRESSION_WITHOUT_CAST_1)) {
 			case 1:
@@ -5846,7 +5600,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.NODE_VARIABLE);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -5868,52 +5622,20 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		switch (getToken(0).kind) {
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.DECR:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.FALSE:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.INCR:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.MINUS:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.PLUS:
-			case TokenType.SHORT:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.THIS:
-			case TokenType.TILDE:
-			case TokenType.TRUE:
-			case TokenType.VOID:
-				pushCallStack(JavaGrammar.LambdaBody_1_1_1);
-				expr = parseExpression();
-				popCallStack();
-				ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-				break;
-			case TokenType.LBRACE:
-				pushCallStack(JavaGrammar.LambdaBody_1_2_1);
-				block = parseBlock();
-				popCallStack();
-				ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-				break;
-			default:
-				throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.LambdaBody_1_2_1);
+			block = parseBlock();
+			popCallStack();
+			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.LambdaBody_1_1_1);
+			expr = parseExpression();
+			popCallStack();
+			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -5930,16 +5652,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseInferredFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SFormalParameter> param;
+		int __token;
 		pushCallStack(JavaGrammar.InferredFormalParameterList_1);
 		param = parseInferredFormalParameter();
 		popCallStack();
 		ret = append(ret, param);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.InferredFormalParameterList_2_2);
 			param = parseInferredFormalParameter();
 			popCallStack();
 			ret = append(ret, param);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -5950,6 +5675,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SFormalParameter> parseInferredFormalParameter() throws ParseException {
 		BUTree<SName> name;
+		int __token;
 		pushCallStack(JavaGrammar.InferredFormalParameter_1);
 		name = parseName();
 		popCallStack();
@@ -6011,58 +5737,46 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
-		switch (getToken(0).kind) {
-			case TokenType.ASSIGN:
-				parse(TokenType.ASSIGN);
-				ret = AssignOp.Normal;
-				break;
-			case TokenType.STARASSIGN:
-				parse(TokenType.STARASSIGN);
-				ret = AssignOp.Times;
-				break;
-			case TokenType.SLASHASSIGN:
-				parse(TokenType.SLASHASSIGN);
-				ret = AssignOp.Divide;
-				break;
-			case TokenType.REMASSIGN:
-				parse(TokenType.REMASSIGN);
-				ret = AssignOp.Remainder;
-				break;
-			case TokenType.PLUSASSIGN:
-				parse(TokenType.PLUSASSIGN);
-				ret = AssignOp.Plus;
-				break;
-			case TokenType.MINUSASSIGN:
-				parse(TokenType.MINUSASSIGN);
-				ret = AssignOp.Minus;
-				break;
-			case TokenType.LSHIFTASSIGN:
-				parse(TokenType.LSHIFTASSIGN);
-				ret = AssignOp.LeftShift;
-				break;
-			case TokenType.RSIGNEDSHIFTASSIGN:
-				parse(TokenType.RSIGNEDSHIFTASSIGN);
-				ret = AssignOp.RightSignedShift;
-				break;
-			case TokenType.RUNSIGNEDSHIFTASSIGN:
-				parse(TokenType.RUNSIGNEDSHIFTASSIGN);
-				ret = AssignOp.RightUnsignedShift;
-				break;
-			case TokenType.ANDASSIGN:
-				parse(TokenType.ANDASSIGN);
-				ret = AssignOp.And;
-				break;
-			case TokenType.XORASSIGN:
-				parse(TokenType.XORASSIGN);
-				ret = AssignOp.XOr;
-				break;
-			case TokenType.ORASSIGN:
-				parse(TokenType.ORASSIGN);
-				ret = AssignOp.Or;
-				break;
-			default:
-				throw produceParseException(TokenType.ANDASSIGN, TokenType.ASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.ORASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.XORASSIGN);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.ORASSIGN) {
+			parse(TokenType.ORASSIGN);
+			ret = AssignOp.Or;
+		} else if (__token == TokenType.XORASSIGN) {
+			parse(TokenType.XORASSIGN);
+			ret = AssignOp.XOr;
+		} else if (__token == TokenType.ANDASSIGN) {
+			parse(TokenType.ANDASSIGN);
+			ret = AssignOp.And;
+		} else if (__token == TokenType.RUNSIGNEDSHIFTASSIGN) {
+			parse(TokenType.RUNSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightUnsignedShift;
+		} else if (__token == TokenType.RSIGNEDSHIFTASSIGN) {
+			parse(TokenType.RSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightSignedShift;
+		} else if (__token == TokenType.LSHIFTASSIGN) {
+			parse(TokenType.LSHIFTASSIGN);
+			ret = AssignOp.LeftShift;
+		} else if (__token == TokenType.MINUSASSIGN) {
+			parse(TokenType.MINUSASSIGN);
+			ret = AssignOp.Minus;
+		} else if (__token == TokenType.PLUSASSIGN) {
+			parse(TokenType.PLUSASSIGN);
+			ret = AssignOp.Plus;
+		} else if (__token == TokenType.REMASSIGN) {
+			parse(TokenType.REMASSIGN);
+			ret = AssignOp.Remainder;
+		} else if (__token == TokenType.SLASHASSIGN) {
+			parse(TokenType.SLASHASSIGN);
+			ret = AssignOp.Divide;
+		} else if (__token == TokenType.STARASSIGN) {
+			parse(TokenType.STARASSIGN);
+			ret = AssignOp.Times;
+		} else if (__token == TokenType.ASSIGN) {
+			parse(TokenType.ASSIGN);
+			ret = AssignOp.Normal;
+		} else
+			throw produceParseException(TokenType.ASSIGN, TokenType.PLUSASSIGN, TokenType.MINUSASSIGN, TokenType.STARASSIGN, TokenType.SLASHASSIGN, TokenType.ANDASSIGN, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.REMASSIGN, TokenType.LSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN);
 		return ret;
 	}
 
@@ -6085,10 +5799,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.ConditionalExpression_1);
 		ret = parseConditionalOrExpression();
 		popCallStack();
-		if (match(0, TokenType.HOOK) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.HOOK) {
 			lateRun();
 			parse(TokenType.HOOK);
 			pushCallStack(JavaGrammar.ConditionalExpression_2_2);
@@ -6107,7 +5823,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					popCallStack();
 					break;
 				default:
-					throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
+					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 			}
 			ret = dress(SConditionalExpr.make(ret, left, right));
 		}
@@ -6127,16 +5843,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.ConditionalOrExpression_1);
 		ret = parseConditionalAndExpression();
 		popCallStack();
-		while (match(0, TokenType.SC_OR) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.SC_OR) {
 			lateRun();
 			parse(TokenType.SC_OR);
 			pushCallStack(JavaGrammar.ConditionalOrExpression_2_2);
 			right = parseConditionalAndExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6154,16 +5873,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.ConditionalAndExpression_1);
 		ret = parseInclusiveOrExpression();
 		popCallStack();
-		while (match(0, TokenType.SC_AND) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.SC_AND) {
 			lateRun();
 			parse(TokenType.SC_AND);
 			pushCallStack(JavaGrammar.ConditionalAndExpression_2_2);
 			right = parseInclusiveOrExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6181,16 +5903,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.InclusiveOrExpression_1);
 		ret = parseExclusiveOrExpression();
 		popCallStack();
-		while (match(0, TokenType.BIT_OR) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.BIT_OR) {
 			lateRun();
 			parse(TokenType.BIT_OR);
 			pushCallStack(JavaGrammar.InclusiveOrExpression_2_2);
 			right = parseExclusiveOrExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6208,16 +5933,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.ExclusiveOrExpression_1);
 		ret = parseAndExpression();
 		popCallStack();
-		while (match(0, TokenType.XOR) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.XOR) {
 			lateRun();
 			parse(TokenType.XOR);
 			pushCallStack(JavaGrammar.ExclusiveOrExpression_2_2);
 			right = parseAndExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6235,16 +5963,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
+		int __token;
 		pushCallStack(JavaGrammar.AndExpression_1);
 		ret = parseEqualityExpression();
 		popCallStack();
-		while (match(0, TokenType.BIT_AND) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.BIT_AND) {
 			lateRun();
 			parse(TokenType.BIT_AND);
 			pushCallStack(JavaGrammar.AndExpression_2_2);
 			right = parseEqualityExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6272,27 +6003,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.EqualityExpression_1);
 		ret = parseInstanceOfExpression();
 		popCallStack();
-		while (match(0, TokenType.EQ, TokenType.NE) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.EQ || __token == TokenType.NE) {
 			lateRun();
-			switch (getToken(0).kind) {
-				case TokenType.EQ:
-					parse(TokenType.EQ);
-					op = BinaryOp.Equal;
-					break;
-				case TokenType.NE:
-					parse(TokenType.NE);
-					op = BinaryOp.NotEqual;
-					break;
-				default:
-					throw produceParseException(TokenType.EQ, TokenType.NE);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.NE) {
+				parse(TokenType.NE);
+				op = BinaryOp.NotEqual;
+			} else if (__token == TokenType.EQ) {
+				parse(TokenType.EQ);
+				op = BinaryOp.Equal;
+			} else
+				throw produceParseException(TokenType.EQ, TokenType.NE);
 			pushCallStack(JavaGrammar.EqualityExpression_2_2);
 			right = parseInstanceOfExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6313,10 +6044,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
+		int __token;
 		pushCallStack(JavaGrammar.InstanceOfExpression_1);
 		ret = parseRelationalExpression();
 		popCallStack();
-		if (match(0, TokenType.INSTANCEOF) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.INSTANCEOF) {
 			lateRun();
 			parse(TokenType.INSTANCEOF);
 			run();
@@ -6362,35 +6095,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.RelationalExpression_1);
 		ret = parseShiftExpression();
 		popCallStack();
-		while (match(0, TokenType.GE, TokenType.GT, TokenType.LE, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		while ((__token - 91 & ~63) == 0 && (1L << __token - 91 & (1L << TokenType.LT - 91 | 1L << TokenType.LE - 91 | 1L << TokenType.GE - 91 | 1L << TokenType.GT - 91)) != 0) {
 			lateRun();
-			switch (getToken(0).kind) {
-				case TokenType.LT:
-					parse(TokenType.LT);
-					op = BinaryOp.Less;
-					break;
-				case TokenType.GT:
-					parse(TokenType.GT);
-					op = BinaryOp.Greater;
-					break;
-				case TokenType.LE:
-					parse(TokenType.LE);
-					op = BinaryOp.LessOrEqual;
-					break;
-				case TokenType.GE:
-					parse(TokenType.GE);
-					op = BinaryOp.GreaterOrEqual;
-					break;
-				default:
-					throw produceParseException(TokenType.GE, TokenType.GT, TokenType.LE, TokenType.LT);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.GE) {
+				parse(TokenType.GE);
+				op = BinaryOp.GreaterOrEqual;
+			} else if (__token == TokenType.LE) {
+				parse(TokenType.LE);
+				op = BinaryOp.LessOrEqual;
+			} else if (__token == TokenType.GT) {
+				parse(TokenType.GT);
+				op = BinaryOp.Greater;
+			} else if (__token == TokenType.LT) {
+				parse(TokenType.LT);
+				op = BinaryOp.Less;
+			} else
+				throw produceParseException(TokenType.LT, TokenType.LE, TokenType.GE, TokenType.GT);
 			pushCallStack(JavaGrammar.RelationalExpression_2_2);
 			right = parseShiftExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6423,9 +6154,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.ShiftExpression_1);
 		ret = parseAdditiveExpression();
 		popCallStack();
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.SHIFT_EXPRESSION_2) == 1) {
 			lateRun();
 			switch (predict(JavaGrammar.SHIFT_EXPRESSION_2_1)) {
@@ -6446,12 +6179,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					op = BinaryOp.RightSignedShift;
 					break;
 				default:
-					throw produceParseException(TokenType.GT, TokenType.LSHIFT);
+					throw produceParseException(TokenType.LSHIFT, TokenType.GT);
 			}
 			pushCallStack(JavaGrammar.ShiftExpression_2_2);
 			right = parseAdditiveExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6479,27 +6213,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.AdditiveExpression_1);
 		ret = parseMultiplicativeExpression();
 		popCallStack();
-		while (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.PLUS || __token == TokenType.MINUS) {
 			lateRun();
-			switch (getToken(0).kind) {
-				case TokenType.PLUS:
-					parse(TokenType.PLUS);
-					op = BinaryOp.Plus;
-					break;
-				case TokenType.MINUS:
-					parse(TokenType.MINUS);
-					op = BinaryOp.Minus;
-					break;
-				default:
-					throw produceParseException(TokenType.MINUS, TokenType.PLUS);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.MINUS) {
+				parse(TokenType.MINUS);
+				op = BinaryOp.Minus;
+			} else if (__token == TokenType.PLUS) {
+				parse(TokenType.PLUS);
+				op = BinaryOp.Plus;
+			} else
+				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
 			pushCallStack(JavaGrammar.AdditiveExpression_2_2);
 			right = parseMultiplicativeExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6531,31 +6265,30 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.MultiplicativeExpression_1);
 		ret = parseUnaryExpression();
 		popCallStack();
-		while (match(0, TokenType.REM, TokenType.SLASH, TokenType.STAR) != -1) {
+		__token = getToken(0).kind;
+		while ((__token - 106 & ~63) == 0 && (1L << __token - 106 & (1L << TokenType.STAR - 106 | 1L << TokenType.SLASH - 106 | 1L << TokenType.REM - 106)) != 0) {
 			lateRun();
-			switch (getToken(0).kind) {
-				case TokenType.STAR:
-					parse(TokenType.STAR);
-					op = BinaryOp.Times;
-					break;
-				case TokenType.SLASH:
-					parse(TokenType.SLASH);
-					op = BinaryOp.Divide;
-					break;
-				case TokenType.REM:
-					parse(TokenType.REM);
-					op = BinaryOp.Remainder;
-					break;
-				default:
-					throw produceParseException(TokenType.REM, TokenType.SLASH, TokenType.STAR);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.REM) {
+				parse(TokenType.REM);
+				op = BinaryOp.Remainder;
+			} else if (__token == TokenType.SLASH) {
+				parse(TokenType.SLASH);
+				op = BinaryOp.Divide;
+			} else if (__token == TokenType.STAR) {
+				parse(TokenType.STAR);
+				op = BinaryOp.Times;
+			} else
+				throw produceParseException(TokenType.STAR, TokenType.SLASH, TokenType.REM);
 			pushCallStack(JavaGrammar.MultiplicativeExpression_2_2);
 			right = parseUnaryExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -6585,67 +6318,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		switch (getToken(0).kind) {
-			case TokenType.DECR:
-			case TokenType.INCR:
-				pushCallStack(JavaGrammar.UnaryExpression_1_1);
-				ret = parsePrefixExpression();
-				popCallStack();
-				break;
-			case TokenType.MINUS:
-			case TokenType.PLUS:
-				run();
-				switch (getToken(0).kind) {
-					case TokenType.PLUS:
-						parse(TokenType.PLUS);
-						op = UnaryOp.Positive;
-						break;
-					case TokenType.MINUS:
-						parse(TokenType.MINUS);
-						op = UnaryOp.Negative;
-						break;
-					default:
-						throw produceParseException(TokenType.MINUS, TokenType.PLUS);
-				}
-				pushCallStack(JavaGrammar.UnaryExpression_1_2_2);
-				ret = parseUnaryExpression();
-				popCallStack();
-				ret = dress(SUnaryExpr.make(op, ret));
-				break;
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.FALSE:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.SHORT:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.THIS:
-			case TokenType.TILDE:
-			case TokenType.TRUE:
-			case TokenType.VOID:
-				pushCallStack(JavaGrammar.UnaryExpression_1_3);
-				ret = parseUnaryExpressionNotPlusMinus();
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_3);
+			ret = parseUnaryExpressionNotPlusMinus();
+			popCallStack();
+		} else if (__token == TokenType.PLUS || __token == TokenType.MINUS) {
+			run();
+			__token = getToken(0).kind;
+			if (__token == TokenType.MINUS) {
+				parse(TokenType.MINUS);
+				op = UnaryOp.Negative;
+			} else if (__token == TokenType.PLUS) {
+				parse(TokenType.PLUS);
+				op = UnaryOp.Positive;
+			} else
+				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
+			pushCallStack(JavaGrammar.UnaryExpression_1_2_2);
+			ret = parseUnaryExpression();
+			popCallStack();
+			ret = dress(SUnaryExpr.make(op, ret));
+		} else if (__token == TokenType.INCR || __token == TokenType.DECR) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_1);
+			ret = parsePrefixExpression();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -6667,19 +6366,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parsePrefixExpression() throws ParseException {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.INCR:
-				parse(TokenType.INCR);
-				op = UnaryOp.PreIncrement;
-				break;
-			case TokenType.DECR:
-				parse(TokenType.DECR);
-				op = UnaryOp.PreDecrement;
-				break;
-			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.DECR) {
+			parse(TokenType.DECR);
+			op = UnaryOp.PreDecrement;
+		} else if (__token == TokenType.INCR) {
+			parse(TokenType.INCR);
+			op = UnaryOp.PreIncrement;
+		} else
+			throw produceParseException(TokenType.INCR, TokenType.DECR);
 		pushCallStack(JavaGrammar.PrefixExpression_2);
 		ret = parseUnaryExpression();
 		popCallStack();
@@ -6711,21 +6408,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
+		int __token;
 		switch (predict(JavaGrammar.UNARY_EXPRESSION_NOT_PLUS_MINUS_1)) {
 			case 1:
 				run();
-				switch (getToken(0).kind) {
-					case TokenType.TILDE:
-						parse(TokenType.TILDE);
-						op = UnaryOp.Inverse;
-						break;
-					case TokenType.BANG:
-						parse(TokenType.BANG);
-						op = UnaryOp.Not;
-						break;
-					default:
-						throw produceParseException(TokenType.BANG, TokenType.TILDE);
-				}
+				__token = getToken(0).kind;
+				if (__token == TokenType.BANG) {
+					parse(TokenType.BANG);
+					op = UnaryOp.Not;
+				} else if (__token == TokenType.TILDE) {
+					parse(TokenType.TILDE);
+					op = UnaryOp.Inverse;
+				} else
+					throw produceParseException(TokenType.BANG, TokenType.TILDE);
 				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_1_2);
 				ret = parseUnaryExpression();
 				popCallStack();
@@ -6742,7 +6437,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -6768,23 +6463,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parsePostfixExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
+		int __token;
 		pushCallStack(JavaGrammar.PostfixExpression_1);
 		ret = parsePrimaryExpression();
 		popCallStack();
-		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.INCR || __token == TokenType.DECR) {
 			lateRun();
-			switch (getToken(0).kind) {
-				case TokenType.INCR:
-					parse(TokenType.INCR);
-					op = UnaryOp.PostIncrement;
-					break;
-				case TokenType.DECR:
-					parse(TokenType.DECR);
-					op = UnaryOp.PostDecrement;
-					break;
-				default:
-					throw produceParseException(TokenType.DECR, TokenType.INCR);
-			}
+			__token = getToken(0).kind;
+			if (__token == TokenType.DECR) {
+				parse(TokenType.DECR);
+				op = UnaryOp.PostDecrement;
+			} else if (__token == TokenType.INCR) {
+				parse(TokenType.INCR);
+				op = UnaryOp.PostIncrement;
+			} else
+				throw produceParseException(TokenType.INCR, TokenType.DECR);
 			ret = dress(SUnaryExpr.make(op, ret));
 		}
 		return ret;
@@ -6818,6 +6512,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> arrayDims;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
 		parse(TokenType.LPAREN);
 		run();
@@ -6849,7 +6544,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SCastExpr.make(type, ret));
 				break;
 			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -6872,7 +6567,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SType> parseReferenceCastTypeRest(BUTree<? extends SType> type) throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<SNodeList> annotations = null;
-		if (match(0, TokenType.BIT_AND) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.BIT_AND) {
 			types = append(types, type);
 			lateRun();
 			do {
@@ -6885,7 +6582,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				type = parseReferenceType(annotations);
 				popCallStack();
 				types = append(types, type);
-			} while (match(0, TokenType.BIT_AND) != -1);
+				__token = getToken(0).kind;
+			} while (__token == TokenType.BIT_AND);
 			type = dress(SIntersectionType.make(types));
 		}
 		return type;
@@ -6936,47 +6634,38 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseLiteral() throws ParseException {
 		Token literal;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.INTEGER_LITERAL:
-				literal = parse(TokenType.INTEGER_LITERAL);
-				ret = SLiteralExpr.make(Integer.class, literal.image);
-				break;
-			case TokenType.LONG_LITERAL:
-				literal = parse(TokenType.LONG_LITERAL);
-				ret = SLiteralExpr.make(Long.class, literal.image);
-				break;
-			case TokenType.FLOAT_LITERAL:
-				literal = parse(TokenType.FLOAT_LITERAL);
-				ret = SLiteralExpr.make(Float.class, literal.image);
-				break;
-			case TokenType.DOUBLE_LITERAL:
-				literal = parse(TokenType.DOUBLE_LITERAL);
-				ret = SLiteralExpr.make(Double.class, literal.image);
-				break;
-			case TokenType.CHARACTER_LITERAL:
-				literal = parse(TokenType.CHARACTER_LITERAL);
-				ret = SLiteralExpr.make(Character.class, literal.image);
-				break;
-			case TokenType.STRING_LITERAL:
-				literal = parse(TokenType.STRING_LITERAL);
-				ret = SLiteralExpr.make(String.class, literal.image);
-				break;
-			case TokenType.TRUE:
-				literal = parse(TokenType.TRUE);
-				ret = SLiteralExpr.make(Boolean.class, literal.image);
-				break;
-			case TokenType.FALSE:
-				literal = parse(TokenType.FALSE);
-				ret = SLiteralExpr.make(Boolean.class, literal.image);
-				break;
-			case TokenType.NULL:
-				literal = parse(TokenType.NULL);
-				ret = SLiteralExpr.make(Void.class, literal.image);
-				break;
-			default:
-				throw produceParseException(TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.NULL) {
+			literal = parse(TokenType.NULL);
+			ret = SLiteralExpr.make(Void.class, literal.image);
+		} else if (__token == TokenType.FALSE) {
+			literal = parse(TokenType.FALSE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.TRUE) {
+			literal = parse(TokenType.TRUE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.STRING_LITERAL) {
+			literal = parse(TokenType.STRING_LITERAL);
+			ret = SLiteralExpr.make(String.class, literal.image);
+		} else if (__token == TokenType.CHARACTER_LITERAL) {
+			literal = parse(TokenType.CHARACTER_LITERAL);
+			ret = SLiteralExpr.make(Character.class, literal.image);
+		} else if (__token == TokenType.DOUBLE_LITERAL) {
+			literal = parse(TokenType.DOUBLE_LITERAL);
+			ret = SLiteralExpr.make(Double.class, literal.image);
+		} else if (__token == TokenType.FLOAT_LITERAL) {
+			literal = parse(TokenType.FLOAT_LITERAL);
+			ret = SLiteralExpr.make(Float.class, literal.image);
+		} else if (__token == TokenType.LONG_LITERAL) {
+			literal = parse(TokenType.LONG_LITERAL);
+			ret = SLiteralExpr.make(Long.class, literal.image);
+		} else if (__token == TokenType.INTEGER_LITERAL) {
+			literal = parse(TokenType.INTEGER_LITERAL);
+			ret = SLiteralExpr.make(Integer.class, literal.image);
+		} else
+			throw produceParseException(TokenType.FALSE, TokenType.NULL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL);
 		return dress(ret);
 	}
 
@@ -6989,6 +6678,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		switch (predict(JavaGrammar.PRIMARY_EXPRESSION_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.PrimaryExpression_1_1);
@@ -7001,7 +6691,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -7016,14 +6706,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parsePrimaryNoNewArray() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		pushCallStack(JavaGrammar.PrimaryNoNewArray_1);
 		ret = parsePrimaryPrefix();
 		popCallStack();
-		while (match(0, TokenType.DOT, TokenType.DOUBLECOLON, TokenType.LBRACKET) != -1) {
+		__token = getToken(0).kind;
+		while ((__token - 84 & ~63) == 0 && (1L << __token - 84 & (1L << TokenType.LBRACKET - 84 | 1L << TokenType.DOT - 84 | 1L << TokenType.DOUBLECOLON - 84)) != 0) {
 			lateRun();
 			pushCallStack(JavaGrammar.PrimaryNoNewArray_2_1);
 			ret = parsePrimarySuffix(ret);
 			popCallStack();
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -7038,14 +6731,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		pushCallStack(JavaGrammar.PrimaryExpressionWithoutSuperSuffix_1);
 		ret = parsePrimaryPrefix();
 		popCallStack();
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2) == 1) {
 			lateRun();
 			pushCallStack(JavaGrammar.PrimaryExpressionWithoutSuperSuffix_2_1);
 			ret = parsePrimarySuffixWithoutSuper(ret);
 			popCallStack();
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -7113,6 +6809,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SNodeList> params;
 		BUTree<? extends SType> type;
+		int __token;
 		switch (predict(JavaGrammar.PRIMARY_PREFIX_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.PrimaryPrefix_1_1);
@@ -7128,34 +6825,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				run();
 				parse(TokenType.SUPER);
 				ret = dress(SSuperExpr.make(none()));
-				switch (getToken(0).kind) {
-					case TokenType.DOT:
-						lateRun();
-						parse(TokenType.DOT);
-						switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
-							case 1:
-								pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_1);
-								ret = parseMethodInvocation(ret);
-								popCallStack();
-								break;
-							case 2:
-								pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_2);
-								ret = parseFieldAccess(ret);
-								popCallStack();
-								break;
-							default:
-								throw produceParseException(TokenType.IDENTIFIER, TokenType.LT, TokenType.NODE_VARIABLE);
-						}
-						break;
-					case TokenType.DOUBLECOLON:
-						lateRun();
-						pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
-						ret = parseMethodReferenceSuffix(ret);
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON);
-				}
+				__token = getToken(0).kind;
+				if (__token == TokenType.DOUBLECOLON) {
+					lateRun();
+					pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
+					ret = parseMethodReferenceSuffix(ret);
+					popCallStack();
+				} else if (__token == TokenType.DOT) {
+					lateRun();
+					parse(TokenType.DOT);
+					switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
+						case 1:
+							pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_1);
+							ret = parseMethodInvocation(ret);
+							popCallStack();
+							break;
+						case 2:
+							pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_2);
+							ret = parseFieldAccess(ret);
+							popCallStack();
+							break;
+						default:
+							throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+					}
+				} else
+					throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON);
 				break;
 			case 4:
 				pushCallStack(JavaGrammar.PrimaryPrefix_1_4);
@@ -7202,7 +6896,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SParenthesizedExpr.make(ret));
 				break;
 			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -7223,6 +6917,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		switch (predict(JavaGrammar.PRIMARY_SUFFIX_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.PrimarySuffix_1_1_1);
@@ -7240,7 +6935,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON, TokenType.LBRACKET);
+				throw produceParseException(TokenType.LBRACKET, TokenType.DOT, TokenType.DOUBLECOLON);
 		}
 		return ret;
 	}
@@ -7271,44 +6966,42 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
-		switch (getToken(0).kind) {
-			case TokenType.DOT:
-				parse(TokenType.DOT);
-				switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2)) {
-					case 1:
-						parse(TokenType.THIS);
-						ret = dress(SThisExpr.make(optionOf(scope)));
-						break;
-					case 2:
-						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_2);
-						ret = parseClassCreationExpr(scope);
-						popCallStack();
-						break;
-					case 3:
-						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_3);
-						ret = parseMethodInvocation(scope);
-						popCallStack();
-						break;
-					case 4:
-						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_4);
-						ret = parseFieldAccess(scope);
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.IDENTIFIER, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.THIS);
-				}
-				break;
-			case TokenType.LBRACKET:
-				parse(TokenType.LBRACKET);
-				pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
-				ret = parseExpression();
-				popCallStack();
-				parse(TokenType.RBRACKET);
-				ret = dress(SArrayAccessExpr.make(scope, ret));
-				break;
-			default:
-				throw produceParseException(TokenType.DOT, TokenType.LBRACKET);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACKET) {
+			parse(TokenType.LBRACKET);
+			pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
+			ret = parseExpression();
+			popCallStack();
+			parse(TokenType.RBRACKET);
+			ret = dress(SArrayAccessExpr.make(scope, ret));
+		} else if (__token == TokenType.DOT) {
+			parse(TokenType.DOT);
+			switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2)) {
+				case 1:
+					parse(TokenType.THIS);
+					ret = dress(SThisExpr.make(optionOf(scope)));
+					break;
+				case 2:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_2);
+					ret = parseClassCreationExpr(scope);
+					popCallStack();
+					break;
+				case 3:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_3);
+					ret = parseMethodInvocation(scope);
+					popCallStack();
+					break;
+				case 4:
+					pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_4);
+					ret = parseFieldAccess(scope);
+					popCallStack();
+					break;
+				default:
+					throw produceParseException(TokenType.NEW, TokenType.THIS, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+			}
+		} else
+			throw produceParseException(TokenType.LBRACKET, TokenType.DOT);
 		return ret;
 	}
 
@@ -7318,6 +7011,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseFieldAccess(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SName> name;
+		int __token;
 		pushCallStack(JavaGrammar.FieldAccess_1);
 		name = parseName();
 		popCallStack();
@@ -7337,7 +7031,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
 		BUTree<? extends SExpr> ret;
-		if (match(0, TokenType.LT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.MethodInvocation_1_1);
 			typeArgs = parseTypeArguments();
 			popCallStack();
@@ -7376,56 +7072,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
+		int __token;
 		parse(TokenType.LPAREN);
-		switch (getToken(0).kind) {
-			case TokenType.NODE_LIST_VARIABLE:
-				pushCallStack(JavaGrammar.Arguments_2_1_1_1);
-				ret = parseNodeListVar();
-				popCallStack();
-				break;
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.DECR:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.FALSE:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.INCR:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.MINUS:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.PLUS:
-			case TokenType.SHORT:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.THIS:
-			case TokenType.TILDE:
-			case TokenType.TRUE:
-			case TokenType.VOID:
-				pushCallStack(JavaGrammar.Arguments_2_1_2_1);
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.Arguments_2_1_2_1);
+			expr = parseExpression();
+			popCallStack();
+			ret = append(ret, expr);
+			__token = getToken(0).kind;
+			while (predict(JavaGrammar.ARGUMENTS_2_1_2_2) == 1) {
+				parse(TokenType.COMMA);
+				pushCallStack(JavaGrammar.Arguments_2_1_2_2_2);
 				expr = parseExpression();
 				popCallStack();
 				ret = append(ret, expr);
-				while (predict(JavaGrammar.ARGUMENTS_2_1_2_2) == 1) {
-					parse(TokenType.COMMA);
-					pushCallStack(JavaGrammar.Arguments_2_1_2_2_2);
-					expr = parseExpression();
-					popCallStack();
-					ret = append(ret, expr);
-				}
-				break;
+				__token = getToken(0).kind;
+			}
+		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Arguments_2_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
 		}
 		parse(TokenType.RPAREN);
 		return ret;
@@ -7450,26 +7117,24 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
 		BUTree<? extends SExpr> ret;
+		int __token;
 		parse(TokenType.DOUBLECOLON);
-		if (match(0, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.MethodReferenceSuffix_2_1);
 			typeArgs = parseTypeArguments();
 			popCallStack();
 		}
-		switch (getToken(0).kind) {
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.MethodReferenceSuffix_3_1);
-				name = parseName();
-				popCallStack();
-				break;
-			case TokenType.NEW:
-				parse(TokenType.NEW);
-				name = SName.make("new");
-				break;
-			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NEW, TokenType.NODE_VARIABLE);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.NEW) {
+			parse(TokenType.NEW);
+			name = SName.make("new");
+		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.MethodReferenceSuffix_3_1);
+			name = parseName();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
 	}
@@ -7498,10 +7163,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> anonymousBody = null;
 		BUTree<SNodeList> args;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		if (scope == null) run();
 
 		parse(TokenType.NEW);
-		if (match(0, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.ClassCreationExpr_2_1);
 			typeArgs = parseTypeArguments();
 			popCallStack();
@@ -7516,7 +7183,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ClassCreationExpr_5);
 		args = parseArguments();
 		popCallStack();
-		if (match(0, TokenType.LBRACE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.ClassCreationExpr_6_1);
 			anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
 			popCallStack();
@@ -7548,10 +7216,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> anonymousBody = null;
 		BUTree<SNodeList> args;
 		BUTree<SNodeList> annotations = null;
+		int __token;
 		if (scope == null) run();
 
 		parse(TokenType.NEW);
-		if (match(0, TokenType.LT) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.LT) {
 			pushCallStack(JavaGrammar.ArrayCreationExpr_2_1);
 			typeArgs = parseTypeArguments();
 			popCallStack();
@@ -7560,28 +7230,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ArrayCreationExpr_3);
 		annotations = parseAnnotations();
 		popCallStack();
-		switch (getToken(0).kind) {
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.DOUBLE:
-			case TokenType.FLOAT:
-			case TokenType.INT:
-			case TokenType.LONG:
-			case TokenType.SHORT:
-				pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
-				type = parsePrimitiveType(annotations);
-				popCallStack();
-				break;
-			case TokenType.IDENTIFIER:
-			case TokenType.NODE_VARIABLE:
-				pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
-				type = parseQualifiedType(annotations);
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.NODE_VARIABLE, TokenType.SHORT);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
+			type = parseQualifiedType(annotations);
+			popCallStack();
+		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
+			type = parsePrimitiveType(annotations);
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		pushCallStack(JavaGrammar.ArrayCreationExpr_5);
 		ret = parseArrayCreationExprRest(type);
 		popCallStack();
@@ -7606,6 +7265,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations = null;
 		BUTree<SArrayInitializerExpr> initializer;
+		int __token;
 		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR_REST)) {
 			case 1:
 				pushCallStack(JavaGrammar.ArrayCreationExprRest_1_1);
@@ -7624,7 +7284,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
 			default:
-				throw produceParseException(TokenType.AT, TokenType.LBRACKET);
+				throw produceParseException(TokenType.LBRACKET, TokenType.AT);
 		}
 	}
 
@@ -7643,6 +7303,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SExpr> expr;
+		int __token;
 		do {
 			run();
 			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_1);
@@ -7654,6 +7315,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			popCallStack();
 			parse(TokenType.RBRACKET);
 			arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
+			__token = getToken(0).kind;
 		} while (predict(JavaGrammar.ARRAY_DIM_EXPRS_MANDATORY_1) == 1);
 		return arrayDimExprs;
 	}
@@ -7671,6 +7333,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseArrayDimsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
+		int __token;
 		do {
 			run();
 			pushCallStack(JavaGrammar.ArrayDimsMandatory_1_1);
@@ -7679,6 +7342,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			parse(TokenType.LBRACKET);
 			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
+			__token = getToken(0).kind;
 		} while (predict(JavaGrammar.ARRAY_DIMS_MANDATORY_1) == 1);
 		return arrayDims;
 	}
@@ -7706,6 +7370,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SStmt> parseStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
+		int __token;
 		switch (predict(JavaGrammar.STATEMENT_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.Statement_1_1);
@@ -7788,7 +7453,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.ASSERT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.CONTINUE, TokenType.DECR, TokenType.DO, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.FOR, TokenType.IDENTIFIER, TokenType.IF, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.RETURN, TokenType.SEMICOLON, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TILDE, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.WHILE);
+				throw produceParseException(TokenType.ASSERT, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CONTINUE, TokenType.DO, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.FOR, TokenType.IF, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.RETURN, TokenType.SHORT, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.WHILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -7807,12 +7472,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
 		BUTree<? extends SExpr> check;
 		BUTree<? extends SExpr> msg = null;
+		int __token;
 		run();
 		parse(TokenType.ASSERT);
 		pushCallStack(JavaGrammar.AssertStatement_2);
 		check = parseExpression();
 		popCallStack();
-		if (match(0, TokenType.COLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COLON) {
 			parse(TokenType.COLON);
 			pushCallStack(JavaGrammar.AssertStatement_3_2);
 			msg = parseExpression();
@@ -7832,6 +7499,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SLabeledStmt> parseLabeledStatement() throws ParseException {
 		BUTree<SName> label;
 		BUTree<? extends SStmt> stmt;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.LabeledStatement_1);
 		label = parseName();
@@ -7852,6 +7520,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SBlockStmt> parseBlock() throws ParseException {
 		BUTree<SNodeList> stmts;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
 		pushCallStack(JavaGrammar.Block_2);
@@ -7885,6 +7554,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> expr;
 		BUTree<? extends STypeDecl> typeDecl;
 		BUTree<SNodeList> modifiers;
+		int __token;
 		switch (predict(JavaGrammar.BLOCK_STATEMENT_1)) {
 			case 1:
 				run();
@@ -7911,7 +7581,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.ASSERT, TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.CLASS, TokenType.CONTINUE, TokenType.DECR, TokenType.DO, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.FOR, TokenType.IDENTIFIER, TokenType.IF, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.INTERFACE, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NATIVE, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.RETURN, TokenType.SEMICOLON, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TILDE, TokenType.TRANSIENT, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.VOLATILE, TokenType.WHILE);
+				throw produceParseException(TokenType.ABSTRACT, TokenType.ASSERT, TokenType.BOOLEAN, TokenType.BREAK, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.CONTINUE, TokenType.DO, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FOR, TokenType.IF, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.RETURN, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SWITCH, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.THROW, TokenType.TRANSIENT, TokenType.TRUE, TokenType.TRY, TokenType.VOID, TokenType.VOLATILE, TokenType.WHILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -7926,6 +7596,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SLocalVariableDecl> variableDecl;
+		int __token;
 		run();
 		run();
 		pushCallStack(JavaGrammar.VariableDeclExpression_1);
@@ -7943,6 +7614,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ return dress(SEmptyStmt.make()); })
 	) */
 	protected BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
+		int __token;
 		run();
 		parse(TokenType.SEMICOLON);
 		return dress(SEmptyStmt.make());
@@ -7958,6 +7630,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> expr;
 		AssignOp op;
 		BUTree<? extends SExpr> value;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.ExpressionStatement_1);
 		expr = parseStatementExpression();
@@ -7972,6 +7645,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseStatementExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
+		int __token;
 		pushCallStack(JavaGrammar.StatementExpression_1);
 		ret = parseExpression();
 		popCallStack();
@@ -7996,6 +7670,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> selector;
 		BUTree<SSwitchCase> entry;
 		BUTree<SNodeList> entries = emptyList();
+		int __token;
 		run();
 		parse(TokenType.SWITCH);
 		parse(TokenType.LPAREN);
@@ -8004,11 +7679,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		parse(TokenType.RPAREN);
 		parse(TokenType.LBRACE);
-		while (match(0, TokenType.CASE, TokenType.DEFAULT) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.CASE || __token == TokenType.DEFAULT) {
 			pushCallStack(JavaGrammar.SwitchStatement_6_1);
 			entry = parseSwitchEntry();
 			popCallStack();
 			entries = append(entries, entry);
+			__token = getToken(0).kind;
 		}
 		parse(TokenType.RBRACE);
 		return dress(SSwitchStmt.make(selector, entries));
@@ -8030,20 +7707,18 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
+		int __token;
 		run();
-		switch (getToken(0).kind) {
-			case TokenType.CASE:
-				parse(TokenType.CASE);
-				pushCallStack(JavaGrammar.SwitchEntry_1_1_2);
-				label = parseExpression();
-				popCallStack();
-				break;
-			case TokenType.DEFAULT:
-				parse(TokenType.DEFAULT);
-				break;
-			default:
-				throw produceParseException(TokenType.CASE, TokenType.DEFAULT);
-		}
+		__token = getToken(0).kind;
+		if (__token == TokenType.DEFAULT) {
+			parse(TokenType.DEFAULT);
+		} else if (__token == TokenType.CASE) {
+			parse(TokenType.CASE);
+			pushCallStack(JavaGrammar.SwitchEntry_1_1_2);
+			label = parseExpression();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.CASE, TokenType.DEFAULT);
 		parse(TokenType.COLON);
 		pushCallStack(JavaGrammar.SwitchEntry_3);
 		stmts = parseStatements(false);
@@ -8068,6 +7743,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> thenStmt;
 		BUTree<? extends SStmt> elseStmt = null;
+		int __token;
 		run();
 		parse(TokenType.IF);
 		parse(TokenType.LPAREN);
@@ -8078,7 +7754,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.IfStatement_5);
 		thenStmt = parseStatement();
 		popCallStack();
-		if (match(0, TokenType.ELSE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.ELSE) {
 			parse(TokenType.ELSE);
 			pushCallStack(JavaGrammar.IfStatement_6_2);
 			elseStmt = parseStatement();
@@ -8099,6 +7776,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.WHILE);
 		parse(TokenType.LPAREN);
@@ -8126,6 +7804,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SDoStmt> parseDoStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.DO);
 		pushCallStack(JavaGrammar.DoStatement_2);
@@ -8180,6 +7859,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> init = null;
 		BUTree<SNodeList> update = null;
 		BUTree<? extends SStmt> body;
+		int __token;
 		run();
 		parse(TokenType.FOR);
 		parse(TokenType.LPAREN);
@@ -8194,18 +7874,21 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			case 2:
-				if (match(0, TokenType.ABSTRACT, TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NATIVE, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TILDE, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE) != -1) {
+				__token = getToken(0).kind;
+				if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FALSE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.NEW - 9 | 1L << TokenType.NULL - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SUPER - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.THIS - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.TRUE - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9 | 1L << TokenType.LONG_LITERAL - 9 | 1L << TokenType.INTEGER_LITERAL - 9 | 1L << TokenType.FLOAT_LITERAL - 9 | 1L << TokenType.DOUBLE_LITERAL - 9)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.AT - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 					pushCallStack(JavaGrammar.ForStatement_3_2_1_1);
 					init = parseForInit();
 					popCallStack();
 				}
 				parse(TokenType.SEMICOLON);
-				if (match(0, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID) != -1) {
+				__token = getToken(0).kind;
+				if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 					pushCallStack(JavaGrammar.ForStatement_3_2_3_1);
 					expr = parseExpression();
 					popCallStack();
 				}
 				parse(TokenType.SEMICOLON);
+				__token = getToken(0).kind;
 				if (predict(JavaGrammar.FOR_STATEMENT_3_2_5) == 1) {
 					pushCallStack(JavaGrammar.ForStatement_3_2_5_1);
 					update = parseForUpdate();
@@ -8213,7 +7896,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NATIVE, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TILDE, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE);
+				throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		parse(TokenType.RPAREN);
 		pushCallStack(JavaGrammar.ForStatement_5);
@@ -8242,6 +7925,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseForInit() throws ParseException {
 		BUTree<SNodeList> ret;
 		BUTree<? extends SExpr> expr;
+		int __token;
 		switch (predict(JavaGrammar.FOR_INIT_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.ForInit_1_1_1);
@@ -8256,7 +7940,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.ABSTRACT, TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NATIVE, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TILDE, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE);
+				throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.NEW, TokenType.NULL, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SUPER, TokenType.SYNCHRONIZED, TokenType.THIS, TokenType.TRANSIENT, TokenType.TRUE, TokenType.VOID, TokenType.VOLATILE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -8274,16 +7958,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseStatementExpressionList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
+		int __token;
 		pushCallStack(JavaGrammar.StatementExpressionList_1);
 		expr = parseStatementExpression();
 		popCallStack();
 		ret = append(ret, expr);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.StatementExpressionList_2_2);
 			expr = parseStatementExpression();
 			popCallStack();
 			ret = append(ret, expr);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -8294,6 +7981,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SNodeList> parseForUpdate() throws ParseException {
 		BUTree<SNodeList> ret;
+		int __token;
 		pushCallStack(JavaGrammar.ForUpdate_1);
 		ret = parseStatementExpressionList();
 		popCallStack();
@@ -8311,9 +7999,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
 		BUTree<SName> id = null;
+		int __token;
 		run();
 		parse(TokenType.BREAK);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 			pushCallStack(JavaGrammar.BreakStatement_2_1);
 			id = parseName();
 			popCallStack();
@@ -8333,9 +8023,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
 		BUTree<SName> id = null;
+		int __token;
 		run();
 		parse(TokenType.CONTINUE);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 			pushCallStack(JavaGrammar.ContinueStatement_2_1);
 			id = parseName();
 			popCallStack();
@@ -8355,9 +8047,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
 		BUTree<? extends SExpr> expr = null;
+		int __token;
 		run();
 		parse(TokenType.RETURN);
-		if (match(0, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 			pushCallStack(JavaGrammar.ReturnStatement_2_1);
 			expr = parseExpression();
 			popCallStack();
@@ -8375,6 +8069,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
+		int __token;
 		run();
 		parse(TokenType.THROW);
 		pushCallStack(JavaGrammar.ThrowStatement_2);
@@ -8396,6 +8091,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SSynchronizedStmt> parseSynchronizedStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SBlockStmt> block;
+		int __token;
 		run();
 		parse(TokenType.SYNCHRONIZED);
 		parse(TokenType.LPAREN);
@@ -8449,57 +8145,55 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SBlockStmt> tryBlock;
 		BUTree<SBlockStmt> finallyBlock = null;
 		BUTree<SNodeList> catchClauses = null;
+		int __token;
 		run();
 		parse(TokenType.TRY);
-		switch (getToken(0).kind) {
-			case TokenType.LPAREN:
-				pushCallStack(JavaGrammar.TryStatement_2_1_1);
-				resources = parseResourceSpecification(trailingSemiColon);
+		__token = getToken(0).kind;
+		if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.TryStatement_2_2_1);
+			tryBlock = parseBlock();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.FINALLY) {
+				parse(TokenType.FINALLY);
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
+				finallyBlock = parseBlock();
 				popCallStack();
-				pushCallStack(JavaGrammar.TryStatement_2_1_2);
-				tryBlock = parseBlock();
+			} else if (__token == TokenType.CATCH) {
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
+				catchClauses = parseCatchClauses();
 				popCallStack();
-				if (match(0, TokenType.CATCH) != -1) {
-					pushCallStack(JavaGrammar.TryStatement_2_1_3_1);
-					catchClauses = parseCatchClauses();
-					popCallStack();
-				}
-				if (predict(JavaGrammar.TRY_STATEMENT_2_1_4) == 1) {
+				__token = getToken(0).kind;
+				if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
 					parse(TokenType.FINALLY);
-					pushCallStack(JavaGrammar.TryStatement_2_1_4_2);
+					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
 					finallyBlock = parseBlock();
 					popCallStack();
 				}
-				break;
-			case TokenType.LBRACE:
-				pushCallStack(JavaGrammar.TryStatement_2_2_1);
-				tryBlock = parseBlock();
+			} else
+				throw produceParseException(TokenType.CATCH, TokenType.FINALLY);
+		} else if (__token == TokenType.LPAREN) {
+			pushCallStack(JavaGrammar.TryStatement_2_1_1);
+			resources = parseResourceSpecification(trailingSemiColon);
+			popCallStack();
+			pushCallStack(JavaGrammar.TryStatement_2_1_2);
+			tryBlock = parseBlock();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.CATCH) {
+				pushCallStack(JavaGrammar.TryStatement_2_1_3_1);
+				catchClauses = parseCatchClauses();
 				popCallStack();
-				switch (getToken(0).kind) {
-					case TokenType.CATCH:
-						pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
-						catchClauses = parseCatchClauses();
-						popCallStack();
-						if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
-							parse(TokenType.FINALLY);
-							pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
-							finallyBlock = parseBlock();
-							popCallStack();
-						}
-						break;
-					case TokenType.FINALLY:
-						parse(TokenType.FINALLY);
-						pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
-						finallyBlock = parseBlock();
-						popCallStack();
-						break;
-					default:
-						throw produceParseException(TokenType.CATCH, TokenType.FINALLY);
-				}
-				break;
-			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.LPAREN);
-		}
+			}
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TRY_STATEMENT_2_1_4) == 1) {
+				parse(TokenType.FINALLY);
+				pushCallStack(JavaGrammar.TryStatement_2_1_4_2);
+				finallyBlock = parseBlock();
+				popCallStack();
+			}
+		} else
+			throw produceParseException(TokenType.LPAREN, TokenType.LBRACE);
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
 
@@ -8513,12 +8207,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseCatchClauses() throws ParseException {
 		BUTree<SNodeList> catchClauses = emptyList();
 		BUTree<SCatchClause> catchClause;
+		int __token;
 		do {
 			pushCallStack(JavaGrammar.CatchClauses_1_1);
 			catchClause = parseCatchClause();
 			popCallStack();
 			catchClauses = append(catchClauses, catchClause);
-		} while (match(0, TokenType.CATCH) != -1);
+			__token = getToken(0).kind;
+		} while (__token == TokenType.CATCH);
 		return catchClauses;
 	}
 
@@ -8534,6 +8230,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SCatchClause> parseCatchClause() throws ParseException {
 		BUTree<SFormalParameter> param;
 		BUTree<SBlockStmt> catchBlock;
+		int __token;
 		run();
 		parse(TokenType.CATCH);
 		parse(TokenType.LPAREN);
@@ -8569,6 +8266,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> exceptType;
 		BUTree<SNodeList> exceptTypes = emptyList();
 		BUTree<SVariableDeclaratorId> exceptId;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.CatchFormalParameter_1);
 		modifiers = parseModifiers();
@@ -8577,7 +8275,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		exceptType = parseQualifiedType(null);
 		popCallStack();
 		exceptTypes = append(exceptTypes, exceptType);
-		if (match(0, TokenType.BIT_OR) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.BIT_OR) {
 			lateRun();
 			do {
 				parse(TokenType.BIT_OR);
@@ -8585,7 +8284,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				exceptType = parseAnnotatedQualifiedType();
 				popCallStack();
 				exceptTypes = append(exceptTypes, exceptType);
-			} while (match(0, TokenType.BIT_OR) != -1);
+				__token = getToken(0).kind;
+			} while (__token == TokenType.BIT_OR);
 			exceptType = dress(SUnionType.make(exceptTypes));
 		}
 		pushCallStack(JavaGrammar.CatchFormalParameter_4);
@@ -8613,19 +8313,23 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
 		BUTree<SNodeList> vars = emptyList();
 		BUTree<SVariableDeclarationExpr> var;
+		int __token;
 		parse(TokenType.LPAREN);
 		pushCallStack(JavaGrammar.ResourceSpecification_2);
 		var = parseVariableDeclExpression();
 		popCallStack();
 		vars = append(vars, var);
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.RESOURCE_SPECIFICATION_3) == 1) {
 			parse(TokenType.SEMICOLON);
 			pushCallStack(JavaGrammar.ResourceSpecification_3_2);
 			var = parseVariableDeclExpression();
 			popCallStack();
 			vars = append(vars, var);
+			__token = getToken(0).kind;
 		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
 			trailingSemiColon.value = true;
 		}
@@ -8640,6 +8344,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ popNewWhitespaces(2); })
 	) */
 	protected void parseRUNSIGNEDSHIFT() throws ParseException {
+		int __token;
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		parse(TokenType.GT);
@@ -8652,6 +8357,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ popNewWhitespaces(1); })
 	) */
 	protected void parseRSIGNEDSHIFT() throws ParseException {
+		int __token;
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		popNewWhitespaces(1);
@@ -8667,11 +8373,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
-		while (match(0, TokenType.AT) != -1) {
+		int __token;
+		__token = getToken(0).kind;
+		while (__token == TokenType.AT) {
 			pushCallStack(JavaGrammar.Annotations_1_1);
 			annotation = parseAnnotation();
 			popCallStack();
 			annotations = append(annotations, annotation);
+			__token = getToken(0).kind;
 		}
 		return annotations;
 	}
@@ -8686,6 +8395,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SAnnotationExpr> parseAnnotation() throws ParseException {
 		BUTree<? extends SAnnotationExpr> ret;
+		int __token;
 		switch (predict(JavaGrammar.ANNOTATION_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.Annotation_1_1);
@@ -8722,13 +8432,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNormalAnnotationExpr> parseNormalAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<SNodeList> pairs = null;
+		int __token;
 		run();
 		parse(TokenType.AT);
 		pushCallStack(JavaGrammar.NormalAnnotation_2);
 		name = parseQualifiedName();
 		popCallStack();
 		parse(TokenType.LPAREN);
-		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 			pushCallStack(JavaGrammar.NormalAnnotation_4_1);
 			pairs = parseElementValuePairList();
 			popCallStack();
@@ -8745,6 +8457,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
+		int __token;
 		run();
 		parse(TokenType.AT);
 		pushCallStack(JavaGrammar.MarkerAnnotation_2);
@@ -8765,6 +8478,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SSingleMemberAnnotationExpr> parseSingleElementAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<? extends SExpr> value;
+		int __token;
 		run();
 		parse(TokenType.AT);
 		pushCallStack(JavaGrammar.SingleElementAnnotation_2);
@@ -8791,16 +8505,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseElementValuePairList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SMemberValuePair> pair;
+		int __token;
 		pushCallStack(JavaGrammar.ElementValuePairList_1);
 		pair = parseElementValuePair();
 		popCallStack();
 		ret = append(ret, pair);
-		while (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		while (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.ElementValuePairList_2_2);
 			pair = parseElementValuePair();
 			popCallStack();
 			ret = append(ret, pair);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
@@ -8815,6 +8532,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SMemberValuePair> parseElementValuePair() throws ParseException {
 		BUTree<SName> name;
 		BUTree<? extends SExpr> value;
+		int __token;
 		run();
 		pushCallStack(JavaGrammar.ElementValuePair_1);
 		name = parseName();
@@ -8836,55 +8554,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseElementValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		switch (getToken(0).kind) {
-			case TokenType.BANG:
-			case TokenType.BOOLEAN:
-			case TokenType.BYTE:
-			case TokenType.CHAR:
-			case TokenType.CHARACTER_LITERAL:
-			case TokenType.DECR:
-			case TokenType.DOUBLE:
-			case TokenType.DOUBLE_LITERAL:
-			case TokenType.FALSE:
-			case TokenType.FLOAT:
-			case TokenType.FLOAT_LITERAL:
-			case TokenType.IDENTIFIER:
-			case TokenType.INCR:
-			case TokenType.INT:
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.LONG:
-			case TokenType.LONG_LITERAL:
-			case TokenType.LPAREN:
-			case TokenType.LT:
-			case TokenType.MINUS:
-			case TokenType.NEW:
-			case TokenType.NODE_VARIABLE:
-			case TokenType.NULL:
-			case TokenType.PLUS:
-			case TokenType.SHORT:
-			case TokenType.STRING_LITERAL:
-			case TokenType.SUPER:
-			case TokenType.THIS:
-			case TokenType.TILDE:
-			case TokenType.TRUE:
-			case TokenType.VOID:
-				pushCallStack(JavaGrammar.ElementValue_1_1);
-				ret = parseConditionalExpression();
-				popCallStack();
-				break;
-			case TokenType.LBRACE:
-				pushCallStack(JavaGrammar.ElementValue_1_2);
-				ret = parseElementValueArrayInitializer();
-				popCallStack();
-				break;
-			case TokenType.AT:
-				pushCallStack(JavaGrammar.ElementValue_1_3);
-				ret = parseAnnotation();
-				popCallStack();
-				break;
-			default:
-				throw produceParseException(TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID);
-		}
+		int __token;
+		__token = getToken(0).kind;
+		if (__token == TokenType.AT) {
+			pushCallStack(JavaGrammar.ElementValue_1_3);
+			ret = parseAnnotation();
+			popCallStack();
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.ElementValue_1_2);
+			ret = parseElementValueArrayInitializer();
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ElementValue_1_1);
+			ret = parseConditionalExpression();
+			popCallStack();
+		} else
+			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
 	}
 
@@ -8904,14 +8589,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseElementValueArrayInitializer() throws ParseException {
 		BUTree<SNodeList> values = null;
 		boolean trailingComma = false;
+		int __token;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.AT, TokenType.BANG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CHARACTER_LITERAL, TokenType.DECR, TokenType.DOUBLE, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.FLOAT, TokenType.FLOAT_LITERAL, TokenType.IDENTIFIER, TokenType.INCR, TokenType.INT, TokenType.INTEGER_LITERAL, TokenType.LBRACE, TokenType.LONG, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.MINUS, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.NULL, TokenType.PLUS, TokenType.SHORT, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.TRUE, TokenType.VOID) != -1) {
+		__token = getToken(0).kind;
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.AT - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 			pushCallStack(JavaGrammar.ElementValueArrayInitializer_2_1);
 			values = parseElementValueList();
 			popCallStack();
 		}
-		if (match(0, TokenType.COMMA) != -1) {
+		__token = getToken(0).kind;
+		if (__token == TokenType.COMMA) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
@@ -8932,16 +8620,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseElementValueList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> value;
+		int __token;
 		pushCallStack(JavaGrammar.ElementValueList_1);
 		value = parseElementValue();
 		popCallStack();
 		ret = append(ret, value);
+		__token = getToken(0).kind;
 		while (predict(JavaGrammar.ELEMENT_VALUE_LIST_2) == 1) {
 			parse(TokenType.COMMA);
 			pushCallStack(JavaGrammar.ElementValueList_2_2);
 			value = parseElementValue();
 			popCallStack();
 			ret = append(ret, value);
+			__token = getToken(0).kind;
 		}
 		return ret;
 	}
