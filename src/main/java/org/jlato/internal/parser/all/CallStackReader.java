@@ -23,5 +23,5 @@ package org.jlato.internal.parser.all;
  * @author Didier Villevalois
  */
 public interface CallStackReader {
-	void handleNext(GrammarState head, CallStack tail);
+	void handleNext(int head, CallStack tail);
 }

@@ -24,10 +24,10 @@ package org.jlato.internal.parser.all;
  */
 public class StateCallStackPair {
 
-	public final GrammarState state;
+	public final int state;
 	public final CallStack callStack;
 
-	public StateCallStackPair(GrammarState state, CallStack callStack) {
+	public StateCallStackPair(int state, CallStack callStack) {
 		this.state = state;
 		this.callStack = callStack;
 	}
@@ -39,14 +39,14 @@ public class StateCallStackPair {
 
 		StateCallStackPair that = (StateCallStackPair) o;
 
-		if (!state.equals(that.state)) return false;
+		if (state != that.state) return false;
 		return callStack.equals(that.callStack);
 
 	}
 
 	@Override
 	public int hashCode() {
-		int result = state.hashCode();
+		int result = state;
 		result = 31 * result + callStack.hashCode();
 		return result;
 	}

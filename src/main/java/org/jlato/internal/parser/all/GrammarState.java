@@ -35,13 +35,13 @@ public class GrammarState {
 
 	public final int nonTerminalEnd;
 
-	public final GrammarState[] choiceTransitions = new GrammarState[17];
+	public final int[] choiceTransitions = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,};
 
 	public int nonTerminalTransition = -1;
-	public GrammarState nonTerminalTransitionEnd;
+	public int nonTerminalTransitionEnd;
 
 	public int terminalTransition = -1;
-	public GrammarState terminalTransitionEnd;
+	public int terminalTransitionEnd;
 
 	public GrammarState(int id, String name) {
 		this(id, name, -1);
@@ -69,25 +69,25 @@ public class GrammarState {
 	}
 
 	void addChoice(int index, GrammarState target) {
-		choiceTransitions[index] = target;
+		choiceTransitions[index] = target.id;
 	}
 
 	void setNonTerminal(int symbol, GrammarState target) {
 		if (nonTerminalTransition != -1)
 			throw new IllegalStateException("Already defined non-terminal " + symbol + " transition for state " + name);
 		nonTerminalTransition = symbol;
-		nonTerminalTransitionEnd = target;
+		nonTerminalTransitionEnd = target.id;
 	}
 
 	void setTerminal(int tokenType, GrammarState target) {
 		if (terminalTransition != -1)
 			throw new IllegalStateException("Already defined terminal " + tokenType + " transition for state " + name);
 		terminalTransition = tokenType;
-		terminalTransitionEnd = target;
+		terminalTransitionEnd = target.id;
 	}
 
-	public GrammarState match(Token token) {
-		return terminalTransition == token.kind ? terminalTransitionEnd : null;
+	public int match(Token token) {
+		return terminalTransition == token.kind ? terminalTransitionEnd : -1;
 	}
 
 	@Override
@@ -97,16 +97,16 @@ public class GrammarState {
 		builder.append("(" + name + ")");
 		builder.append(" ");
 		for (int choice = 0; choice < choiceTransitions.length; choice++) {
-			GrammarState target = choiceTransitions[choice];
-			if (target != null) builder.append("[c:" + choice + "->" + target.name + "]");
+			int target = choiceTransitions[choice];
+			if (target != -1) builder.append("[c:" + choice + "->" + target + "]");
 		}
 		if (terminalTransition != -1) {
 			builder.append(" ");
-			builder.append("[tok:" + TokenType.tokenImage[terminalTransition] + "->" + terminalTransitionEnd.name + "]");
+			builder.append("[tok:" + TokenType.tokenImage[terminalTransition] + "->" + terminalTransitionEnd + "]");
 		}
 		if (nonTerminalTransition != -1) {
 			builder.append(" ");
-			builder.append("[nt:" + nonTerminalTransition + "->" + nonTerminalTransitionEnd.name + "]");
+			builder.append("[nt:" + nonTerminalTransition + "->" + nonTerminalTransitionEnd + "]");
 		}
 
 		return builder.toString();

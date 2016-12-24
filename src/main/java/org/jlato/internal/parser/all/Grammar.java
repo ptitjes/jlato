@@ -31,14 +31,14 @@ public abstract class Grammar {
 
 	private int nextStateId = 0;
 	private final GrammarState[] states;
-	private final GrammarState[] startStates;
-	private final Set<GrammarState>[] perNonTerminalUseEndStates;
-	private final Map<Integer, Map<Integer, Set<GrammarState>>> perEntryPointNonTerminalUseEndState = new HashMap<Integer, Map<Integer, Set<GrammarState>>>();
+	private final int[] startStates;
+	private final Set<Integer>[] perNonTerminalUseEndStates;
+	private final Map<Integer, Map<Integer, Set<Integer>>> perEntryPointNonTerminalUseEndState = new HashMap<Integer, Map<Integer, Set<Integer>>>();
 
 	public Grammar(int stateCount, int constantCount) {
 		states = new GrammarState[stateCount];
-		startStates = new GrammarState[constantCount];
-		perNonTerminalUseEndStates = (Set<GrammarState>[]) new Set[constantCount];
+		startStates = new int[constantCount];
+		perNonTerminalUseEndStates = (Set<Integer>[]) new Set[constantCount];
 		initializeProductions();
 	}
 
@@ -49,55 +49,65 @@ public abstract class Grammar {
 	}
 
 	GrammarState newGrammarState(Expansion expansion) {
-		return new GrammarState(newStateId(), expansion.name);
+		return newGrammarState(expansion, -1);
+	}
+
+	private GrammarState newGrammarState(Expansion expansion, int nonTerminal) {
+		GrammarState state = new GrammarState(newStateId(), expansion.name, nonTerminal);
+		states[state.id] = state;
+		return state;
 	}
 
 	protected void addProduction(int nonTerminal, Expansion expansion, boolean entryPoint) {
-		GrammarState start = new GrammarState(newStateId(), expansion.name);
-		GrammarState end = new GrammarState(newStateId(), expansion.name, nonTerminal);
+		GrammarState start = newGrammarState(expansion);
+		GrammarState end = newGrammarState(expansion, nonTerminal);
 		expansion.initializeStates(start, end, this, entryPoint ? nonTerminal : -1);
 
-		startStates[nonTerminal] = start;
+		startStates[nonTerminal] = start.id;
 	}
 
 	protected void addChoicePoint(int choicePoint, ChoicePoint expansion) {
-		startStates[choicePoint] = expansion.choice();
+		startStates[choicePoint] = expansion.choice().id;
 	}
 
 	void addNonTerminalEndState(int symbol, GrammarState end) {
-		Set<GrammarState> useEndStates = perNonTerminalUseEndStates[symbol];
+		Set<Integer> useEndStates = perNonTerminalUseEndStates[symbol];
 		if (useEndStates == null) {
-			useEndStates = new HashSet<GrammarState>();
+			useEndStates = new HashSet<Integer>();
 			perNonTerminalUseEndStates[symbol] = useEndStates;
 		}
-		useEndStates.add(end);
+		useEndStates.add(end.id);
 	}
 
 	void addNonTerminalEntryPointEndState(int entryPoint, int symbol, GrammarState end) {
-		Map<Integer, Set<GrammarState>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
+		Map<Integer, Set<Integer>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
 		if (nonTerminalUseEndStates == null) {
-			nonTerminalUseEndStates = new HashMap<Integer, Set<GrammarState>>();
+			nonTerminalUseEndStates = new HashMap<Integer, Set<Integer>>();
 			perEntryPointNonTerminalUseEndState.put(entryPoint, nonTerminalUseEndStates);
 		}
 
-		Set<GrammarState> useEndStates = nonTerminalUseEndStates.get(symbol);
+		Set<Integer> useEndStates = nonTerminalUseEndStates.get(symbol);
 		if (useEndStates == null) {
-			useEndStates = new HashSet<GrammarState>();
+			useEndStates = new HashSet<Integer>();
 			nonTerminalUseEndStates.put(symbol, useEndStates);
 		}
-		useEndStates.add(end);
+		useEndStates.add(end.id);
 	}
 
-	public GrammarState getStartState(int nonTerminal) {
+	public GrammarState getState(int stateId) {
+		return states[stateId];
+	}
+
+	public int getStartState(int nonTerminal) {
 		return startStates[nonTerminal];
 	}
 
-	public Set<GrammarState> getUseEndStates(int nonTerminal) {
+	public Set<Integer> getUseEndStates(int nonTerminal) {
 		return perNonTerminalUseEndStates[nonTerminal];
 	}
 
-	public Set<GrammarState> getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
-		Map<Integer, Set<GrammarState>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
+	public Set<Integer> getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
+		Map<Integer, Set<Integer>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
 		return nonTerminalUseEndStates == null ? null : nonTerminalUseEndStates.get(nonTerminal);
 	}
 }

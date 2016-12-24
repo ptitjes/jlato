@@ -79,7 +79,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	protected void pushCallStack(GrammarProduction.NonTerminal ntCall) {
 		if (forceLL) return;
 
-		GrammarState state = ntCall.end();
+		int state = ntCall.end().id;
 		callStack = callStack.push(state);
 	}
 
@@ -88,7 +88,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		callStack.pop(new CallStackReader() {
 			@Override
-			public void handleNext(GrammarState head, CallStack tail) {
+			public void handleNext(int head, CallStack tail) {
 				callStack = tail;
 			}
 		});
@@ -188,9 +188,9 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
-		GrammarState state = grammar.getStartState(choicePoint);
+		int stateId = grammar.getStartState(choicePoint);
 
-		Configuration initialConfiguration = new Configuration(state, -1, callStack);
+		Configuration initialConfiguration = new Configuration(stateId, -1, callStack);
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
@@ -257,10 +257,11 @@ public abstract class ParserBaseALL extends ParserBase {
 	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
 		Set<Configuration> newConfigurations = new HashSet<Configuration>();
 		for (Configuration configuration : configurations) {
-			GrammarState target = configuration.state.match(token);
-			if (target == null) continue;
+			GrammarState state = grammar.getState(configuration.stateId);
+			int targetId = state.match(token);
+			if (targetId == -1) continue;
 
-			Configuration newConfiguration = new Configuration(target, configuration.prediction, configuration.callStack);
+			Configuration newConfiguration = new Configuration(targetId, configuration.prediction, configuration.callStack);
 			newConfigurations.add(newConfiguration);
 		}
 		return newConfigurations;
@@ -297,9 +298,11 @@ public abstract class ParserBaseALL extends ParserBase {
 		if (busy.contains(configuration)) return;
 		else busy.add(configuration);
 
-		final GrammarState state = configuration.state;
+		final int stateId = configuration.stateId;
 		final CallStack callStack = configuration.callStack;
 		final int prediction = configuration.prediction;
+
+		final GrammarState state = grammar.getState(stateId);
 
 		// TODO Avoid this when return from non-terminal call ??
 		newConfigurations.add(configuration);
@@ -311,10 +314,10 @@ public abstract class ParserBaseALL extends ParserBase {
 			if (callStack == CallStack.WILDCARD) {
 
 				// End states
-				Set<GrammarState> useEndStates = grammar.getUseEndStates(nonTerminalEnd);
+				Set<Integer> useEndStates = grammar.getUseEndStates(nonTerminalEnd);
 				if (useEndStates != null) {
-					for (GrammarState useEndState : useEndStates) {
-						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
+					for (int useEndStateId : useEndStates) {
+						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
 						closureOf(newConfiguration, newConfigurations, busy);
 					}
 				}
@@ -322,8 +325,8 @@ public abstract class ParserBaseALL extends ParserBase {
 				// Specific end states for the entry point
 				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminalEnd);
 				if (useEndStates != null) {
-					for (GrammarState useEndState : useEndStates) {
-						Configuration newConfiguration = new Configuration(useEndState, prediction, CallStack.WILDCARD);
+					for (int useEndStateId : useEndStates) {
+						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
 						closureOf(newConfiguration, newConfigurations, busy);
 					}
 				}
@@ -359,22 +362,22 @@ public abstract class ParserBaseALL extends ParserBase {
 		} else {
 			// Handle choice transitions
 			for (int choice = 0; choice < state.choiceTransitions.length; choice++) {
-				GrammarState target = state.choiceTransitions[choice];
-				if (target == null) continue;
+				int targetId = state.choiceTransitions[choice];
+				if (targetId == -1) continue;
 
 				int realPrediction = prediction == -1 ? choice : prediction;
 
-				Configuration newConfiguration = new Configuration(target, realPrediction, callStack);
+				Configuration newConfiguration = new Configuration(targetId, realPrediction, callStack);
 				closureOf(newConfiguration, newConfigurations, busy);
 			}
 
 			// Handle non-terminal call
 			int symbol = state.nonTerminalTransition;
-			GrammarState target = state.nonTerminalTransitionEnd;
-			if (symbol != -1 && target != null) {
-				GrammarState start = grammar.getStartState(symbol);
+			int targetId = state.nonTerminalTransitionEnd;
+			if (symbol != -1 && targetId != -1) {
+				int startId = grammar.getStartState(symbol);
 
-				Configuration newConfiguration = new Configuration(start, prediction, callStack.push(target));
+				Configuration newConfiguration = new Configuration(startId, prediction, callStack.push(targetId));
 				closureOf(newConfiguration, newConfigurations, busy);
 			}
 		}
@@ -405,18 +408,19 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		private Set<Configuration> merge(Set<Configuration> configurations) {
 			int previousSize = configurations.size();
-			Map<StatePredictionPair, CallStack> perStatePredictionCallStack = new HashMap<StatePredictionPair, CallStack>();
+			Map<Long, CallStack> perStatePredictionCallStack = new HashMap<Long, CallStack>();
 			for (Configuration configuration : configurations) {
-				StatePredictionPair key = new StatePredictionPair(configuration.state, configuration.prediction);
+				long key = (long) configuration.stateId << 32 | (long) configuration.prediction & 0xffffffffL;
 
 				CallStack stack = perStatePredictionCallStack.get(key);
 				perStatePredictionCallStack.put(key, stack == null ? configuration.callStack : stack.merge(configuration.callStack));
 			}
 
 			configurations.clear();
-			for (Map.Entry<StatePredictionPair, CallStack> entry : perStatePredictionCallStack.entrySet()) {
-				StatePredictionPair key = entry.getKey();
-				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
+			for (long key : perStatePredictionCallStack.keySet()) {
+				int stateId = (int) (key >>> 32);
+				int prediction = (int) (key & 0xffffffffL);
+				configurations.add(new Configuration(stateId, prediction, perStatePredictionCallStack.get(key)));
 			}
 
 			if (MERGE_STATS) {
@@ -430,10 +434,10 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithIncrementalMerge implements ConfigurationSetBuilder {
-		Map<StatePredictionPair, CallStack> perStatePredictionCallStack = new HashMap<StatePredictionPair, CallStack>();
+		Map<Long, CallStack> perStatePredictionCallStack = new HashMap<Long, CallStack>();
 
 		public void add(Configuration configuration) {
-			StatePredictionPair key = new StatePredictionPair(configuration.state, configuration.prediction);
+			long key = (long) configuration.stateId << 32 | (long) configuration.prediction & 0xffffffffL;
 
 			CallStack stack = perStatePredictionCallStack.get(key);
 
@@ -451,9 +455,10 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		public Set<Configuration> build() {
 			HashSet<Configuration> configurations = new HashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
-			for (Map.Entry<StatePredictionPair, CallStack> entry : perStatePredictionCallStack.entrySet()) {
-				StatePredictionPair key = entry.getKey();
-				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
+			for (long key : perStatePredictionCallStack.keySet()) {
+				int stateId = (int) (key >>> 32);
+				int prediction = (int) (key & 0xffffffffL);
+				configurations.add(new Configuration(stateId, prediction, perStatePredictionCallStack.get(key)));
 			}
 
 			if (MERGE_STATS) {

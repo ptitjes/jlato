@@ -46,7 +46,7 @@ public class CallStack {
 		this.hashCode = hashCode;
 	}
 
-	public CallStack push(GrammarState state) {
+	public CallStack push(int state) {
 		return new Push(state, this);
 	}
 
@@ -107,23 +107,23 @@ public class CallStack {
 
 		// Implement MERGE-MERGE by set copy/addAll
 
-		Map<GrammarState, CallStack> perHeadTails = new HashMap<GrammarState, CallStack>();
+		Map<Integer, CallStack> perHeadTails = new HashMap<Integer, CallStack>();
 		merge(thisKind, this, perHeadTails);
 		merge(otherKind, other, perHeadTails);
 
 		if (perHeadTails.size() == 1) {
-			Map.Entry<GrammarState, CallStack> entry = perHeadTails.entrySet().iterator().next();
+			Map.Entry<Integer, CallStack> entry = perHeadTails.entrySet().iterator().next();
 			return new Push(entry.getKey(), entry.getValue());
 		} else {
 			Builder<CallStack, Set<CallStack>> builder = Sets.builder();
-			for (Map.Entry<GrammarState, CallStack> entry : perHeadTails.entrySet()) {
+			for (Map.Entry<Integer, CallStack> entry : perHeadTails.entrySet()) {
 				builder.add(new Push(entry.getKey(), entry.getValue()));
 			}
 			return new Merge(builder.build());
 		}
 	}
 
-	private void merge(Kind kind, CallStack stacks, Map<GrammarState, CallStack> perHead) {
+	private void merge(Kind kind, CallStack stacks, Map<Integer, CallStack> perHead) {
 		if (kind == Kind.PUSH) {
 			Push push = (Push) stacks;
 			merge(push.head, push.tails, perHead);
@@ -137,7 +137,7 @@ public class CallStack {
 		}
 	}
 
-	private void merge(GrammarState head, CallStack tails, Map<GrammarState, CallStack> perHeadTails) {
+	private void merge(int head, CallStack tails, Map<Integer, CallStack> perHeadTails) {
 		perHeadTails.put(head, perHeadTails.containsKey(head) ? perHeadTails.get(head).merge(tails) : tails);
 	}
 
@@ -165,10 +165,10 @@ public class CallStack {
 
 	public static class Push extends CallStack {
 
-		public final GrammarState head;
+		public final int head;
 		public final CallStack tails;
 
-		private Push(GrammarState head, CallStack tails) {
+		private Push(int head, CallStack tails) {
 			super(Kind.PUSH, computeHashCode(head, tails));
 			this.head = head;
 			this.tails = tails;
@@ -181,19 +181,19 @@ public class CallStack {
 
 			Push other = (Push) o;
 
-			return head.equals(other.head) && tails.equals(other.tails);
+			return head == other.head && tails.equals(other.tails);
 		}
 
-		private static int computeHashCode(GrammarState head, CallStack tails) {
+		private static int computeHashCode(int head, CallStack tails) {
 			int result = 3 + 31 * Kind.PUSH.hashCode();
-			result = 31 * result + head.hashCode();
+			result = 31 * result + head;
 			result = 31 * result + tails.hashCode();
 			return result;
 		}
 
 		@Override
 		public String toString() {
-			return "(" + head.name + "):" + tails.toString();
+			return "(" + head + "):" + tails.toString();
 		}
 	}
 

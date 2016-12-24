@@ -24,10 +24,10 @@ package org.jlato.internal.parser.all;
  */
 public class StatePredictionPair {
 
-	public final GrammarState state;
+	public final int state;
 	public final int prediction;
 
-	public StatePredictionPair(GrammarState state, int prediction) {
+	public StatePredictionPair(int state, int prediction) {
 		this.state = state;
 		this.prediction = prediction;
 
@@ -40,14 +40,14 @@ public class StatePredictionPair {
 
 		StatePredictionPair that = (StatePredictionPair) o;
 
-		if (!state.equals(that.state)) return false;
+		if (state != that.state) return false;
 		return prediction == that.prediction;
 
 	}
 
 	@Override
 	public int hashCode() {
-		int result = state.hashCode();
+		int result = state;
 		result = 31 * result + prediction;
 		return result;
 	}

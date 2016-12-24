@@ -76,8 +76,8 @@ public class PredictionState {
 	}
 
 	private boolean viableAlternative() {
-		HashMap<GrammarState, BitSet> prodSetsPerState = getProdSetsPerState();
-		for (Map.Entry<GrammarState, BitSet> entry : prodSetsPerState.entrySet()) {
+		HashMap<Integer, BitSet> prodSetsPerState = getProdSetsPerState();
+		for (Map.Entry<Integer, BitSet> entry : prodSetsPerState.entrySet()) {
 			if (entry.getValue().cardinality() == 1) return true;
 		}
 		return false;
@@ -86,12 +86,12 @@ public class PredictionState {
 	public Collection<BitSet> getConflictSets() {
 		HashMap<StateCallStackPair, BitSet> stateCallStackToAlts = new HashMap<StateCallStackPair, BitSet>();
 		for (Configuration configuration : configurations) {
-			GrammarState state = configuration.state;
+			int stateId = configuration.stateId;
 			CallStack callStack = configuration.callStack;
 			Integer prediction = configuration.prediction;
 			if (prediction == -1) continue;
 
-			StateCallStackPair pair = new StateCallStackPair(state, callStack);
+			StateCallStackPair pair = new StateCallStackPair(stateId, callStack);
 			BitSet alts = stateCallStackToAlts.get(pair);
 			if (alts == null) {
 				alts = new BitSet();
@@ -103,17 +103,17 @@ public class PredictionState {
 		return stateCallStackToAlts.values();
 	}
 
-	public HashMap<GrammarState, BitSet> getProdSetsPerState() {
-		HashMap<GrammarState, BitSet> stateToAlts = new HashMap<GrammarState, BitSet>();
+	public HashMap<Integer, BitSet> getProdSetsPerState() {
+		HashMap<Integer, BitSet> stateToAlts = new HashMap<Integer, BitSet>();
 		for (Configuration configuration : configurations) {
-			GrammarState state = configuration.state;
+			int stateId = configuration.stateId;
 			Integer prediction = configuration.prediction;
 			if (prediction == -1) continue;
 
-			BitSet alts = stateToAlts.get(state);
+			BitSet alts = stateToAlts.get(stateId);
 			if (alts == null) {
 				alts = new BitSet();
-				stateToAlts.put(state, alts);
+				stateToAlts.put(stateId, alts);
 			}
 
 			alts.set(prediction);

@@ -23,13 +23,13 @@ package org.jlato.internal.parser.all;
  * @author Didier Villevalois
  */
 public class Configuration {
+	public final int stateId;
 	public final int prediction;
-	public final GrammarState state;
 	public final CallStack callStack;
 
-	public Configuration(GrammarState state, int prediction, CallStack callStack) {
+	public Configuration(int stateId, int prediction, CallStack callStack) {
 		this.prediction = prediction;
-		this.state = state;
+		this.stateId = stateId;
 		this.callStack = callStack;
 	}
 
@@ -41,14 +41,14 @@ public class Configuration {
 		Configuration that = (Configuration) o;
 
 		if (prediction != that.prediction) return false;
-		if (!state.equals(that.state)) return false;
+		if (stateId != that.stateId) return false;
 		return callStack.equals(that.callStack);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = prediction;
-		result = 31 * result + state.hashCode();
+		result = 31 * result + stateId;
 		result = 31 * result + callStack.hashCode();
 		return result;
 	}
@@ -57,7 +57,7 @@ public class Configuration {
 	public String toString() {
 		return "Configuration{" +
 				"prediction=" + prediction +
-				", state=" + state +
+				", state=" + stateId +
 				", callStack=" + callStack +
 				'}';
 	}
