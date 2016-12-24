@@ -22,9 +22,6 @@ package org.jlato.internal.parser.all;
 import org.jlato.internal.parser.Token;
 import org.jlato.internal.parser.TokenType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Didier Villevalois
  */
@@ -42,10 +39,6 @@ public class GrammarState {
 
 	public int terminalTransition = -1;
 	public int terminalTransitionEnd;
-
-	public GrammarState(int id, String name) {
-		this(id, name, -1);
-	}
 
 	public GrammarState(int id, String name, int nonTerminalEnd) {
 		this.id = id;

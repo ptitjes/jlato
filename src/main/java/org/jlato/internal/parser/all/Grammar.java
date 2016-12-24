@@ -21,6 +21,7 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.all.GrammarProduction.ChoicePoint;
 import org.jlato.internal.parser.all.GrammarProduction.Expansion;
+import org.jlato.internal.parser.util.IntPairObjectMap;
 
 import java.util.*;
 
@@ -33,7 +34,7 @@ public abstract class Grammar {
 	private final GrammarState[] states;
 	private final int[] startStates;
 	private final Set<Integer>[] perNonTerminalUseEndStates;
-	private final Map<Integer, Map<Integer, Set<Integer>>> perEntryPointNonTerminalUseEndState = new HashMap<Integer, Map<Integer, Set<Integer>>>();
+	private final IntPairObjectMap<Set<Integer>> perEntryPointNonTerminalUseEndState = new IntPairObjectMap<Set<Integer>>();
 
 	public Grammar(int stateCount, int constantCount) {
 		states = new GrammarState[stateCount];
@@ -80,16 +81,10 @@ public abstract class Grammar {
 	}
 
 	void addNonTerminalEntryPointEndState(int entryPoint, int symbol, GrammarState end) {
-		Map<Integer, Set<Integer>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
-		if (nonTerminalUseEndStates == null) {
-			nonTerminalUseEndStates = new HashMap<Integer, Set<Integer>>();
-			perEntryPointNonTerminalUseEndState.put(entryPoint, nonTerminalUseEndStates);
-		}
-
-		Set<Integer> useEndStates = nonTerminalUseEndStates.get(symbol);
+		Set<Integer> useEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint, symbol);
 		if (useEndStates == null) {
 			useEndStates = new HashSet<Integer>();
-			nonTerminalUseEndStates.put(symbol, useEndStates);
+			perEntryPointNonTerminalUseEndState.put(entryPoint, symbol, useEndStates);
 		}
 		useEndStates.add(end.id);
 	}
@@ -107,7 +102,6 @@ public abstract class Grammar {
 	}
 
 	public Set<Integer> getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
-		Map<Integer, Set<Integer>> nonTerminalUseEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint);
-		return nonTerminalUseEndStates == null ? null : nonTerminalUseEndStates.get(nonTerminal);
+		return perEntryPointNonTerminalUseEndState.get(entryPoint, nonTerminal);
 	}
 }

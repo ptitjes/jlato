@@ -19,7 +19,16 @@
 
 package org.jlato.internal.parser;
 
+import gnu.trove.decorator.TLongObjectMapDecorator;
+import gnu.trove.iterator.TLongIterator;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.set.hash.THashSet;
 import org.jlato.internal.parser.all.*;
+import org.jlato.internal.parser.util.IntObjectMap;
+import org.jlato.internal.parser.util.IntPairObjectMap;
+import org.jlato.internal.parser.util.IntPairObjectMap.IntPairObjectIterator;
 
 import java.util.*;
 
@@ -39,7 +48,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 	private final Grammar grammar = initializeGrammar();
 
-	private final Map<Integer, Map<Integer, CachedAutomaton>> automata = new HashMap<Integer, Map<Integer, CachedAutomaton>>();
+	private final IntPairObjectMap<CachedAutomaton> automata = new IntPairObjectMap<CachedAutomaton>();
 
 	private CallStack callStack = CallStack.EMPTY;
 
@@ -101,22 +110,16 @@ public abstract class ParserBaseALL extends ParserBase {
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
-		Map<Integer, CachedAutomaton> perChoicePointAutomata = automata.get(entryPoint);
-		if (perChoicePointAutomata == null) {
-			perChoicePointAutomata = new HashMap<Integer, CachedAutomaton>();
-			automata.put(entryPoint, perChoicePointAutomata);
-		}
-
 		// TODO Generate data for the number of choice points and number of alternative predictions
 		// TODO Pre-initialize automaton with there final states and the shared error state
-		CachedAutomaton automaton = perChoicePointAutomata.get(choicePoint);
+		CachedAutomaton automaton = automata.get(entryPoint, choicePoint);
 
 		if (automaton == null) {
 			current = makeStartState(choicePoint, CallStack.WILDCARD);
 			cacheMiss++;
 
 			automaton = new CachedAutomaton(current);
-			perChoicePointAutomata.put(choicePoint, automaton);
+			automata.put(entryPoint, choicePoint, automaton);
 		} else {
 			current = automaton.initialState;
 			cacheHits++;
@@ -255,7 +258,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
-		Set<Configuration> newConfigurations = new HashSet<Configuration>();
+		Set<Configuration> newConfigurations = new THashSet<Configuration>();
 		for (Configuration configuration : configurations) {
 			GrammarState state = grammar.getState(configuration.stateId);
 			int targetId = state.match(token);
@@ -271,7 +274,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 	private Set<Configuration> closure(Set<Configuration> configurations) {
 		ConfigurationSetBuilder newConfigurations = newConfigurationSetBuilder();
-		HashSet<Configuration> busy = new HashSet<Configuration>(configurations.size() * 4 / 3 + 1, 3f / 4);
+		Set<Configuration> busy = new THashSet<Configuration>(configurations.size() * 4 / 3 + 1, 3f / 4);
 		for (Configuration configuration : configurations) {
 			closureOf(configuration, newConfigurations, busy);
 		}
@@ -384,7 +387,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithoutMerge implements ConfigurationSetBuilder {
-		HashSet<Configuration> configurations = new HashSet<Configuration>();
+		Set<Configuration> configurations = new THashSet<Configuration>();
 
 		public void add(Configuration configuration) {
 			configurations.add(configuration);
@@ -396,7 +399,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithPostMerge implements ConfigurationSetBuilder {
-		HashSet<Configuration> configurations = new HashSet<Configuration>();
+		Set<Configuration> configurations = new THashSet<Configuration>();
 
 		public void add(Configuration configuration) {
 			configurations.add(configuration);
@@ -408,19 +411,19 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		private Set<Configuration> merge(Set<Configuration> configurations) {
 			int previousSize = configurations.size();
-			Map<Long, CallStack> perStatePredictionCallStack = new HashMap<Long, CallStack>();
+			IntPairObjectMap<CallStack> perStatePredictionCallStack = new IntPairObjectMap<CallStack>();
 			for (Configuration configuration : configurations) {
-				long key = (long) configuration.stateId << 32 | (long) configuration.prediction & 0xffffffffL;
-
-				CallStack stack = perStatePredictionCallStack.get(key);
-				perStatePredictionCallStack.put(key, stack == null ? configuration.callStack : stack.merge(configuration.callStack));
+				CallStack stack = perStatePredictionCallStack.get(configuration.stateId, configuration.prediction);
+				CallStack mergedStack = stack == null ? configuration.callStack : stack.merge(configuration.callStack);
+				perStatePredictionCallStack.put(configuration.stateId, configuration.prediction, mergedStack);
 			}
 
 			configurations.clear();
-			for (long key : perStatePredictionCallStack.keySet()) {
-				int stateId = (int) (key >>> 32);
-				int prediction = (int) (key & 0xffffffffL);
-				configurations.add(new Configuration(stateId, prediction, perStatePredictionCallStack.get(key)));
+
+			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
+			while (iterator.hasNext()) {
+				iterator.advance();
+				configurations.add(new Configuration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
 			}
 
 			if (MERGE_STATS) {
@@ -434,12 +437,10 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithIncrementalMerge implements ConfigurationSetBuilder {
-		Map<Long, CallStack> perStatePredictionCallStack = new HashMap<Long, CallStack>();
+		IntPairObjectMap<CallStack> perStatePredictionCallStack = new IntPairObjectMap<CallStack>();
 
 		public void add(Configuration configuration) {
-			long key = (long) configuration.stateId << 32 | (long) configuration.prediction & 0xffffffffL;
-
-			CallStack stack = perStatePredictionCallStack.get(key);
+			CallStack stack = perStatePredictionCallStack.get(configuration.stateId, configuration.prediction);
 
 			if (MERGE_STATS) {
 				added++;
@@ -447,18 +448,19 @@ public abstract class ParserBaseALL extends ParserBase {
 			}
 
 			CallStack mergedStack = stack == null ? configuration.callStack : stack.merge(configuration.callStack);
-			perStatePredictionCallStack.put(key, mergedStack);
+			perStatePredictionCallStack.put(configuration.stateId, configuration.prediction, mergedStack);
 		}
 
 		private int added = 0;
 		private int saved = 0;
 
 		public Set<Configuration> build() {
-			HashSet<Configuration> configurations = new HashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
-			for (long key : perStatePredictionCallStack.keySet()) {
-				int stateId = (int) (key >>> 32);
-				int prediction = (int) (key & 0xffffffffL);
-				configurations.add(new Configuration(stateId, prediction, perStatePredictionCallStack.get(key)));
+			Set<Configuration> configurations = new THashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
+
+			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
+			while (iterator.hasNext()) {
+				iterator.advance();
+				configurations.add(new Configuration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
 			}
 
 			if (MERGE_STATS) {

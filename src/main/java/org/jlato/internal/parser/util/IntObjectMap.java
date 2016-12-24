@@ -17,38 +17,12 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.parser.all;
+package org.jlato.internal.parser.util;
+
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
  * @author Didier Villevalois
  */
-public class StatePredictionPair {
-
-	public final int state;
-	public final int prediction;
-
-	public StatePredictionPair(int state, int prediction) {
-		this.state = state;
-		this.prediction = prediction;
-
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		StatePredictionPair that = (StatePredictionPair) o;
-
-		if (state != that.state) return false;
-		return prediction == that.prediction;
-
-	}
-
-	@Override
-	public int hashCode() {
-		int result = state;
-		result = 31 * result + prediction;
-		return result;
-	}
+public class IntObjectMap<V> extends TIntObjectHashMap<V> {
 }

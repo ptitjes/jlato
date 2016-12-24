@@ -20,6 +20,7 @@
 package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.TokenType;
+import org.jlato.internal.parser.util.IntObjectMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,13 +49,13 @@ public class CachedAutomaton {
 	public static void printToString(StringBuilder builder, PredictionState state, int indent) {
 		indent(builder, indent);
 		builder.append("(" + state.hashCode() + (state.prediction == -1 ? "" : " - " + state.prediction) + ")");
-		if (!state.transitions.isEmpty()) {
+		IntObjectMap<PredictionState> transitions = state.transitions;
+		if (!transitions.isEmpty()) {
 			builder.append(" \n");
-			for (Map.Entry<Integer, PredictionState> entry : state.transitions.entrySet()) {
+			for (int token : transitions.keys()) {
 				indent(builder, indent + 1);
-				int token = entry.getKey();
 				builder.append("[tok:" + TokenType.tokenImage[token] + "->\n");
-				printToString(builder, entry.getValue(), indent + 2);
+				printToString(builder, transitions.get(token), indent + 2);
 				builder.append("\n");
 				indent(builder, indent + 1);
 				builder.append("]\n");

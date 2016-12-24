@@ -21,6 +21,7 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.ParserBaseALL;
 import org.jlato.internal.parser.Token;
+import org.jlato.internal.parser.util.IntObjectMap;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class PredictionState {
 	public final int prediction;
 	public final boolean stackSensitive;
 
-	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
+	public final IntObjectMap<PredictionState> transitions = new IntObjectMap<PredictionState>();
 
 	public PredictionState(Set<Configuration> configurations, boolean computePrediction, boolean computeConflicts, boolean forceLL) {
 		this.hashCode = computeHashCode(configurations);
