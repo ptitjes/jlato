@@ -45,7 +45,7 @@ import static org.jlato.internal.parser.TokenType.*;
 /**
  * @author Didier Villevalois
  */
-public abstract class ParserBase {
+public abstract class ParserBase implements ParserInterface {
 
 	private final Lexer lexer;
 	protected ParserConfiguration configuration;
@@ -63,7 +63,7 @@ public abstract class ParserBase {
 		this.preserveWhitespaces = configuration.preserveWhitespaces;
 	}
 
-	protected void reset(InputStream inputStream, String encoding) {
+	public void reset(InputStream inputStream, String encoding) {
 		try {
 			reset(new InputStreamReader(inputStream, encoding));
 		} catch (UnsupportedEncodingException e) {
@@ -72,8 +72,13 @@ public abstract class ParserBase {
 		}
 	}
 
-	protected void reset(Reader reader) {
+	public void reset(Reader reader) {
 		lexer.yyreset(reader);
+
+		reset();
+	}
+
+	protected void reset() {
 		lookaheadCells.clear();
 		matchLookahead = 0;
 
@@ -83,48 +88,6 @@ public abstract class ParserBase {
 			runStack.push(Vector.<WTokenRun>empty());
 		}
 	}
-
-	// Parser interface
-
-	protected abstract BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException;
-
-	protected abstract BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SImportDecl> parseImportDeclEntry() throws ParseException;
-
-	protected abstract BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException;
-
-	protected abstract BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind kind) throws ParseException;
-
-	protected abstract BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SNodeList> parseModifiersEntry() throws ParseException;
-
-	protected abstract BUTree<SNodeList> parseAnnotationsEntry() throws ParseException;
-
-	protected abstract BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException;
-
-	protected abstract BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException;
-
-	protected abstract BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException;
-
-	protected abstract BUTree<SNodeList> parseStatementsEntry() throws ParseException;
-
-	protected abstract BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException;
-
-	protected abstract BUTree<? extends SExpr> parseExpressionEntry() throws ParseException;
-
-	protected abstract BUTree<? extends SType> parseTypeEntry() throws ParseException;
-
-	protected abstract BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException;
-
-	protected abstract BUTree<SName> parseNameEntry() throws ParseException;
 
 	// Lexical preservation mechanism
 

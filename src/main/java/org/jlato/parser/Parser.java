@@ -21,9 +21,8 @@ package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.parser.ParserInterface;
-import org.jlato.internal.parser.ParserNew;
-import org.jlato.tree.Tree;
 import org.jlato.tree.NodeMap;
+import org.jlato.tree.Tree;
 import org.jlato.tree.Trees;
 import org.jlato.tree.decl.CompilationUnit;
 
@@ -51,7 +50,7 @@ public class Parser {
 		this.configuration = configuration;
 	}
 
-	static final ParserInterface.Factory DefaultFactory = new ParserNew.ParserNewFactory();
+	static final ParserInterface.Factory DefaultFactory = new ParserInterface.DefaultParserFactory();
 
 	private ParserInterface.Factory factory() {
 		return DefaultFactory;

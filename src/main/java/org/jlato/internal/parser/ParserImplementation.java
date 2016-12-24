@@ -2555,7 +2555,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(ret, CompilationUnit)
 		action({ return ret; })
 	) */
-	protected BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException {
+	public BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException {
 		BUTree<SCompilationUnit> ret;
 		int __token;
 		entryPoint = JavaGrammar.COMPILATION_UNIT_ENTRY;
@@ -2571,7 +2571,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException {
+	public BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException {
 		BUTree<SPackageDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.PACKAGE_DECL_ENTRY;
@@ -2590,7 +2590,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SImportDecl> parseImportDeclEntry() throws ParseException {
+	public BUTree<SImportDecl> parseImportDeclEntry() throws ParseException {
 		BUTree<SImportDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.IMPORT_DECL_ENTRY;
@@ -2609,7 +2609,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException {
+	public BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException {
 		BUTree<? extends STypeDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.TYPE_DECL_ENTRY;
@@ -2628,7 +2628,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind typeKind) throws ParseException {
+	public BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.MEMBER_DECL_ENTRY;
@@ -2647,7 +2647,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException {
+	public BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException {
 		BUTree<? extends SMemberDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.ANNOTATION_MEMBER_DECL_ENTRY;
@@ -2666,7 +2666,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseModifiersEntry() throws ParseException {
+	public BUTree<SNodeList> parseModifiersEntry() throws ParseException {
 		BUTree<SNodeList> ret;
 		int __token;
 		entryPoint = JavaGrammar.MODIFIERS_ENTRY;
@@ -2685,7 +2685,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseAnnotationsEntry() throws ParseException {
+	public BUTree<SNodeList> parseAnnotationsEntry() throws ParseException {
 		BUTree<SNodeList> ret;
 		int __token;
 		entryPoint = JavaGrammar.ANNOTATIONS_ENTRY;
@@ -2706,7 +2706,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException {
+	public BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SMethodDecl> ret;
 		int __token;
@@ -2732,7 +2732,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException {
+	public BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SFieldDecl> ret;
 		int __token;
@@ -2758,7 +2758,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException {
+	public BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SAnnotationMemberDecl> ret;
 		int __token;
@@ -2782,7 +2782,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException {
+	public BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException {
 		BUTree<SEnumConstantDecl> ret;
 		int __token;
 		entryPoint = JavaGrammar.ENUM_CONSTANT_DECL_ENTRY;
@@ -2801,7 +2801,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException {
+	public BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException {
 		BUTree<SFormalParameter> ret;
 		int __token;
 		entryPoint = JavaGrammar.FORMAL_PARAMETER_ENTRY;
@@ -2820,7 +2820,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException {
+	public BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException {
 		BUTree<STypeParameter> ret;
 		int __token;
 		entryPoint = JavaGrammar.TYPE_PARAMETER_ENTRY;
@@ -2839,7 +2839,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseStatementsEntry() throws ParseException {
+	public BUTree<SNodeList> parseStatementsEntry() throws ParseException {
 		BUTree<SNodeList> ret;
 		int __token;
 		entryPoint = JavaGrammar.STATEMENTS_ENTRY;
@@ -2858,7 +2858,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException {
+	public BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException {
 		BUTree<? extends SStmt> ret;
 		int __token;
 		entryPoint = JavaGrammar.BLOCK_STATEMENT_ENTRY;
@@ -2877,7 +2877,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends SExpr> parseExpressionEntry() throws ParseException {
+	public BUTree<? extends SExpr> parseExpressionEntry() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		int __token;
 		entryPoint = JavaGrammar.EXPRESSION_ENTRY;
@@ -2898,7 +2898,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<? extends SType> parseTypeEntry() throws ParseException {
+	public BUTree<? extends SType> parseTypeEntry() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> ret;
 		int __token;
@@ -2922,7 +2922,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException {
+	public BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException {
 		BUTree<SQualifiedName> ret;
 		int __token;
 		entryPoint = JavaGrammar.QUALIFIED_NAME_ENTRY;
@@ -2941,7 +2941,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
-	protected BUTree<SName> parseNameEntry() throws ParseException {
+	public BUTree<SName> parseNameEntry() throws ParseException {
 		BUTree<SName> ret;
 		int __token;
 		entryPoint = JavaGrammar.NAME_ENTRY;
@@ -3598,7 +3598,8 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, cit);
 				__token = getToken(0).kind;
 			}
-			if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
+			if (typeKind == TypeKind.Interface)
+				problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
 
 		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
 			pushCallStack(JavaGrammar.ImplementsList_2_1_1);
@@ -4144,14 +4145,16 @@ class ParserImplementation extends ParserBaseALL {
 			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
 			modifiers = parseModifiers();
 			popCallStack();
-			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
+				problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
 
 			switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECL_1_2_2)) {
 				case 1:
 					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_1_1);
 					ret = parseInitializerDecl(modifiers);
 					popCallStack();
-					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
+					if (typeKind == TypeKind.Interface)
+						ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 
 					break;
 				case 2:
@@ -4173,7 +4176,8 @@ class ParserImplementation extends ParserBaseALL {
 					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_2_5_1);
 					ret = parseConstructorDecl(modifiers);
 					popCallStack();
-					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
+					if (typeKind == TypeKind.Interface)
+						ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 
 					break;
 				case 6:
@@ -4483,7 +4487,8 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.SEMICOLON) {
 			parse(TokenType.SEMICOLON);
-			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
+				problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
 		} else if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.MethodDecl_7_1);
@@ -7704,7 +7709,7 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(stmts, Statements)
 		action({ return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts))); })
 	) */
-	protected BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
+	public BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
 		int __token;

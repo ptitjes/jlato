@@ -24,7 +24,6 @@ import org.jlato.internal.parser.all.*;
 import java.io.Reader;
 import java.util.*;
 
-
 /**
  * @author Didier Villevalois
  */
@@ -46,19 +45,25 @@ public abstract class ParserBaseALL extends ParserBase {
 	private CallStack callStack = CallStack.EMPTY;
 
 	@Override
-	protected void reset(Reader reader) {
-		super.reset(reader);
-		currentPredictions = new LinkedList<Integer>();
+	protected void reset() {
+		super.reset();
+
 		callStack = CallStack.EMPTY;
 	}
 
+	@Override
 	public void clearStats() {
+		super.clearStats();
+
 		cacheMiss = 0;
 		cacheHits = 0;
 		fullLL = 0;
 	}
 
+	@Override
 	public void printStats() {
+		super.printStats();
+
 		if (CACHE_STATS) {
 			System.out.println("DFA Cache - Hits: " + cacheHits + ", Misses: " + cacheMiss + ", FullLL: " + fullLL);
 			for (Map.Entry<Integer, PredictionState> entry : perChoicePointStackSensitiveStates.entrySet()) {
@@ -71,8 +76,6 @@ public abstract class ParserBaseALL extends ParserBase {
 			}
 		}
 	}
-
-	private List<Integer> currentPredictions;
 
 	protected void pushCallStack(Grammar.NonTerminal ntCall) {
 		if (forceLL) return;

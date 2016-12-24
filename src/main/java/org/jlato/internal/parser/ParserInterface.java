@@ -36,61 +36,78 @@ import java.io.Reader;
 /**
  * @author Didier Villevalois
  */
-public abstract class ParserInterface {
+public interface ParserInterface {
 
-	public abstract void clearStats();
-
-	public abstract void printStats();
-
-	public interface Factory {
+	interface Factory {
 
 		ParserInterface newInstance(InputStream in, String encoding, ParserConfiguration configuration, boolean quotesMode);
 
 		ParserInterface newInstance(Reader in, ParserConfiguration configuration, boolean quotesMode);
 	}
 
-	public abstract void reset(InputStream inputStream, String encoding);
+	public static class DefaultParserFactory implements ParserInterface.Factory {
+		@Override
+		public ParserInterface newInstance(InputStream in, String encoding, ParserConfiguration configuration, boolean quotesMode) {
+			ParserImplementation parser = new ParserImplementation();
+			parser.configure(configuration, quotesMode);
+			parser.reset(in, encoding);
+			return parser;
+		}
 
-	public abstract void reset(Reader reader);
+		@Override
+		public ParserInterface newInstance(Reader in, ParserConfiguration configuration, boolean quotesMode) {
+			ParserImplementation parser = new ParserImplementation();
+			parser.configure(configuration, quotesMode);
+			parser.reset(in);
+			return parser;
+		}
+	}
 
-	public abstract BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException;
+	void reset(InputStream inputStream, String encoding);
 
-	public abstract BUTree<SPackageDecl> parsePackageDecl() throws ParseException;
+	void reset(Reader reader);
 
-	public abstract BUTree<SImportDecl> parseImportDecl() throws ParseException;
+	void clearStats();
 
-	public abstract BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException;
+	void printStats();
 
-	public abstract BUTree<? extends SMemberDecl> parseMemberDecl(TypeKind kind) throws ParseException;
+	BUTree<SCompilationUnit> parseCompilationUnitEntry() throws ParseException;
 
-	public abstract BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException;
+	BUTree<SPackageDecl> parsePackageDeclEntry() throws ParseException;
 
-	public abstract BUTree<SNodeList> parseModifiers() throws ParseException;
+	BUTree<SImportDecl> parseImportDeclEntry() throws ParseException;
 
-	public abstract BUTree<SNodeList> parseAnnotations() throws ParseException;
+	BUTree<? extends STypeDecl> parseTypeDeclEntry() throws ParseException;
 
-	public abstract BUTree<SMethodDecl> parseMethodDecl() throws ParseException;
+	BUTree<? extends SMemberDecl> parseMemberDeclEntry(TypeKind kind) throws ParseException;
 
-	public abstract BUTree<SFieldDecl> parseFieldDecl() throws ParseException;
+	BUTree<? extends SMemberDecl> parseAnnotationMemberDeclEntry() throws ParseException;
 
-	public abstract BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException;
+	BUTree<SNodeList> parseModifiersEntry() throws ParseException;
 
-	public abstract BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException;
+	BUTree<SNodeList> parseAnnotationsEntry() throws ParseException;
 
-	public abstract BUTree<SFormalParameter> parseFormalParameter() throws ParseException;
+	BUTree<SMethodDecl> parseMethodDeclEntry() throws ParseException;
 
-	public abstract BUTree<STypeParameter> parseTypeParameter() throws ParseException;
+	BUTree<SFieldDecl> parseFieldDeclEntry() throws ParseException;
 
-	public abstract BUTree<SNodeList> parseStatements() throws ParseException;
+	BUTree<SAnnotationMemberDecl> parseAnnotationElementDeclEntry() throws ParseException;
 
-	public abstract BUTree<? extends SStmt> parseBlockStatement() throws ParseException;
+	BUTree<SEnumConstantDecl> parseEnumConstantDeclEntry() throws ParseException;
 
-	public abstract BUTree<? extends SExpr> parseExpression() throws ParseException;
+	BUTree<SFormalParameter> parseFormalParameterEntry() throws ParseException;
 
-	public abstract BUTree<? extends SType> parseType() throws ParseException;
+	BUTree<STypeParameter> parseTypeParameterEntry() throws ParseException;
 
-	public abstract BUTree<SQualifiedName> parseQualifiedName() throws ParseException;
+	BUTree<SNodeList> parseStatementsEntry() throws ParseException;
 
-	public abstract BUTree<SName> parseName() throws ParseException;
+	BUTree<? extends SStmt> parseBlockStatementEntry() throws ParseException;
 
+	BUTree<? extends SExpr> parseExpressionEntry() throws ParseException;
+
+	BUTree<? extends SType> parseTypeEntry() throws ParseException;
+
+	BUTree<SQualifiedName> parseQualifiedNameEntry() throws ParseException;
+
+	BUTree<SName> parseNameEntry() throws ParseException;
 }
