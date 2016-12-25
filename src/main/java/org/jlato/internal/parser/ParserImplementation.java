@@ -3188,47 +3188,47 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(JavaGrammar.MODIFIERS_1) == 1) {
 			__token = getToken(0).kind;
-			if (__token == TokenType.AT) {
+			if (__token == TokenType.PUBLIC) {
+				consume(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else if (__token == TokenType.PROTECTED) {
+				consume(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PRIVATE) {
+				consume(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.ABSTRACT) {
+				consume(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.DEFAULT) {
+				consume(TokenType.DEFAULT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
+			} else if (__token == TokenType.STATIC) {
+				consume(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.FINAL) {
+				consume(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.TRANSIENT) {
+				consume(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.VOLATILE) {
+				consume(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				consume(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.NATIVE) {
+				consume(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.STRICTFP) {
+				consume(TokenType.STRICTFP);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+			} else if (__token == TokenType.AT) {
 				pushCallStack(JavaGrammar.Modifiers_1_1_13_1);
 				ann = parseAnnotation();
 				popCallStack();
 				modifiers = append(modifiers, ann);
-			} else if (__token == TokenType.STRICTFP) {
-				consume(TokenType.STRICTFP);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (__token == TokenType.NATIVE) {
-				consume(TokenType.NATIVE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (__token == TokenType.SYNCHRONIZED) {
-				consume(TokenType.SYNCHRONIZED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (__token == TokenType.VOLATILE) {
-				consume(TokenType.VOLATILE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (__token == TokenType.TRANSIENT) {
-				consume(TokenType.TRANSIENT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (__token == TokenType.FINAL) {
-				consume(TokenType.FINAL);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (__token == TokenType.STATIC) {
-				consume(TokenType.STATIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (__token == TokenType.DEFAULT) {
-				consume(TokenType.DEFAULT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-			} else if (__token == TokenType.ABSTRACT) {
-				consume(TokenType.ABSTRACT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (__token == TokenType.PRIVATE) {
-				consume(TokenType.PRIVATE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (__token == TokenType.PROTECTED) {
-				consume(TokenType.PROTECTED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (__token == TokenType.PUBLIC) {
-				consume(TokenType.PUBLIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
 			} else
 				throw produceParseException(TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
 			__token = getToken(0).kind;
@@ -3298,44 +3298,44 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
 			__token = getToken(0).kind;
-			if (__token == TokenType.AT) {
+			if (__token == TokenType.PUBLIC) {
+				consume(TokenType.PUBLIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+			} else if (__token == TokenType.PROTECTED) {
+				consume(TokenType.PROTECTED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+			} else if (__token == TokenType.PRIVATE) {
+				consume(TokenType.PRIVATE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+			} else if (__token == TokenType.ABSTRACT) {
+				consume(TokenType.ABSTRACT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+			} else if (__token == TokenType.STATIC) {
+				consume(TokenType.STATIC);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+			} else if (__token == TokenType.FINAL) {
+				consume(TokenType.FINAL);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+			} else if (__token == TokenType.TRANSIENT) {
+				consume(TokenType.TRANSIENT);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+			} else if (__token == TokenType.VOLATILE) {
+				consume(TokenType.VOLATILE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+			} else if (__token == TokenType.SYNCHRONIZED) {
+				consume(TokenType.SYNCHRONIZED);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+			} else if (__token == TokenType.NATIVE) {
+				consume(TokenType.NATIVE);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+			} else if (__token == TokenType.STRICTFP) {
+				consume(TokenType.STRICTFP);
+				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+			} else if (__token == TokenType.AT) {
 				pushCallStack(JavaGrammar.ModifiersNoDefault_1_1_12_1);
 				ann = parseAnnotation();
 				popCallStack();
 				modifiers = append(modifiers, ann);
-			} else if (__token == TokenType.STRICTFP) {
-				consume(TokenType.STRICTFP);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (__token == TokenType.NATIVE) {
-				consume(TokenType.NATIVE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (__token == TokenType.SYNCHRONIZED) {
-				consume(TokenType.SYNCHRONIZED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (__token == TokenType.VOLATILE) {
-				consume(TokenType.VOLATILE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (__token == TokenType.TRANSIENT) {
-				consume(TokenType.TRANSIENT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (__token == TokenType.FINAL) {
-				consume(TokenType.FINAL);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (__token == TokenType.STATIC) {
-				consume(TokenType.STATIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (__token == TokenType.ABSTRACT) {
-				consume(TokenType.ABSTRACT);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (__token == TokenType.PRIVATE) {
-				consume(TokenType.PRIVATE);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (__token == TokenType.PROTECTED) {
-				consume(TokenType.PROTECTED);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (__token == TokenType.PUBLIC) {
-				consume(TokenType.PUBLIC);
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
 			} else
 				throw produceParseException(TokenType.ABSTRACT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT);
 			__token = getToken(0).kind;
@@ -3367,28 +3367,28 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
+		if (__token == TokenType.SEMICOLON) {
+			consume(TokenType.SEMICOLON);
+			ret = dress(SEmptyTypeDecl.make());
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89)) != 0)) {
 			pushCallStack(JavaGrammar.TypeDecl_1_2_1);
 			modifiers = parseModifiers();
 			popCallStack();
 			__token = getToken(0).kind;
-			if (__token == TokenType.AT) {
-				pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
-				ret = parseAnnotationTypeDecl(modifiers);
+			if (__token == TokenType.CLASS || __token == TokenType.INTERFACE) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
+				ret = parseClassOrInterfaceDecl(modifiers);
 				popCallStack();
 			} else if (__token == TokenType.ENUM) {
 				pushCallStack(JavaGrammar.TypeDecl_1_2_2_2);
 				ret = parseEnumDecl(modifiers);
 				popCallStack();
-			} else if (__token == TokenType.CLASS || __token == TokenType.INTERFACE) {
-				pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
-				ret = parseClassOrInterfaceDecl(modifiers);
+			} else if (__token == TokenType.AT) {
+				pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
+				ret = parseAnnotationTypeDecl(modifiers);
 				popCallStack();
 			} else
 				throw produceParseException(TokenType.CLASS, TokenType.ENUM, TokenType.INTERFACE, TokenType.AT);
-		} else if (__token == TokenType.SEMICOLON) {
-			consume(TokenType.SEMICOLON);
-			ret = dress(SEmptyTypeDecl.make());
 		} else
 			throw produceParseException(TokenType.ABSTRACT, TokenType.CLASS, TokenType.DEFAULT, TokenType.ENUM, TokenType.FINAL, TokenType.INTERFACE, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT);
 		return ret;
@@ -3443,25 +3443,7 @@ class ParserImplementation extends ParserBaseALL {
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.INTERFACE) {
-			consume(TokenType.INTERFACE);
-			typeKind = TypeKind.Interface;
-			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
-			name = parseName();
-			popCallStack();
-			__token = getToken(0).kind;
-			if (__token == TokenType.LT) {
-				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_3_1);
-				typeParams = parseTypeParameters();
-				popCallStack();
-			}
-			__token = getToken(0).kind;
-			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_2_4) == 1) {
-				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_4_1);
-				extendsClause = parseExtendsList();
-				popCallStack();
-			}
-		} else if (__token == TokenType.CLASS) {
+		if (__token == TokenType.CLASS) {
 			consume(TokenType.CLASS);
 			typeKind = TypeKind.Class;
 			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_2);
@@ -3484,6 +3466,24 @@ class ParserImplementation extends ParserBaseALL {
 			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_1_5) == 1) {
 				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_5_1);
 				implementsClause = parseImplementsList(typeKind, problem);
+				popCallStack();
+			}
+		} else if (__token == TokenType.INTERFACE) {
+			consume(TokenType.INTERFACE);
+			typeKind = TypeKind.Interface;
+			pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
+			name = parseName();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.LT) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_3_1);
+				typeParams = parseTypeParameters();
+				popCallStack();
+			}
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1_2_4) == 1) {
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_4_1);
+				extendsClause = parseExtendsList();
 				popCallStack();
 			}
 		} else
@@ -3521,7 +3521,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.EXTENDS);
 		__token = getToken(0).kind;
-		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ExtendsList_2_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
 			pushCallStack(JavaGrammar.ExtendsList_2_2_1);
 			cit = parseAnnotatedQualifiedType();
 			popCallStack();
@@ -3535,10 +3539,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, cit);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.ExtendsList_2_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		} else
 			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -3570,7 +3570,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.IMPLEMENTS);
 		__token = getToken(0).kind;
-		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ImplementsList_2_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
 			pushCallStack(JavaGrammar.ImplementsList_2_2_1);
 			cit = parseAnnotatedQualifiedType();
 			popCallStack();
@@ -3585,10 +3589,6 @@ class ParserImplementation extends ParserBaseALL {
 				__token = getToken(0).kind;
 			}
 			if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.ImplementsList_2_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		} else
 			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -3647,7 +3647,11 @@ class ParserImplementation extends ParserBaseALL {
 		}
 		consume(TokenType.LBRACE);
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.EnumDecl_5_1_1);
+			constants = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.EnumDecl_5_1_2_1);
 			entry = parseEnumConstantDecl();
 			popCallStack();
@@ -3661,10 +3665,6 @@ class ParserImplementation extends ParserBaseALL {
 				constants = append(constants, entry);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.EnumDecl_5_1_1);
-			constants = parseNodeListVar();
-			popCallStack();
 		}
 		__token = getToken(0).kind;
 		if (__token == TokenType.COMMA) {
@@ -3764,7 +3764,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.LBRACE);
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86 | 1L << TokenType.NODE_VARIABLE - 86 | 1L << TokenType.IDENTIFIER - 86)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86 | 1L << TokenType.NODE_VARIABLE - 86 | 1L << TokenType.IDENTIFIER - 86)) != 0)) {
 			do {
 				pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_2_1);
 				member = parseAnnotationTypeBodyDecl();
@@ -3772,10 +3776,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, member);
 				__token = getToken(0).kind;
 			} while (predict(JavaGrammar.ANNOTATION_TYPE_BODY_2_1_2) == 1);
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		}
 		consume(TokenType.RBRACE);
 		return ret;
@@ -3807,7 +3807,10 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+		if (__token == TokenType.SEMICOLON) {
+			consume(TokenType.SEMICOLON);
+			ret = dress(SEmptyTypeDecl.make());
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_1);
 			modifiers = parseModifiers();
 			popCallStack();
@@ -3840,9 +3843,6 @@ class ParserImplementation extends ParserBaseALL {
 				default:
 					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 			}
-		} else if (__token == TokenType.SEMICOLON) {
-			consume(TokenType.SEMICOLON);
-			ret = dress(SEmptyTypeDecl.make());
 		} else
 			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SEMICOLON, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -3915,7 +3915,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.LT);
 		__token = getToken(0).kind;
-		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeParameters_2_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
 			pushCallStack(JavaGrammar.TypeParameters_2_2_1);
 			tp = parseTypeParameter();
 			popCallStack();
@@ -3929,10 +3933,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, tp);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.TypeParameters_2_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		} else
 			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		consume(TokenType.GT);
@@ -3992,7 +3992,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.EXTENDS);
 		__token = getToken(0).kind;
-		if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeBounds_2_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0) {
 			pushCallStack(JavaGrammar.TypeBounds_2_2_1);
 			cit = parseAnnotatedQualifiedType();
 			popCallStack();
@@ -4006,10 +4010,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, cit);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.TypeBounds_2_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		} else
 			throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -4050,7 +4050,11 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SNodeList> ret = emptyList();
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.SEMICOLON - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.SEMICOLON - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
 			do {
 				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_2_1);
 				member = parseClassOrInterfaceBodyDecl(typeKind);
@@ -4058,10 +4062,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, member);
 				__token = getToken(0).kind;
 			} while (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECLS_1_1_2) == 1);
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		}
 		return ret;
 	}
@@ -4110,7 +4110,10 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
+		if (__token == TokenType.SEMICOLON) {
+			consume(TokenType.SEMICOLON);
+			ret = dress(SEmptyMemberDecl.make());
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
 			pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
 			modifiers = parseModifiers();
 			popCallStack();
@@ -4156,9 +4159,6 @@ class ParserImplementation extends ParserBaseALL {
 				default:
 					throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DOUBLE, TokenType.ENUM, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 			}
-		} else if (__token == TokenType.SEMICOLON) {
-			consume(TokenType.SEMICOLON);
-			ret = dress(SEmptyMemberDecl.make());
 		} else
 			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.CLASS, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.ENUM, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.INTERFACE, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOID, TokenType.VOLATILE, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.AT, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret.withProblem(problem);
@@ -4322,13 +4322,13 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<? extends SExpr> ret;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
-			pushCallStack(JavaGrammar.VariableInitializer_1_2);
-			ret = parseExpression();
-			popCallStack();
-		} else if (__token == TokenType.LBRACE) {
+		if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.VariableInitializer_1_1);
 			ret = parseArrayInitializer();
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.VariableInitializer_1_2);
+			ret = parseExpression();
 			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
@@ -4448,13 +4448,13 @@ class ParserImplementation extends ParserBaseALL {
 			popCallStack();
 		}
 		__token = getToken(0).kind;
-		if (__token == TokenType.SEMICOLON) {
-			consume(TokenType.SEMICOLON);
-			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
-		} else if (__token == TokenType.LBRACE) {
+		if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.MethodDecl_7_1);
 			block = parseBlock();
 			popCallStack();
+		} else if (__token == TokenType.SEMICOLON) {
+			consume(TokenType.SEMICOLON);
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 		} else
 			throw produceParseException(TokenType.LBRACE, TokenType.SEMICOLON);
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
@@ -4503,7 +4503,11 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SFormalParameter> par;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.FormalParameterList_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.FormalParameterList_1_2_1);
 			par = parseFormalParameter();
 			popCallStack();
@@ -4517,10 +4521,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, par);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.FormalParameterList_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		} else
 			throw produceParseException(TokenType.ABSTRACT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DEFAULT, TokenType.DOUBLE, TokenType.FINAL, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SHORT, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.AT, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -4779,7 +4779,11 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<? extends SStmt> stmt;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 0 & ~63) == 0 && (1L << __token - 0 & (1L << TokenType.EOF - 0 | 1L << TokenType.ABSTRACT - 0 | 1L << TokenType.ASSERT - 0 | 1L << TokenType.BOOLEAN - 0 | 1L << TokenType.BREAK - 0 | 1L << TokenType.BYTE - 0 | 1L << TokenType.CHAR - 0 | 1L << TokenType.CLASS - 0 | 1L << TokenType.CONTINUE - 0 | 1L << TokenType.DO - 0 | 1L << TokenType.DOUBLE - 0 | 1L << TokenType.FALSE - 0 | 1L << TokenType.FINAL - 0 | 1L << TokenType.FLOAT - 0 | 1L << TokenType.FOR - 0 | 1L << TokenType.IF - 0 | 1L << TokenType.INT - 0 | 1L << TokenType.INTERFACE - 0 | 1L << TokenType.LONG - 0 | 1L << TokenType.NATIVE - 0 | 1L << TokenType.NEW - 0 | 1L << TokenType.NULL - 0 | 1L << TokenType.PRIVATE - 0 | 1L << TokenType.PROTECTED - 0 | 1L << TokenType.PUBLIC - 0 | 1L << TokenType.RETURN - 0 | 1L << TokenType.SHORT - 0 | 1L << TokenType.STATIC - 0 | 1L << TokenType.STRICTFP - 0 | 1L << TokenType.SUPER - 0 | 1L << TokenType.SWITCH - 0 | 1L << TokenType.SYNCHRONIZED - 0 | 1L << TokenType.THIS - 0 | 1L << TokenType.THROW - 0 | 1L << TokenType.TRANSIENT - 0 | 1L << TokenType.TRUE - 0 | 1L << TokenType.TRY - 0 | 1L << TokenType.VOID - 0 | 1L << TokenType.VOLATILE - 0 | 1L << TokenType.WHILE - 0 | 1L << TokenType.LONG_LITERAL - 0 | 1L << TokenType.INTEGER_LITERAL - 0)) != 0 || (__token - 68 & ~63) == 0 && (1L << __token - 68 & (1L << TokenType.FLOAT_LITERAL - 68 | 1L << TokenType.DOUBLE_LITERAL - 68 | 1L << TokenType.CHARACTER_LITERAL - 68 | 1L << TokenType.STRING_LITERAL - 68 | 1L << TokenType.LPAREN - 68 | 1L << TokenType.LBRACE - 68 | 1L << TokenType.RBRACE - 68 | 1L << TokenType.SEMICOLON - 68 | 1L << TokenType.AT - 68 | 1L << TokenType.LT - 68 | 1L << TokenType.BANG - 68 | 1L << TokenType.TILDE - 68 | 1L << TokenType.INCR - 68 | 1L << TokenType.DECR - 68 | 1L << TokenType.PLUS - 68 | 1L << TokenType.MINUS - 68 | 1L << TokenType.NODE_VARIABLE - 68)) != 0) || ((__token - 132 & ~63) == 0 && (1L << __token - 132 & (1L << TokenType.IDENTIFIER - 132)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Statements_1_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 0 & ~63) == 0 && (1L << __token - 0 & (1L << TokenType.EOF - 0 | 1L << TokenType.ABSTRACT - 0 | 1L << TokenType.ASSERT - 0 | 1L << TokenType.BOOLEAN - 0 | 1L << TokenType.BREAK - 0 | 1L << TokenType.BYTE - 0 | 1L << TokenType.CHAR - 0 | 1L << TokenType.CLASS - 0 | 1L << TokenType.CONTINUE - 0 | 1L << TokenType.DO - 0 | 1L << TokenType.DOUBLE - 0 | 1L << TokenType.FALSE - 0 | 1L << TokenType.FINAL - 0 | 1L << TokenType.FLOAT - 0 | 1L << TokenType.FOR - 0 | 1L << TokenType.IF - 0 | 1L << TokenType.INT - 0 | 1L << TokenType.INTERFACE - 0 | 1L << TokenType.LONG - 0 | 1L << TokenType.NATIVE - 0 | 1L << TokenType.NEW - 0 | 1L << TokenType.NULL - 0 | 1L << TokenType.PRIVATE - 0 | 1L << TokenType.PROTECTED - 0 | 1L << TokenType.PUBLIC - 0 | 1L << TokenType.RETURN - 0 | 1L << TokenType.SHORT - 0 | 1L << TokenType.STATIC - 0 | 1L << TokenType.STRICTFP - 0 | 1L << TokenType.SUPER - 0 | 1L << TokenType.SWITCH - 0 | 1L << TokenType.SYNCHRONIZED - 0 | 1L << TokenType.THIS - 0 | 1L << TokenType.THROW - 0 | 1L << TokenType.TRANSIENT - 0 | 1L << TokenType.TRUE - 0 | 1L << TokenType.TRY - 0 | 1L << TokenType.VOID - 0 | 1L << TokenType.VOLATILE - 0 | 1L << TokenType.WHILE - 0 | 1L << TokenType.LONG_LITERAL - 0 | 1L << TokenType.INTEGER_LITERAL - 0)) != 0 || (__token - 68 & ~63) == 0 && (1L << __token - 68 & (1L << TokenType.FLOAT_LITERAL - 68 | 1L << TokenType.DOUBLE_LITERAL - 68 | 1L << TokenType.CHARACTER_LITERAL - 68 | 1L << TokenType.STRING_LITERAL - 68 | 1L << TokenType.LPAREN - 68 | 1L << TokenType.LBRACE - 68 | 1L << TokenType.RBRACE - 68 | 1L << TokenType.SEMICOLON - 68 | 1L << TokenType.AT - 68 | 1L << TokenType.LT - 68 | 1L << TokenType.BANG - 68 | 1L << TokenType.TILDE - 68 | 1L << TokenType.INCR - 68 | 1L << TokenType.DECR - 68 | 1L << TokenType.PLUS - 68 | 1L << TokenType.MINUS - 68 | 1L << TokenType.NODE_VARIABLE - 68)) != 0) || ((__token - 132 & ~63) == 0 && (1L << __token - 132 & (1L << TokenType.IDENTIFIER - 132)) != 0)) {
 			__token = getToken(0).kind;
 			if (predict(JavaGrammar.STATEMENTS_1_1_2_1) == 1) {
 				pushCallStack(JavaGrammar.Statements_1_1_2_1_1);
@@ -4795,10 +4799,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, stmt);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.Statements_1_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		}
 		return ensureNotNull(ret);
 	}
@@ -4843,19 +4843,7 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SNodeList> arrayDims;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
-			pushCallStack(JavaGrammar.Type_1_2_1);
-			type = parseQualifiedType(annotations);
-			popCallStack();
-			__token = getToken(0).kind;
-			if (predict(JavaGrammar.TYPE_1_2_2) == 1) {
-				lateRun();
-				pushCallStack(JavaGrammar.Type_1_2_2_1);
-				arrayDims = parseArrayDimsMandatory();
-				popCallStack();
-				type = dress(SArrayType.make(type, arrayDims));
-			}
-		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+		if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
 			pushCallStack(JavaGrammar.Type_1_1_1);
 			primitiveType = parsePrimitiveType(annotations);
 			popCallStack();
@@ -4866,6 +4854,18 @@ class ParserImplementation extends ParserBaseALL {
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
+			}
+		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.Type_1_2_1);
+			type = parseQualifiedType(annotations);
+			popCallStack();
+			__token = getToken(0).kind;
+			if (predict(JavaGrammar.TYPE_1_2_2) == 1) {
+				lateRun();
+				pushCallStack(JavaGrammar.Type_1_2_2_1);
+				arrayDims = parseArrayDimsMandatory();
+				popCallStack();
+				type = dress(SArrayType.make(type, arrayDims));
 			}
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
@@ -4897,7 +4897,16 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SNodeList> arrayDims;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+		if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+			pushCallStack(JavaGrammar.ReferenceType_1_1_1);
+			primitiveType = parsePrimitiveType(annotations);
+			popCallStack();
+			lateRun();
+			pushCallStack(JavaGrammar.ReferenceType_1_1_2);
+			arrayDims = parseArrayDimsMandatory();
+			popCallStack();
+			type = dress(SArrayType.make(primitiveType, arrayDims));
+		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 			pushCallStack(JavaGrammar.ReferenceType_1_2_1);
 			type = parseQualifiedType(annotations);
 			popCallStack();
@@ -4909,15 +4918,6 @@ class ParserImplementation extends ParserBaseALL {
 				popCallStack();
 				type = dress(SArrayType.make(type, arrayDims));
 			}
-		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
-			pushCallStack(JavaGrammar.ReferenceType_1_1_1);
-			primitiveType = parsePrimitiveType(annotations);
-			popCallStack();
-			lateRun();
-			pushCallStack(JavaGrammar.ReferenceType_1_1_2);
-			arrayDims = parseArrayDimsMandatory();
-			popCallStack();
-			type = dress(SArrayType.make(primitiveType, arrayDims));
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return type;
@@ -5058,7 +5058,12 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<? extends SType> type;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.TypeArgumentList_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+			return ret;
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 89 & ~63) == 0 && (1L << __token - 89 & (1L << TokenType.AT - 89 | 1L << TokenType.HOOK - 89 | 1L << TokenType.NODE_VARIABLE - 89 | 1L << TokenType.IDENTIFIER - 89)) != 0)) {
 			pushCallStack(JavaGrammar.TypeArgumentList_2_1);
 			type = parseTypeArgument();
 			popCallStack();
@@ -5072,11 +5077,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, type);
 				__token = getToken(0).kind;
 			}
-			return ret;
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.TypeArgumentList_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 			return ret;
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.AT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE, TokenType.IDENTIFIER);
@@ -5100,13 +5100,13 @@ class ParserImplementation extends ParserBaseALL {
 		annotations = parseAnnotations();
 		popCallStack();
 		__token = getToken(0).kind;
-		if (__token == TokenType.HOOK) {
-			pushCallStack(JavaGrammar.TypeArgument_2_2);
-			ret = parseWildcard(annotations);
-			popCallStack();
-		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
 			pushCallStack(JavaGrammar.TypeArgument_2_1);
 			ret = parseReferenceType(annotations);
+			popCallStack();
+		} else if (__token == TokenType.HOOK) {
+			pushCallStack(JavaGrammar.TypeArgument_2_2);
+			ret = parseWildcard(annotations);
 			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
@@ -5150,16 +5150,7 @@ class ParserImplementation extends ParserBaseALL {
 		}
 		consume(TokenType.HOOK);
 		__token = getToken(0).kind;
-		if (__token == TokenType.SUPER) {
-			consume(TokenType.SUPER);
-			run();
-			pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
-			boundAnnotations = parseAnnotations();
-			popCallStack();
-			pushCallStack(JavaGrammar.Wildcard_2_1_2_3);
-			sup = parseReferenceType(boundAnnotations);
-			popCallStack();
-		} else if (__token == TokenType.EXTENDS) {
+		if (__token == TokenType.EXTENDS) {
 			consume(TokenType.EXTENDS);
 			run();
 			pushCallStack(JavaGrammar.Wildcard_2_1_1_2);
@@ -5167,6 +5158,15 @@ class ParserImplementation extends ParserBaseALL {
 			popCallStack();
 			pushCallStack(JavaGrammar.Wildcard_2_1_1_3);
 			ext = parseReferenceType(boundAnnotations);
+			popCallStack();
+		} else if (__token == TokenType.SUPER) {
+			consume(TokenType.SUPER);
+			run();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
+			boundAnnotations = parseAnnotations();
+			popCallStack();
+			pushCallStack(JavaGrammar.Wildcard_2_1_2_3);
+			sup = parseReferenceType(boundAnnotations);
 			popCallStack();
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
@@ -5223,30 +5223,30 @@ class ParserImplementation extends ParserBaseALL {
 			annotations = emptyList();
 		}
 		__token = getToken(0).kind;
-		if (__token == TokenType.DOUBLE) {
-			consume(TokenType.DOUBLE);
-			primitive = Primitive.Double;
-		} else if (__token == TokenType.FLOAT) {
-			consume(TokenType.FLOAT);
-			primitive = Primitive.Float;
-		} else if (__token == TokenType.LONG) {
-			consume(TokenType.LONG);
-			primitive = Primitive.Long;
-		} else if (__token == TokenType.INT) {
-			consume(TokenType.INT);
-			primitive = Primitive.Int;
-		} else if (__token == TokenType.SHORT) {
-			consume(TokenType.SHORT);
-			primitive = Primitive.Short;
-		} else if (__token == TokenType.BYTE) {
-			consume(TokenType.BYTE);
-			primitive = Primitive.Byte;
+		if (__token == TokenType.BOOLEAN) {
+			consume(TokenType.BOOLEAN);
+			primitive = Primitive.Boolean;
 		} else if (__token == TokenType.CHAR) {
 			consume(TokenType.CHAR);
 			primitive = Primitive.Char;
-		} else if (__token == TokenType.BOOLEAN) {
-			consume(TokenType.BOOLEAN);
-			primitive = Primitive.Boolean;
+		} else if (__token == TokenType.BYTE) {
+			consume(TokenType.BYTE);
+			primitive = Primitive.Byte;
+		} else if (__token == TokenType.SHORT) {
+			consume(TokenType.SHORT);
+			primitive = Primitive.Short;
+		} else if (__token == TokenType.INT) {
+			consume(TokenType.INT);
+			primitive = Primitive.Int;
+		} else if (__token == TokenType.LONG) {
+			consume(TokenType.LONG);
+			primitive = Primitive.Long;
+		} else if (__token == TokenType.FLOAT) {
+			consume(TokenType.FLOAT);
+			primitive = Primitive.Float;
+		} else if (__token == TokenType.DOUBLE) {
+			consume(TokenType.DOUBLE);
+			primitive = Primitive.Double;
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT);
 		return dress(SPrimitiveType.make(annotations, primitive));
@@ -5267,14 +5267,14 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<? extends SType> ret;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
-			pushCallStack(JavaGrammar.ResultType_1_2);
-			ret = parseType(null);
-			popCallStack();
-		} else if (__token == TokenType.VOID) {
+		if (__token == TokenType.VOID) {
 			run();
 			consume(TokenType.VOID);
 			ret = dress(SVoidType.make());
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) || ((__token - 130 & ~63) == 0 && (1L << __token - 130 & (1L << TokenType.NODE_VARIABLE - 130 | 1L << TokenType.IDENTIFIER - 130)) != 0)) {
+			pushCallStack(JavaGrammar.ResultType_1_2);
+			ret = parseType(null);
+			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -5353,14 +5353,14 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SName> name;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.IDENTIFIER) {
-			run();
-			id = consume(TokenType.IDENTIFIER);
-			name = dress(SName.make(id.image));
-		} else if (__token == TokenType.NODE_VARIABLE) {
+		if (__token == TokenType.NODE_VARIABLE) {
 			pushCallStack(JavaGrammar.Name_1_1);
 			name = parseNodeVar();
 			popCallStack();
+		} else if (__token == TokenType.IDENTIFIER) {
+			run();
+			id = consume(TokenType.IDENTIFIER);
+			name = dress(SName.make(id.image));
 		} else
 			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return name;
@@ -5580,16 +5580,16 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SLambdaExpr> ret;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.LBRACE) {
-			pushCallStack(JavaGrammar.LambdaBody_1_2_1);
-			block = parseBlock();
-			popCallStack();
-			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 			pushCallStack(JavaGrammar.LambdaBody_1_1_1);
 			expr = parseExpression();
 			popCallStack();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.LambdaBody_1_2_1);
+			block = parseBlock();
+			popCallStack();
+			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		return ret;
@@ -5695,42 +5695,42 @@ class ParserImplementation extends ParserBaseALL {
 		AssignOp ret;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.ORASSIGN) {
-			consume(TokenType.ORASSIGN);
-			ret = AssignOp.Or;
-		} else if (__token == TokenType.XORASSIGN) {
-			consume(TokenType.XORASSIGN);
-			ret = AssignOp.XOr;
-		} else if (__token == TokenType.ANDASSIGN) {
-			consume(TokenType.ANDASSIGN);
-			ret = AssignOp.And;
-		} else if (__token == TokenType.RUNSIGNEDSHIFTASSIGN) {
-			consume(TokenType.RUNSIGNEDSHIFTASSIGN);
-			ret = AssignOp.RightUnsignedShift;
-		} else if (__token == TokenType.RSIGNEDSHIFTASSIGN) {
-			consume(TokenType.RSIGNEDSHIFTASSIGN);
-			ret = AssignOp.RightSignedShift;
-		} else if (__token == TokenType.LSHIFTASSIGN) {
-			consume(TokenType.LSHIFTASSIGN);
-			ret = AssignOp.LeftShift;
-		} else if (__token == TokenType.MINUSASSIGN) {
-			consume(TokenType.MINUSASSIGN);
-			ret = AssignOp.Minus;
-		} else if (__token == TokenType.PLUSASSIGN) {
-			consume(TokenType.PLUSASSIGN);
-			ret = AssignOp.Plus;
-		} else if (__token == TokenType.REMASSIGN) {
-			consume(TokenType.REMASSIGN);
-			ret = AssignOp.Remainder;
-		} else if (__token == TokenType.SLASHASSIGN) {
-			consume(TokenType.SLASHASSIGN);
-			ret = AssignOp.Divide;
+		if (__token == TokenType.ASSIGN) {
+			consume(TokenType.ASSIGN);
+			ret = AssignOp.Normal;
 		} else if (__token == TokenType.STARASSIGN) {
 			consume(TokenType.STARASSIGN);
 			ret = AssignOp.Times;
-		} else if (__token == TokenType.ASSIGN) {
-			consume(TokenType.ASSIGN);
-			ret = AssignOp.Normal;
+		} else if (__token == TokenType.SLASHASSIGN) {
+			consume(TokenType.SLASHASSIGN);
+			ret = AssignOp.Divide;
+		} else if (__token == TokenType.REMASSIGN) {
+			consume(TokenType.REMASSIGN);
+			ret = AssignOp.Remainder;
+		} else if (__token == TokenType.PLUSASSIGN) {
+			consume(TokenType.PLUSASSIGN);
+			ret = AssignOp.Plus;
+		} else if (__token == TokenType.MINUSASSIGN) {
+			consume(TokenType.MINUSASSIGN);
+			ret = AssignOp.Minus;
+		} else if (__token == TokenType.LSHIFTASSIGN) {
+			consume(TokenType.LSHIFTASSIGN);
+			ret = AssignOp.LeftShift;
+		} else if (__token == TokenType.RSIGNEDSHIFTASSIGN) {
+			consume(TokenType.RSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightSignedShift;
+		} else if (__token == TokenType.RUNSIGNEDSHIFTASSIGN) {
+			consume(TokenType.RUNSIGNEDSHIFTASSIGN);
+			ret = AssignOp.RightUnsignedShift;
+		} else if (__token == TokenType.ANDASSIGN) {
+			consume(TokenType.ANDASSIGN);
+			ret = AssignOp.And;
+		} else if (__token == TokenType.XORASSIGN) {
+			consume(TokenType.XORASSIGN);
+			ret = AssignOp.XOr;
+		} else if (__token == TokenType.ORASSIGN) {
+			consume(TokenType.ORASSIGN);
+			ret = AssignOp.Or;
 		} else
 			throw produceParseException(TokenType.ASSIGN, TokenType.PLUSASSIGN, TokenType.MINUSASSIGN, TokenType.STARASSIGN, TokenType.SLASHASSIGN, TokenType.ANDASSIGN, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.REMASSIGN, TokenType.LSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN);
 		return ret;
@@ -5967,12 +5967,12 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.EQ || __token == TokenType.NE) {
 			lateRun();
 			__token = getToken(0).kind;
-			if (__token == TokenType.NE) {
-				consume(TokenType.NE);
-				op = BinaryOp.NotEqual;
-			} else if (__token == TokenType.EQ) {
+			if (__token == TokenType.EQ) {
 				consume(TokenType.EQ);
 				op = BinaryOp.Equal;
+			} else if (__token == TokenType.NE) {
+				consume(TokenType.NE);
+				op = BinaryOp.NotEqual;
 			} else
 				throw produceParseException(TokenType.EQ, TokenType.NE);
 			pushCallStack(JavaGrammar.EqualityExpression_2_2);
@@ -6059,18 +6059,18 @@ class ParserImplementation extends ParserBaseALL {
 		while ((__token - 91 & ~63) == 0 && (1L << __token - 91 & (1L << TokenType.LT - 91 | 1L << TokenType.LE - 91 | 1L << TokenType.GE - 91 | 1L << TokenType.GT - 91)) != 0) {
 			lateRun();
 			__token = getToken(0).kind;
-			if (__token == TokenType.GE) {
-				consume(TokenType.GE);
-				op = BinaryOp.GreaterOrEqual;
-			} else if (__token == TokenType.LE) {
-				consume(TokenType.LE);
-				op = BinaryOp.LessOrEqual;
+			if (__token == TokenType.LT) {
+				consume(TokenType.LT);
+				op = BinaryOp.Less;
 			} else if (__token == TokenType.GT) {
 				consume(TokenType.GT);
 				op = BinaryOp.Greater;
-			} else if (__token == TokenType.LT) {
-				consume(TokenType.LT);
-				op = BinaryOp.Less;
+			} else if (__token == TokenType.LE) {
+				consume(TokenType.LE);
+				op = BinaryOp.LessOrEqual;
+			} else if (__token == TokenType.GE) {
+				consume(TokenType.GE);
+				op = BinaryOp.GreaterOrEqual;
 			} else
 				throw produceParseException(TokenType.LT, TokenType.LE, TokenType.GE, TokenType.GT);
 			pushCallStack(JavaGrammar.RelationalExpression_2_2);
@@ -6182,12 +6182,12 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.PLUS || __token == TokenType.MINUS) {
 			lateRun();
 			__token = getToken(0).kind;
-			if (__token == TokenType.MINUS) {
-				consume(TokenType.MINUS);
-				op = BinaryOp.Minus;
-			} else if (__token == TokenType.PLUS) {
+			if (__token == TokenType.PLUS) {
 				consume(TokenType.PLUS);
 				op = BinaryOp.Plus;
+			} else if (__token == TokenType.MINUS) {
+				consume(TokenType.MINUS);
+				op = BinaryOp.Minus;
 			} else
 				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
 			pushCallStack(JavaGrammar.AdditiveExpression_2_2);
@@ -6234,15 +6234,15 @@ class ParserImplementation extends ParserBaseALL {
 		while ((__token - 106 & ~63) == 0 && (1L << __token - 106 & (1L << TokenType.STAR - 106 | 1L << TokenType.SLASH - 106 | 1L << TokenType.REM - 106)) != 0) {
 			lateRun();
 			__token = getToken(0).kind;
-			if (__token == TokenType.REM) {
-				consume(TokenType.REM);
-				op = BinaryOp.Remainder;
+			if (__token == TokenType.STAR) {
+				consume(TokenType.STAR);
+				op = BinaryOp.Times;
 			} else if (__token == TokenType.SLASH) {
 				consume(TokenType.SLASH);
 				op = BinaryOp.Divide;
-			} else if (__token == TokenType.STAR) {
-				consume(TokenType.STAR);
-				op = BinaryOp.Times;
+			} else if (__token == TokenType.REM) {
+				consume(TokenType.REM);
+				op = BinaryOp.Remainder;
 			} else
 				throw produceParseException(TokenType.STAR, TokenType.SLASH, TokenType.REM);
 			pushCallStack(JavaGrammar.MultiplicativeExpression_2_2);
@@ -6281,28 +6281,28 @@ class ParserImplementation extends ParserBaseALL {
 		UnaryOp op;
 		int __token;
 		__token = getToken(0).kind;
-		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
-			pushCallStack(JavaGrammar.UnaryExpression_1_3);
-			ret = parseUnaryExpressionNotPlusMinus();
+		if (__token == TokenType.INCR || __token == TokenType.DECR) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_1);
+			ret = parsePrefixExpression();
 			popCallStack();
 		} else if (__token == TokenType.PLUS || __token == TokenType.MINUS) {
 			run();
 			__token = getToken(0).kind;
-			if (__token == TokenType.MINUS) {
-				consume(TokenType.MINUS);
-				op = UnaryOp.Negative;
-			} else if (__token == TokenType.PLUS) {
+			if (__token == TokenType.PLUS) {
 				consume(TokenType.PLUS);
 				op = UnaryOp.Positive;
+			} else if (__token == TokenType.MINUS) {
+				consume(TokenType.MINUS);
+				op = UnaryOp.Negative;
 			} else
 				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
 			pushCallStack(JavaGrammar.UnaryExpression_1_2_2);
 			ret = parseUnaryExpression();
 			popCallStack();
 			ret = dress(SUnaryExpr.make(op, ret));
-		} else if (__token == TokenType.INCR || __token == TokenType.DECR) {
-			pushCallStack(JavaGrammar.UnaryExpression_1_1);
-			ret = parsePrefixExpression();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.UnaryExpression_1_3);
+			ret = parseUnaryExpressionNotPlusMinus();
 			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
@@ -6330,12 +6330,12 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (__token == TokenType.DECR) {
-			consume(TokenType.DECR);
-			op = UnaryOp.PreDecrement;
-		} else if (__token == TokenType.INCR) {
+		if (__token == TokenType.INCR) {
 			consume(TokenType.INCR);
 			op = UnaryOp.PreIncrement;
+		} else if (__token == TokenType.DECR) {
+			consume(TokenType.DECR);
+			op = UnaryOp.PreDecrement;
 		} else
 			throw produceParseException(TokenType.INCR, TokenType.DECR);
 		pushCallStack(JavaGrammar.PrefixExpression_2);
@@ -6374,12 +6374,12 @@ class ParserImplementation extends ParserBaseALL {
 			case 1:
 				run();
 				__token = getToken(0).kind;
-				if (__token == TokenType.BANG) {
-					consume(TokenType.BANG);
-					op = UnaryOp.Not;
-				} else if (__token == TokenType.TILDE) {
+				if (__token == TokenType.TILDE) {
 					consume(TokenType.TILDE);
 					op = UnaryOp.Inverse;
+				} else if (__token == TokenType.BANG) {
+					consume(TokenType.BANG);
+					op = UnaryOp.Not;
 				} else
 					throw produceParseException(TokenType.BANG, TokenType.TILDE);
 				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_1_2);
@@ -6432,12 +6432,12 @@ class ParserImplementation extends ParserBaseALL {
 		if (__token == TokenType.INCR || __token == TokenType.DECR) {
 			lateRun();
 			__token = getToken(0).kind;
-			if (__token == TokenType.DECR) {
-				consume(TokenType.DECR);
-				op = UnaryOp.PostDecrement;
-			} else if (__token == TokenType.INCR) {
+			if (__token == TokenType.INCR) {
 				consume(TokenType.INCR);
 				op = UnaryOp.PostIncrement;
+			} else if (__token == TokenType.DECR) {
+				consume(TokenType.DECR);
+				op = UnaryOp.PostDecrement;
 			} else
 				throw produceParseException(TokenType.INCR, TokenType.DECR);
 			ret = dress(SUnaryExpr.make(op, ret));
@@ -6598,33 +6598,33 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (__token == TokenType.NULL) {
-			literal = consume(TokenType.NULL);
-			ret = SLiteralExpr.make(Void.class, literal.image);
-		} else if (__token == TokenType.FALSE) {
-			literal = consume(TokenType.FALSE);
-			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (__token == TokenType.TRUE) {
-			literal = consume(TokenType.TRUE);
-			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (__token == TokenType.STRING_LITERAL) {
-			literal = consume(TokenType.STRING_LITERAL);
-			ret = SLiteralExpr.make(String.class, literal.image);
-		} else if (__token == TokenType.CHARACTER_LITERAL) {
-			literal = consume(TokenType.CHARACTER_LITERAL);
-			ret = SLiteralExpr.make(Character.class, literal.image);
-		} else if (__token == TokenType.DOUBLE_LITERAL) {
-			literal = consume(TokenType.DOUBLE_LITERAL);
-			ret = SLiteralExpr.make(Double.class, literal.image);
-		} else if (__token == TokenType.FLOAT_LITERAL) {
-			literal = consume(TokenType.FLOAT_LITERAL);
-			ret = SLiteralExpr.make(Float.class, literal.image);
+		if (__token == TokenType.INTEGER_LITERAL) {
+			literal = consume(TokenType.INTEGER_LITERAL);
+			ret = SLiteralExpr.make(Integer.class, literal.image);
 		} else if (__token == TokenType.LONG_LITERAL) {
 			literal = consume(TokenType.LONG_LITERAL);
 			ret = SLiteralExpr.make(Long.class, literal.image);
-		} else if (__token == TokenType.INTEGER_LITERAL) {
-			literal = consume(TokenType.INTEGER_LITERAL);
-			ret = SLiteralExpr.make(Integer.class, literal.image);
+		} else if (__token == TokenType.FLOAT_LITERAL) {
+			literal = consume(TokenType.FLOAT_LITERAL);
+			ret = SLiteralExpr.make(Float.class, literal.image);
+		} else if (__token == TokenType.DOUBLE_LITERAL) {
+			literal = consume(TokenType.DOUBLE_LITERAL);
+			ret = SLiteralExpr.make(Double.class, literal.image);
+		} else if (__token == TokenType.CHARACTER_LITERAL) {
+			literal = consume(TokenType.CHARACTER_LITERAL);
+			ret = SLiteralExpr.make(Character.class, literal.image);
+		} else if (__token == TokenType.STRING_LITERAL) {
+			literal = consume(TokenType.STRING_LITERAL);
+			ret = SLiteralExpr.make(String.class, literal.image);
+		} else if (__token == TokenType.TRUE) {
+			literal = consume(TokenType.TRUE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.FALSE) {
+			literal = consume(TokenType.FALSE);
+			ret = SLiteralExpr.make(Boolean.class, literal.image);
+		} else if (__token == TokenType.NULL) {
+			literal = consume(TokenType.NULL);
+			ret = SLiteralExpr.make(Void.class, literal.image);
 		} else
 			throw produceParseException(TokenType.FALSE, TokenType.NULL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL);
 		return dress(ret);
@@ -6785,12 +6785,7 @@ class ParserImplementation extends ParserBaseALL {
 				consume(TokenType.SUPER);
 				ret = dress(SSuperExpr.make(none()));
 				__token = getToken(0).kind;
-				if (__token == TokenType.DOUBLECOLON) {
-					lateRun();
-					pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
-					ret = parseMethodReferenceSuffix(ret);
-					popCallStack();
-				} else if (__token == TokenType.DOT) {
+				if (__token == TokenType.DOT) {
 					lateRun();
 					consume(TokenType.DOT);
 					switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
@@ -6807,6 +6802,11 @@ class ParserImplementation extends ParserBaseALL {
 						default:
 							throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 					}
+				} else if (__token == TokenType.DOUBLECOLON) {
+					lateRun();
+					pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
+					ret = parseMethodReferenceSuffix(ret);
+					popCallStack();
 				} else
 					throw produceParseException(TokenType.DOT, TokenType.DOUBLECOLON);
 				break;
@@ -6927,14 +6927,7 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SName> name;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.LBRACKET) {
-			consume(TokenType.LBRACKET);
-			pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
-			ret = parseExpression();
-			popCallStack();
-			consume(TokenType.RBRACKET);
-			ret = dress(SArrayAccessExpr.make(scope, ret));
-		} else if (__token == TokenType.DOT) {
+		if (__token == TokenType.DOT) {
 			consume(TokenType.DOT);
 			switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2)) {
 				case 1:
@@ -6959,6 +6952,13 @@ class ParserImplementation extends ParserBaseALL {
 				default:
 					throw produceParseException(TokenType.NEW, TokenType.THIS, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 			}
+		} else if (__token == TokenType.LBRACKET) {
+			consume(TokenType.LBRACKET);
+			pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
+			ret = parseExpression();
+			popCallStack();
+			consume(TokenType.RBRACKET);
+			ret = dress(SArrayAccessExpr.make(scope, ret));
 		} else
 			throw produceParseException(TokenType.LBRACKET, TokenType.DOT);
 		return ret;
@@ -7031,7 +7031,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		consume(TokenType.LPAREN);
 		__token = getToken(0).kind;
-		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+		if (__token == TokenType.NODE_LIST_VARIABLE) {
+			pushCallStack(JavaGrammar.Arguments_2_1_1);
+			ret = parseNodeListVar();
+			popCallStack();
+		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
 			pushCallStack(JavaGrammar.Arguments_2_1_2_1);
 			expr = parseExpression();
 			popCallStack();
@@ -7045,10 +7049,6 @@ class ParserImplementation extends ParserBaseALL {
 				ret = append(ret, expr);
 				__token = getToken(0).kind;
 			}
-		} else if (__token == TokenType.NODE_LIST_VARIABLE) {
-			pushCallStack(JavaGrammar.Arguments_2_1_1);
-			ret = parseNodeListVar();
-			popCallStack();
 		}
 		consume(TokenType.RPAREN);
 		return ret;
@@ -7082,13 +7082,13 @@ class ParserImplementation extends ParserBaseALL {
 			popCallStack();
 		}
 		__token = getToken(0).kind;
-		if (__token == TokenType.NEW) {
-			consume(TokenType.NEW);
-			name = SName.make("new");
-		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
 			pushCallStack(JavaGrammar.MethodReferenceSuffix_3_1);
 			name = parseName();
 			popCallStack();
+		} else if (__token == TokenType.NEW) {
+			consume(TokenType.NEW);
+			name = SName.make("new");
 		} else
 			throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
@@ -7185,13 +7185,13 @@ class ParserImplementation extends ParserBaseALL {
 		annotations = parseAnnotations();
 		popCallStack();
 		__token = getToken(0).kind;
-		if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
-			pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
-			type = parseQualifiedType(annotations);
-			popCallStack();
-		} else if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
+		if ((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.SHORT - 11)) != 0) {
 			pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
 			type = parsePrimitiveType(annotations);
+			popCallStack();
+		} else if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
+			type = parseQualifiedType(annotations);
 			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
@@ -7664,13 +7664,13 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		run();
 		__token = getToken(0).kind;
-		if (__token == TokenType.DEFAULT) {
-			consume(TokenType.DEFAULT);
-		} else if (__token == TokenType.CASE) {
+		if (__token == TokenType.CASE) {
 			consume(TokenType.CASE);
 			pushCallStack(JavaGrammar.SwitchEntry_1_1_2);
 			label = parseExpression();
 			popCallStack();
+		} else if (__token == TokenType.DEFAULT) {
+			consume(TokenType.DEFAULT);
 		} else
 			throw produceParseException(TokenType.CASE, TokenType.DEFAULT);
 		consume(TokenType.COLON);
@@ -8098,30 +8098,7 @@ class ParserImplementation extends ParserBaseALL {
 		run();
 		consume(TokenType.TRY);
 		__token = getToken(0).kind;
-		if (__token == TokenType.LBRACE) {
-			pushCallStack(JavaGrammar.TryStatement_2_2_1);
-			tryBlock = parseBlock();
-			popCallStack();
-			__token = getToken(0).kind;
-			if (__token == TokenType.FINALLY) {
-				consume(TokenType.FINALLY);
-				pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
-				finallyBlock = parseBlock();
-				popCallStack();
-			} else if (__token == TokenType.CATCH) {
-				pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
-				catchClauses = parseCatchClauses();
-				popCallStack();
-				__token = getToken(0).kind;
-				if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
-					consume(TokenType.FINALLY);
-					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
-					finallyBlock = parseBlock();
-					popCallStack();
-				}
-			} else
-				throw produceParseException(TokenType.CATCH, TokenType.FINALLY);
-		} else if (__token == TokenType.LPAREN) {
+		if (__token == TokenType.LPAREN) {
 			pushCallStack(JavaGrammar.TryStatement_2_1_1);
 			resources = parseResourceSpecification(trailingSemiColon);
 			popCallStack();
@@ -8141,6 +8118,29 @@ class ParserImplementation extends ParserBaseALL {
 				finallyBlock = parseBlock();
 				popCallStack();
 			}
+		} else if (__token == TokenType.LBRACE) {
+			pushCallStack(JavaGrammar.TryStatement_2_2_1);
+			tryBlock = parseBlock();
+			popCallStack();
+			__token = getToken(0).kind;
+			if (__token == TokenType.CATCH) {
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
+				catchClauses = parseCatchClauses();
+				popCallStack();
+				__token = getToken(0).kind;
+				if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
+					consume(TokenType.FINALLY);
+					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
+					finallyBlock = parseBlock();
+					popCallStack();
+				}
+			} else if (__token == TokenType.FINALLY) {
+				consume(TokenType.FINALLY);
+				pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
+				finallyBlock = parseBlock();
+				popCallStack();
+			} else
+				throw produceParseException(TokenType.CATCH, TokenType.FINALLY);
 		} else
 			throw produceParseException(TokenType.LPAREN, TokenType.LBRACE);
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
@@ -8479,17 +8479,17 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<? extends SExpr> ret;
 		int __token;
 		__token = getToken(0).kind;
-		if (__token == TokenType.AT) {
-			pushCallStack(JavaGrammar.ElementValue_1_3);
-			ret = parseAnnotation();
+		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
+			pushCallStack(JavaGrammar.ElementValue_1_1);
+			ret = parseConditionalExpression();
 			popCallStack();
 		} else if (__token == TokenType.LBRACE) {
 			pushCallStack(JavaGrammar.ElementValue_1_2);
 			ret = parseElementValueArrayInitializer();
 			popCallStack();
-		} else if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
-			pushCallStack(JavaGrammar.ElementValue_1_1);
-			ret = parseConditionalExpression();
+		} else if (__token == TokenType.AT) {
+			pushCallStack(JavaGrammar.ElementValue_1_3);
+			ret = parseAnnotation();
 			popCallStack();
 		} else
 			throw produceParseException(TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FALSE, TokenType.FLOAT, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.NULL, TokenType.SHORT, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.VOID, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.LPAREN, TokenType.LBRACE, TokenType.AT, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
