@@ -21,10 +21,9 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.all.GrammarProduction.ChoicePoint;
 import org.jlato.internal.parser.all.GrammarProduction.Expansion;
-import org.jlato.internal.parser.util.*;
 import org.jlato.internal.parser.util.Collections;
-
-import java.util.*;
+import org.jlato.internal.parser.util.IntPairObjectMap;
+import org.jlato.internal.parser.util.IntSet;
 
 /**
  * @author Didier Villevalois
