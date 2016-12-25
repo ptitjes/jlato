@@ -274,9 +274,8 @@ public abstract class ParserBaseALL extends ParserBase {
 
 	private Set<Configuration> closure(Set<Configuration> configurations) {
 		ConfigurationSetBuilder newConfigurations = newConfigurationSetBuilder();
-		Set<Configuration> busy = new THashSet<Configuration>(configurations.size() * 4 / 3 + 1, 3f / 4);
 		for (Configuration configuration : configurations) {
-			closureOf(configuration, newConfigurations, busy);
+			closureOf(configuration, newConfigurations);
 		}
 		return newConfigurations.build();
 	}
@@ -284,6 +283,8 @@ public abstract class ParserBaseALL extends ParserBase {
 	private interface ConfigurationSetBuilder {
 
 		void add(Configuration configuration);
+
+		boolean contains(Configuration configuration);
 
 		Set<Configuration> build();
 	}
@@ -296,19 +297,15 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private void closureOf(final Configuration configuration,
-	                       final ConfigurationSetBuilder newConfigurations,
-	                       final Set<Configuration> busy) {
-		if (busy.contains(configuration)) return;
-		else busy.add(configuration);
+	                       final ConfigurationSetBuilder newConfigurations) {
+		if (newConfigurations.contains(configuration)) return;
+		else newConfigurations.add(configuration);
 
 		final int stateId = configuration.stateId;
 		final CallStack callStack = configuration.callStack;
 		final int prediction = configuration.prediction;
 
 		final GrammarState state = grammar.getState(stateId);
-
-		// TODO Avoid this when return from non-terminal call ??
-		newConfigurations.add(configuration);
 
 		// Return from non-terminal call
 		int nonTerminalEnd = state.nonTerminalEnd;
@@ -321,7 +318,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				if (useEndStates != null) {
 					for (int useEndStateId : useEndStates) {
 						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
-						closureOf(newConfiguration, newConfigurations, busy);
+						closureOf(newConfiguration, newConfigurations);
 					}
 				}
 
@@ -330,7 +327,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				if (useEndStates != null) {
 					for (int useEndStateId : useEndStates) {
 						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
-						closureOf(newConfiguration, newConfigurations, busy);
+						closureOf(newConfiguration, newConfigurations);
 					}
 				}
 			} else {
@@ -350,7 +347,7 @@ public abstract class ParserBaseALL extends ParserBase {
 					CallStack.Push push = (CallStack.Push) callStack;
 
 					Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
-					closureOf(newConfiguration, newConfigurations, busy);
+					closureOf(newConfiguration, newConfigurations);
 				} else {
 					CallStack.Merge merge = (CallStack.Merge) callStack;
 					// Stacks in a merge are Push stacks by construction
@@ -358,7 +355,7 @@ public abstract class ParserBaseALL extends ParserBase {
 						CallStack.Push push = (CallStack.Push) pushStack;
 
 						Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
-						closureOf(newConfiguration, newConfigurations, busy);
+						closureOf(newConfiguration, newConfigurations);
 					}
 				}
 			}
@@ -371,7 +368,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				int realPrediction = prediction == -1 ? choice : prediction;
 
 				Configuration newConfiguration = new Configuration(targetId, realPrediction, callStack);
-				closureOf(newConfiguration, newConfigurations, busy);
+				closureOf(newConfiguration, newConfigurations);
 			}
 
 			// Handle non-terminal call
@@ -381,30 +378,44 @@ public abstract class ParserBaseALL extends ParserBase {
 				int startId = grammar.getStartState(symbol);
 
 				Configuration newConfiguration = new Configuration(startId, prediction, callStack.push(targetId));
-				closureOf(newConfiguration, newConfigurations, busy);
+				closureOf(newConfiguration, newConfigurations);
 			}
 		}
 	}
 
 	private static class ConfigurationSetBuilderWithoutMerge implements ConfigurationSetBuilder {
-		Set<Configuration> configurations = new THashSet<Configuration>();
+		private final Set<Configuration> configurations = new THashSet<Configuration>();
 
+		@Override
 		public void add(Configuration configuration) {
 			configurations.add(configuration);
 		}
 
+		@Override
+		public boolean contains(Configuration configuration) {
+			return configurations.contains(configuration);
+		}
+
+		@Override
 		public Set<Configuration> build() {
 			return configurations;
 		}
 	}
 
 	private static class ConfigurationSetBuilderWithPostMerge implements ConfigurationSetBuilder {
-		Set<Configuration> configurations = new THashSet<Configuration>();
+		private final Set<Configuration> configurations = new THashSet<Configuration>();
 
+		@Override
 		public void add(Configuration configuration) {
 			configurations.add(configuration);
 		}
 
+		@Override
+		public boolean contains(Configuration configuration) {
+			return configurations.contains(configuration);
+		}
+
+		@Override
 		public Set<Configuration> build() {
 			return merge(configurations);
 		}
@@ -437,9 +448,12 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithIncrementalMerge implements ConfigurationSetBuilder {
-		IntPairObjectMap<CallStack> perStatePredictionCallStack = new IntPairObjectMap<CallStack>();
+		private final Set<Configuration> configurations = new THashSet<Configuration>();
+		private final IntPairObjectMap<CallStack> perStatePredictionCallStack = new IntPairObjectMap<CallStack>();
 
+		@Override
 		public void add(Configuration configuration) {
+			configurations.add(configuration);
 			CallStack stack = perStatePredictionCallStack.get(configuration.stateId, configuration.prediction);
 
 			if (MERGE_STATS) {
@@ -451,9 +465,15 @@ public abstract class ParserBaseALL extends ParserBase {
 			perStatePredictionCallStack.put(configuration.stateId, configuration.prediction, mergedStack);
 		}
 
+		@Override
+		public boolean contains(Configuration configuration) {
+			return configurations.contains(configuration);
+		}
+
 		private int added = 0;
 		private int saved = 0;
 
+		@Override
 		public Set<Configuration> build() {
 			Set<Configuration> configurations = new THashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
 
