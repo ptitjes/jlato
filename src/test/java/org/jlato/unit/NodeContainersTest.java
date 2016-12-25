@@ -336,17 +336,17 @@ public class NodeContainersTest {
 		Name foldLeft = list.foldLeft(name("zero"), new Function2<Name, Name, Name>() {
 			@Override
 			public Name apply(Name name, Name name2) {
-				return name(name.id() + " " + name2.id());
+				return name("_" + name.id() + "_" + name2.id() + "_");
 			}
 		});
 		Name foldRight = list.foldRight(name("zero"), new Function2<Name, Name, Name>() {
 			@Override
 			public Name apply(Name name, Name name2) {
-				return name(name.id() + " " + name2.id());
+				return name("_" + name.id() + "_" + name2.id() + "_");
 			}
 		});
-		Assert.assertEquals("zero name0 name1 name2", foldLeft.id());
-		Assert.assertEquals("name2 name1 name0 zero", foldRight.id());
+		Assert.assertEquals("___zero_name0__name1__name2_", foldLeft.id());
+		Assert.assertEquals("_name0__name1__name2_zero___", foldRight.id());
 	}
 
 	@Test
