@@ -193,7 +193,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
 		int stateId = grammar.getStartState(choicePoint);
 
-		Configuration initialConfiguration = new Configuration(stateId, -1, callStack);
+		Configuration initialConfiguration = newConfiguration(stateId, -1, callStack);
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
@@ -264,7 +264,7 @@ public abstract class ParserBaseALL extends ParserBase {
 			int targetId = state.match(token);
 			if (targetId == -1) continue;
 
-			Configuration newConfiguration = new Configuration(targetId, configuration.prediction, configuration.callStack);
+			Configuration newConfiguration = newConfiguration(targetId, configuration.prediction, configuration.callStack);
 			newConfigurations.add(newConfiguration);
 		}
 		return newConfigurations;
@@ -289,11 +289,11 @@ public abstract class ParserBaseALL extends ParserBase {
 		Set<Configuration> build();
 	}
 
-	private static ConfigurationSetBuilder newConfigurationSetBuilder() {
+	private ConfigurationSetBuilder newConfigurationSetBuilder() {
 		return !MERGE ? new ConfigurationSetBuilderWithoutMerge() :
 				INCREMENTAL_MERGE ?
-						new ConfigurationSetBuilderWithIncrementalMerge() :
-						new ConfigurationSetBuilderWithPostMerge();
+						new ConfigurationSetBuilderWithIncrementalMerge(this) :
+						new ConfigurationSetBuilderWithPostMerge(this);
 	}
 
 	private void closureOf(final Configuration configuration,
@@ -317,7 +317,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				Set<Integer> useEndStates = grammar.getUseEndStates(nonTerminalEnd);
 				if (useEndStates != null) {
 					for (int useEndStateId : useEndStates) {
-						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
+						Configuration newConfiguration = newConfiguration(useEndStateId, prediction, CallStack.WILDCARD);
 						closureOf(newConfiguration, newConfigurations);
 					}
 				}
@@ -326,7 +326,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminalEnd);
 				if (useEndStates != null) {
 					for (int useEndStateId : useEndStates) {
-						Configuration newConfiguration = new Configuration(useEndStateId, prediction, CallStack.WILDCARD);
+						Configuration newConfiguration = newConfiguration(useEndStateId, prediction, CallStack.WILDCARD);
 						closureOf(newConfiguration, newConfigurations);
 					}
 				}
@@ -346,7 +346,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				if (callStack.kind == CallStack.Kind.PUSH) {
 					CallStack.Push push = (CallStack.Push) callStack;
 
-					Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
+					Configuration newConfiguration = newConfiguration(push.head, prediction, push.tails);
 					closureOf(newConfiguration, newConfigurations);
 				} else {
 					CallStack.Merge merge = (CallStack.Merge) callStack;
@@ -354,7 +354,7 @@ public abstract class ParserBaseALL extends ParserBase {
 					for (CallStack pushStack : merge.stacks) {
 						CallStack.Push push = (CallStack.Push) pushStack;
 
-						Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
+						Configuration newConfiguration = newConfiguration(push.head, prediction, push.tails);
 						closureOf(newConfiguration, newConfigurations);
 					}
 				}
@@ -367,7 +367,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 				int realPrediction = prediction == -1 ? choice : prediction;
 
-				Configuration newConfiguration = new Configuration(targetId, realPrediction, callStack);
+				Configuration newConfiguration = newConfiguration(targetId, realPrediction, callStack);
 				closureOf(newConfiguration, newConfigurations);
 			}
 
@@ -377,11 +377,29 @@ public abstract class ParserBaseALL extends ParserBase {
 			if (symbol != -1 && targetId != -1) {
 				int startId = grammar.getStartState(symbol);
 
-				Configuration newConfiguration = new Configuration(startId, prediction, callStack.push(targetId));
+				Configuration newConfiguration = newConfiguration(startId, prediction, callStack.push(targetId));
 				closureOf(newConfiguration, newConfigurations);
 			}
 		}
 	}
+
+	private Configuration newConfiguration(int stateId, int prediction, CallStack callStack) {
+		if (configurationPool.isEmpty())
+			return new Configuration(stateId, prediction, callStack);
+		else {
+			Configuration configuration = configurationPool.pop();
+			configuration.stateId = stateId;
+			configuration.prediction = prediction;
+			configuration.callStack = callStack;
+			return configuration;
+		}
+	}
+
+	private void releaseConfiguration(Configuration configuration) {
+		configurationPool.push(configuration);
+	}
+
+	Deque<Configuration> configurationPool = new ArrayDeque<Configuration>();
 
 	private static class ConfigurationSetBuilderWithoutMerge implements ConfigurationSetBuilder {
 		private final Set<Configuration> configurations = new THashSet<Configuration>();
@@ -403,7 +421,13 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithPostMerge implements ConfigurationSetBuilder {
+
+		private final ParserBaseALL base;
 		private final Set<Configuration> configurations = new THashSet<Configuration>();
+
+		private ConfigurationSetBuilderWithPostMerge(ParserBaseALL base) {
+			this.base = base;
+		}
 
 		@Override
 		public void add(Configuration configuration) {
@@ -427,6 +451,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				CallStack stack = perStatePredictionCallStack.get(configuration.stateId, configuration.prediction);
 				CallStack mergedStack = stack == null ? configuration.callStack : stack.merge(configuration.callStack);
 				perStatePredictionCallStack.put(configuration.stateId, configuration.prediction, mergedStack);
+				base.releaseConfiguration(configuration);
 			}
 
 			configurations.clear();
@@ -434,7 +459,7 @@ public abstract class ParserBaseALL extends ParserBase {
 			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
 			while (iterator.hasNext()) {
 				iterator.advance();
-				configurations.add(new Configuration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
+				configurations.add(base.newConfiguration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
 			}
 
 			if (MERGE_STATS) {
@@ -448,8 +473,14 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private static class ConfigurationSetBuilderWithIncrementalMerge implements ConfigurationSetBuilder {
+
+		private final ParserBaseALL base;
 		private final Set<Configuration> configurations = new THashSet<Configuration>();
 		private final IntPairObjectMap<CallStack> perStatePredictionCallStack = new IntPairObjectMap<CallStack>();
+
+		private ConfigurationSetBuilderWithIncrementalMerge(ParserBaseALL base) {
+			this.base = base;
+		}
 
 		@Override
 		public void add(Configuration configuration) {
@@ -475,12 +506,16 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		@Override
 		public Set<Configuration> build() {
-			Set<Configuration> configurations = new THashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
+			for (Configuration configuration : configurations) {
+				base.releaseConfiguration(configuration);
+			}
+
+			Set<Configuration> newConfigurations = new THashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
 
 			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
 			while (iterator.hasNext()) {
 				iterator.advance();
-				configurations.add(new Configuration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
+				newConfigurations.add(base.newConfiguration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
 			}
 
 			if (MERGE_STATS) {
@@ -489,7 +524,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				}
 			}
 
-			return configurations;
+			return newConfigurations;
 		}
 	}
 }

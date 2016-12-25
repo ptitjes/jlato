@@ -23,9 +23,9 @@ package org.jlato.internal.parser.all;
  * @author Didier Villevalois
  */
 public class Configuration {
-	public final int stateId;
-	public final int prediction;
-	public final CallStack callStack;
+	public int stateId;
+	public int prediction;
+	public CallStack callStack;
 
 	public Configuration(int stateId, int prediction, CallStack callStack) {
 		this.prediction = prediction;
