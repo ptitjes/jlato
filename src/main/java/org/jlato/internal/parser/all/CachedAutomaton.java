@@ -20,9 +20,9 @@
 package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.TokenType;
+import org.jlato.internal.parser.util.Collections;
 import org.jlato.internal.parser.util.IntObjectMap;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +31,7 @@ import java.util.Map;
 public class CachedAutomaton {
 
 	public final PredictionState initialState;
-	private final Map<PredictionState, PredictionState> states = new HashMap<PredictionState, PredictionState>();
+	private final Map<PredictionState, PredictionState> states = Collections.hashMap();
 
 	public CachedAutomaton(PredictionState initialState) {
 		this.initialState = initialState;

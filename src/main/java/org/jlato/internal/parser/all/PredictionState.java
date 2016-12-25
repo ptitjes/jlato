@@ -21,9 +21,13 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.ParserBaseALL;
 import org.jlato.internal.parser.Token;
+import org.jlato.internal.parser.util.Collections;
 import org.jlato.internal.parser.util.IntObjectMap;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Didier Villevalois
@@ -35,7 +39,7 @@ public class PredictionState {
 	public final int prediction;
 	public final boolean stackSensitive;
 
-	public final IntObjectMap<PredictionState> transitions = new IntObjectMap<PredictionState>();
+	public final IntObjectMap<PredictionState> transitions = Collections.intObjectMap();
 
 	public PredictionState(Set<Configuration> configurations, boolean computePrediction, boolean computeConflicts, boolean forceLL) {
 		this.hashCode = computeHashCode(configurations);
@@ -77,7 +81,7 @@ public class PredictionState {
 	}
 
 	private boolean viableAlternative() {
-		HashMap<Integer, BitSet> prodSetsPerState = getProdSetsPerState();
+		Map<Integer, BitSet> prodSetsPerState = getProdSetsPerState();
 		for (Map.Entry<Integer, BitSet> entry : prodSetsPerState.entrySet()) {
 			if (entry.getValue().cardinality() == 1) return true;
 		}
@@ -85,7 +89,7 @@ public class PredictionState {
 	}
 
 	public Collection<BitSet> getConflictSets() {
-		HashMap<StateCallStackPair, BitSet> stateCallStackToAlts = new HashMap<StateCallStackPair, BitSet>();
+		Map<StateCallStackPair, BitSet> stateCallStackToAlts = Collections.hashMap();
 		for (Configuration configuration : configurations) {
 			int stateId = configuration.stateId;
 			CallStack callStack = configuration.callStack;
@@ -104,8 +108,8 @@ public class PredictionState {
 		return stateCallStackToAlts.values();
 	}
 
-	public HashMap<Integer, BitSet> getProdSetsPerState() {
-		HashMap<Integer, BitSet> stateToAlts = new HashMap<Integer, BitSet>();
+	public Map<Integer, BitSet> getProdSetsPerState() {
+		Map<Integer, BitSet> stateToAlts = Collections.hashMap();
 		for (Configuration configuration : configurations) {
 			int stateId = configuration.stateId;
 			Integer prediction = configuration.prediction;

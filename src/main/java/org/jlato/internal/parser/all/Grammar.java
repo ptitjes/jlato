@@ -21,7 +21,8 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.all.GrammarProduction.ChoicePoint;
 import org.jlato.internal.parser.all.GrammarProduction.Expansion;
-import org.jlato.internal.parser.util.IntPairObjectMap;
+import org.jlato.internal.parser.util.*;
+import org.jlato.internal.parser.util.Collections;
 
 import java.util.*;
 
@@ -33,13 +34,13 @@ public abstract class Grammar {
 	private int nextStateId = 0;
 	private final GrammarState[] states;
 	private final int[] startStates;
-	private final Set<Integer>[] perNonTerminalUseEndStates;
-	private final IntPairObjectMap<Set<Integer>> perEntryPointNonTerminalUseEndState = new IntPairObjectMap<Set<Integer>>();
+	private final IntSet[] perNonTerminalUseEndStates;
+	private final IntPairObjectMap<IntSet> perEntryPointNonTerminalUseEndState = Collections.intPairObjectMap();
 
 	public Grammar(int stateCount, int constantCount) {
 		states = new GrammarState[stateCount];
 		startStates = new int[constantCount];
-		perNonTerminalUseEndStates = (Set<Integer>[]) new Set[constantCount];
+		perNonTerminalUseEndStates = new IntSet[constantCount];
 		initializeProductions();
 	}
 
@@ -72,18 +73,18 @@ public abstract class Grammar {
 	}
 
 	void addNonTerminalEndState(int symbol, GrammarState end) {
-		Set<Integer> useEndStates = perNonTerminalUseEndStates[symbol];
+		IntSet useEndStates = perNonTerminalUseEndStates[symbol];
 		if (useEndStates == null) {
-			useEndStates = new HashSet<Integer>();
+			useEndStates = Collections.intSet();
 			perNonTerminalUseEndStates[symbol] = useEndStates;
 		}
 		useEndStates.add(end.id);
 	}
 
 	void addNonTerminalEntryPointEndState(int entryPoint, int symbol, GrammarState end) {
-		Set<Integer> useEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint, symbol);
+		IntSet useEndStates = perEntryPointNonTerminalUseEndState.get(entryPoint, symbol);
 		if (useEndStates == null) {
-			useEndStates = new HashSet<Integer>();
+			useEndStates = Collections.intSet();
 			perEntryPointNonTerminalUseEndState.put(entryPoint, symbol, useEndStates);
 		}
 		useEndStates.add(end.id);
@@ -97,11 +98,11 @@ public abstract class Grammar {
 		return startStates[nonTerminal];
 	}
 
-	public Set<Integer> getUseEndStates(int nonTerminal) {
+	public IntSet getUseEndStates(int nonTerminal) {
 		return perNonTerminalUseEndStates[nonTerminal];
 	}
 
-	public Set<Integer> getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
+	public IntSet getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
 		return perEntryPointNonTerminalUseEndState.get(entryPoint, nonTerminal);
 	}
 }
