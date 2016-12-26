@@ -47,7 +47,7 @@ public final class Literals {
 
 			} else if (Character.class.isAssignableFrom(literalClass)) {
 				char c = (char) (Character) literalValue;
-				return "'" + escapeChar(c) + "'";
+				return "'" + c + "'";
 
 			} else if (Integer.class.isAssignableFrom(literalClass)) {
 				return literalValue.toString();
@@ -62,7 +62,7 @@ public final class Literals {
 				return literalValue.toString();
 
 			} else if (String.class.isAssignableFrom(literalClass)) {
-				return "\"" + escapeString((String) literalValue) + "\"";
+				return "\"" + literalValue + "\"";
 
 			} else {
 				throw new IllegalArgumentException();
