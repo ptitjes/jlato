@@ -19,49 +19,54 @@
 
 package org.jlato.internal.parser.util;
 
+import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
  * @author Didier Villevalois
  */
-public class IntPairObjectMap<V> extends TLongObjectHashMap<V> {
+public class ShortPairObjectMap<V> extends TIntObjectHashMap<V> {
 
 	public void put(int key1, int key2, V value) {
-		long key = (long) key1 << 32 | (long) key2 & 0xffffffffL;
+		int key = keyFor(key1, key2);
 		put(key, value);
 	}
 
 	public V get(int key1, int key2) {
-		long key = (long) key1 << 32 | (long) key2 & 0xffffffffL;
+		int key = keyFor(key1, key2);
 		return get(key);
 	}
 
-	public IntPairObjectIterator<V> iterator() {
-		return new IntPairObjectIterator<V>(super.iterator());
+	private int keyFor(int key1, int key2) {
+		return (int) (key1 << 16 | key2 & 0xffffL);
 	}
 
-	public static class IntPairObjectIterator<V> implements TLongObjectIterator<V> {
+	public ShortPairObjectIterator<V> iterator() {
+		return new ShortPairObjectIterator<V>(super.iterator());
+	}
 
-		private final TLongObjectIterator<V> iterator;
+	public static class ShortPairObjectIterator<V> implements TIntObjectIterator<V> {
 
-		public IntPairObjectIterator(TLongObjectIterator<V> iterator) {
+		private final TIntObjectIterator<V> iterator;
+
+		public ShortPairObjectIterator(TIntObjectIterator<V> iterator) {
 			this.iterator = iterator;
 		}
 
 		@Override
-		public long key() {
+		public int key() {
 			return iterator.key();
 		}
 
-		public int getKey1() {
+		public short getKey1() {
 			long key = iterator.key();
-			return (int) (key >>> 32);
+			return (short) (key >>> 16);
 		}
 
-		public int getKey2() {
+		public short getKey2() {
 			long key = iterator.key();
-			return (int) (key & 0xffffffffL);
+			return (short) (key & 0xffffL);
 		}
 
 		@Override

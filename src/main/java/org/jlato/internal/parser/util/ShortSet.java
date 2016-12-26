@@ -19,10 +19,10 @@
 
 package org.jlato.internal.parser.util;
 
-import gnu.trove.set.hash.TIntHashSet;
+import gnu.trove.set.hash.TShortHashSet;
 
 /**
  * @author Didier Villevalois
  */
-public class IntSet extends TIntHashSet {
+public class ShortSet extends TShortHashSet {
 }

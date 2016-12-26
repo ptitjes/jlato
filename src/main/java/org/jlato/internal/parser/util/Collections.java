@@ -34,8 +34,8 @@ public class Collections {
 		return new THashSet<V>();
 	}
 
-	public static IntSet intSet() {
-		return new IntSet();
+	public static ShortSet intSet() {
+		return new ShortSet();
 	}
 
 	public static <K, V> Map<K, V> hashMap() {
@@ -46,7 +46,7 @@ public class Collections {
 		return new IntObjectMap<V>();
 	}
 
-	public static <V> IntPairObjectMap<V> intPairObjectMap() {
-		return new IntPairObjectMap<V>();
+	public static <V> ShortPairObjectMap<V> intPairObjectMap() {
+		return new ShortPairObjectMap<V>();
 	}
 }

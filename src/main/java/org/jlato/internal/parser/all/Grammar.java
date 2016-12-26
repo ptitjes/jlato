@@ -21,8 +21,6 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.all.GrammarProduction.ChoicePoint;
 import org.jlato.internal.parser.all.GrammarProduction.Expansion;
-import org.jlato.internal.parser.util.Collections;
-import org.jlato.internal.parser.util.IntSet;
 
 import java.io.*;
 
@@ -66,30 +64,47 @@ public class Grammar implements Externalizable {
 
 	private int stateCount = 0;
 	private GrammarState[] states;
-	private int[] nonTerminalStartStates;
-	private int[] choicePointStates;
-	private IntSet[] perNonTerminalUseEndStates;
-	private IntSet[][] perEntryPointNonTerminalUseEndState;
+
+	private short[] nonTerminalStartStates;
+	private short[] choicePointStates;
+
+	private short[][] nonTerminalUseEndStates;
+
+	private short[] entryPointNonTerminalUse;
+	private short[] entryPointNonTerminalUseEndState;
+
+	private short[] nonTerminalUseCount;
 
 	public Grammar(int stateCount, int constantCount) {
 		states = new GrammarState[stateCount];
-		nonTerminalStartStates = new int[constantCount];
-		choicePointStates = new int[constantCount];
-		perNonTerminalUseEndStates = new IntSet[constantCount];
-		perEntryPointNonTerminalUseEndState = new IntSet[constantCount][constantCount];
+		nonTerminalStartStates = new short[constantCount];
+		choicePointStates = new short[constantCount];
+		nonTerminalUseEndStates = new short[constantCount][50];
+		entryPointNonTerminalUse = new short[constantCount];
+		entryPointNonTerminalUseEndState = new short[constantCount];
+
+		nonTerminalUseCount = new short[constantCount];
 		initializeProductions();
+
+		for (int i = 0; i < nonTerminalUseEndStates.length; i++) {
+			short[] tmp = new short[nonTerminalUseCount[i]];
+			System.arraycopy(nonTerminalUseEndStates[i], 0, tmp, 0, nonTerminalUseCount[i]);
+			nonTerminalUseEndStates[i] = tmp;
+		}
 	}
 
 	public Grammar() {
 	}
 
-	public Grammar(GrammarState[] states, int[] nonTerminalStartStates, int[] choicePointStates, IntSet[] perNonTerminalUseEndStates,
-	               IntSet[][] perEntryPointNonTerminalUseEndState) {
+	public Grammar(GrammarState[] states, short[] nonTerminalStartStates,
+	               short[] choicePointStates, short[][] nonTerminalUseEndStates,
+	               short[] entryPointNonTerminalUse, short[] entryPointNonTerminalUseEndState) {
 		this.states = states;
 		this.nonTerminalStartStates = nonTerminalStartStates;
 		this.choicePointStates = choicePointStates;
-		this.perNonTerminalUseEndStates = perNonTerminalUseEndStates;
-		this.perEntryPointNonTerminalUseEndState = perEntryPointNonTerminalUseEndState;
+		this.nonTerminalUseEndStates = nonTerminalUseEndStates;
+		this.entryPointNonTerminalUse = entryPointNonTerminalUse;
+		this.entryPointNonTerminalUseEndState = entryPointNonTerminalUseEndState;
 		stateCount = states.length;
 	}
 
@@ -123,21 +138,13 @@ public class Grammar implements Externalizable {
 	}
 
 	void addNonTerminalEndState(int symbol, GrammarState end) {
-		IntSet useEndStates = perNonTerminalUseEndStates[symbol];
-		if (useEndStates == null) {
-			useEndStates = Collections.intSet();
-			perNonTerminalUseEndStates[symbol] = useEndStates;
-		}
-		useEndStates.add(end.id);
+		nonTerminalUseEndStates[symbol][nonTerminalUseCount[symbol]++] = end.id;
 	}
 
 	void addNonTerminalEntryPointEndState(int entryPoint, int symbol, GrammarState end) {
-		IntSet useEndStates = perEntryPointNonTerminalUseEndState[entryPoint][symbol];
-		if (useEndStates == null) {
-			useEndStates = Collections.intSet();
-			perEntryPointNonTerminalUseEndState[entryPoint][symbol] = useEndStates;
-		}
-		useEndStates.add(end.id);
+		if (symbol == 4 /*Epilog*/) return;
+		entryPointNonTerminalUse[entryPoint] = (short) symbol;
+		entryPointNonTerminalUseEndState[entryPoint] = end.id;
 	}
 
 	public GrammarState getState(int stateId) {
@@ -152,58 +159,85 @@ public class Grammar implements Externalizable {
 		return choicePointStates[nonTerminal];
 	}
 
-	public IntSet getUseEndStates(int nonTerminal) {
-		return perNonTerminalUseEndStates[nonTerminal];
+	public short[] getUseEndStates(int nonTerminal) {
+		return nonTerminalUseEndStates[nonTerminal];
 	}
 
-	public IntSet getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
-		return perEntryPointNonTerminalUseEndState[entryPoint][nonTerminal];
+	public short getEntryPointUseEndStates(int entryPoint, int nonTerminal) {
+		if (entryPointNonTerminalUse[entryPoint] != nonTerminal) return -1;
+		return entryPointNonTerminalUseEndState[entryPoint];
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeInt(stateCount);
+		out.writeShort(stateCount);
 		for (int i = 0; i < stateCount; i++) {
 			out.writeObject(states[i]);
 		}
 
-		int nonTerminalStateCount = nonTerminalStartStates.length;
-		out.writeInt(nonTerminalStateCount);
-		for (int i = 0; i < nonTerminalStateCount; i++) {
-			out.writeInt(nonTerminalStartStates[i]);
+		int nonTerminalCount = nonTerminalStartStates.length;
+		out.writeShort(nonTerminalCount);
+		for (int i = 0; i < nonTerminalCount; i++) {
+			out.writeShort(nonTerminalStartStates[i]);
 		}
 
-		int choicePointStateCount = choicePointStates.length;
-		out.writeInt(choicePointStateCount);
-		for (int i = 0; i < choicePointStateCount; i++) {
-			out.writeInt(choicePointStates[i]);
+		int choicePointCount = choicePointStates.length;
+		out.writeShort(choicePointCount);
+		for (int i = 0; i < choicePointCount; i++) {
+			out.writeShort(choicePointStates[i]);
 		}
 
-		out.writeObject(perNonTerminalUseEndStates);
-		out.writeObject(perEntryPointNonTerminalUseEndState);
+		for (int i = 0; i < nonTerminalCount; i++) {
+			int useCount = nonTerminalUseEndStates[i].length;
+			out.writeShort(useCount);
+			for (int j = 0; j < useCount; j++) {
+				out.writeShort(nonTerminalUseEndStates[i][j]);
+			}
+		}
+
+		int entryPointCount = entryPointNonTerminalUse.length;
+		out.writeShort(entryPointCount);
+		for (int i = 0; i < entryPointCount; i++) {
+			out.writeShort(entryPointNonTerminalUse[i]);
+			out.writeShort(entryPointNonTerminalUseEndState[i]);
+		}
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		stateCount = in.readInt();
+		stateCount = in.readShort();
 		states = new GrammarState[stateCount];
 		for (int i = 0; i < stateCount; i++) {
 			states[i] = (GrammarState) in.readObject();
 		}
 
-		int nonTerminalStateCount = in.readInt();
-		nonTerminalStartStates = new int[nonTerminalStateCount];
-		for (int i = 0; i < nonTerminalStateCount; i++) {
-			nonTerminalStartStates[i] = in.readInt();
+		short nonTerminalCount = in.readShort();
+		nonTerminalStartStates = new short[nonTerminalCount];
+		for (int i = 0; i < nonTerminalCount; i++) {
+			nonTerminalStartStates[i] = in.readShort();
 		}
 
-		int choicePointStateCount = in.readInt();
-		choicePointStates = new int[choicePointStateCount];
-		for (int i = 0; i < choicePointStateCount; i++) {
-			choicePointStates[i] = in.readInt();
+		short choicePointCount = in.readShort();
+		choicePointStates = new short[choicePointCount];
+		for (int i = 0; i < choicePointCount; i++) {
+			choicePointStates[i] = in.readShort();
 		}
 
-		perNonTerminalUseEndStates = (IntSet[]) in.readObject();
-		perEntryPointNonTerminalUseEndState = (IntSet[][]) in.readObject();
+		nonTerminalUseEndStates = new short[nonTerminalCount][];
+		for (int i = 0; i < nonTerminalCount; i++) {
+			int useCount = in.readShort();
+			nonTerminalUseEndStates[i] = new short[useCount];
+			for (int j = 0; j < useCount; j++) {
+				nonTerminalUseEndStates[i][j] = in.readShort();
+			}
+		}
+
+		int entryPointCount = in.readShort();
+		entryPointNonTerminalUse = new short[entryPointCount];
+		entryPointNonTerminalUseEndState = new short[entryPointCount];
+		for (int i = 0; i < entryPointCount; i++) {
+			entryPointNonTerminalUse[i] = in.readShort();
+			entryPointNonTerminalUseEndState[i] = in.readShort();
+		}
 	}
 }

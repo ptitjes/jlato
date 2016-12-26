@@ -192,8 +192,8 @@ public abstract class ParserBase implements ParserInterface {
 			String expectedToken = TokenType.tokenImage[expectedKind];
 
 			// TODO Add parse location (file, ...)
-			throw new ParseException("Found token '" + foundToken + "', expected token " + expectedToken +
-					" at (" + token.beginLine + ":" + token.beginColumn + ")");
+			throw new ParseException("Found token '" + foundToken + "', expected token '" + expectedToken +
+					"' at (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
 
 		lookaheadCells.dropHead();

@@ -32,28 +32,28 @@ import java.io.ObjectOutput;
  */
 public class GrammarState implements Externalizable {
 
-	public int id;
+	public short id;
 
-	public int nonTerminalEnd;
+	public short nonTerminalEnd = -1;
 
-	public int[] choiceTransitions;
+	public short[] choiceTransitions;
 
-	public int nonTerminalTransition = -1;
-	public int nonTerminalTransitionEnd;
+	public short nonTerminalTransition = -1;
+	public short nonTerminalTransitionEnd;
 
-	public int terminalTransition = -1;
-	public int terminalTransitionEnd;
+	public short terminalTransition = -1;
+	public short terminalTransitionEnd;
 
 	public GrammarState(int id, int nonTerminalEnd) {
-		this(id, nonTerminalEnd, new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, -1, -1, -1, -1);
+		this((short) id, (short) nonTerminalEnd, new short[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, (short) -1, (short) -1, (short) -1, (short) -1);
 	}
 
 	public GrammarState() {
 	}
 
-	public GrammarState(int id, int nonTerminalEnd, int[] choiceTransitions,
-	                    int nonTerminalTransition, int nonTerminalTransitionEnd,
-	                    int terminalTransition, int terminalTransitionEnd) {
+	public GrammarState(short id, short nonTerminalEnd, short[] choiceTransitions,
+	                    short nonTerminalTransition, short nonTerminalTransitionEnd,
+	                    short terminalTransition, short terminalTransitionEnd) {
 		this.id = id;
 		this.nonTerminalEnd = nonTerminalEnd;
 		this.choiceTransitions = choiceTransitions;
@@ -85,14 +85,14 @@ public class GrammarState implements Externalizable {
 	void setNonTerminal(int symbol, GrammarState target) {
 		if (nonTerminalTransition != -1)
 			throw new IllegalStateException("Already defined non-terminal " + symbol);
-		nonTerminalTransition = symbol;
+		nonTerminalTransition = (short) symbol;
 		nonTerminalTransitionEnd = target.id;
 	}
 
 	void setTerminal(int tokenType, GrammarState target) {
 		if (terminalTransition != -1)
 			throw new IllegalStateException("Already defined terminal " + tokenType);
-		terminalTransition = tokenType;
+		terminalTransition = (short) tokenType;
 		terminalTransitionEnd = target.id;
 	}
 
@@ -107,7 +107,7 @@ public class GrammarState implements Externalizable {
 		builder.append("(" + id + ")");
 		builder.append(" ");
 		for (int choice = 0; choice < choiceTransitions.length; choice++) {
-			int target = choiceTransitions[choice];
+			short target = choiceTransitions[choice];
 			if (target != -1) builder.append("[c:" + choice + "->" + target + "]");
 		}
 		if (terminalTransition != -1) {
@@ -124,34 +124,34 @@ public class GrammarState implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeInt(id);
-		out.writeInt(nonTerminalEnd);
+		out.writeShort(id);
+		out.writeShort(nonTerminalEnd);
 
-		out.writeInt(choiceTransitions.length);
+		out.writeShort(choiceTransitions.length);
 		for (int i = 0; i < choiceTransitions.length; i++) {
-			out.writeInt(choiceTransitions[i]);
+			out.writeShort(choiceTransitions[i]);
 		}
 
-		out.writeInt(nonTerminalTransition);
-		out.writeInt(nonTerminalTransitionEnd);
-		out.writeInt(terminalTransition);
-		out.writeInt(terminalTransitionEnd);
+		out.writeShort(nonTerminalTransition);
+		out.writeShort(nonTerminalTransitionEnd);
+		out.writeShort(terminalTransition);
+		out.writeShort(terminalTransitionEnd);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		id = in.readInt();
-		nonTerminalEnd = in.readInt();
+		id = in.readShort();
+		nonTerminalEnd = in.readShort();
 
-		int choiceCount = in.readInt();
-		choiceTransitions = new int[choiceCount];
+		int choiceCount = in.readShort();
+		choiceTransitions = new short[choiceCount];
 		for (int i = 0; i < choiceCount; i++) {
-			choiceTransitions[i] = in.readInt();
+			choiceTransitions[i] = in.readShort();
 		}
 
-		nonTerminalTransition = in.readInt();
-		nonTerminalTransitionEnd = in.readInt();
-		terminalTransition = in.readInt();
-		terminalTransitionEnd = in.readInt();
+		nonTerminalTransition = in.readShort();
+		nonTerminalTransitionEnd = in.readShort();
+		terminalTransition = in.readShort();
+		terminalTransitionEnd = in.readShort();
 	}
 }

@@ -19,12 +19,10 @@
 
 package org.jlato.internal.parser;
 
-import gnu.trove.iterator.TIntIterator;
 import org.jlato.internal.parser.all.*;
 import org.jlato.internal.parser.util.Collections;
-import org.jlato.internal.parser.util.IntPairObjectMap;
-import org.jlato.internal.parser.util.IntPairObjectMap.IntPairObjectIterator;
-import org.jlato.internal.parser.util.IntSet;
+import org.jlato.internal.parser.util.ShortPairObjectMap;
+import org.jlato.internal.parser.util.ShortPairObjectMap.ShortPairObjectIterator;
 
 import java.util.*;
 
@@ -46,7 +44,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 	private final Grammar grammar = initializeGrammar();
 
-	private final IntPairObjectMap<CachedAutomaton> automata = Collections.intPairObjectMap();
+	private final ShortPairObjectMap<CachedAutomaton> automata = Collections.intPairObjectMap();
 
 	private CallStack callStack = CallStack.EMPTY;
 
@@ -83,11 +81,16 @@ public abstract class ParserBaseALL extends ParserBase {
 		}
 	}
 
-	protected void pushCallStack(GrammarProduction.NonTerminal ntCall) {
+	protected void pushCallStack(GrammarProduction.NonTerminal nonTerminal) {
 		if (forceLL) return;
 
-		int state = ntCall.end().id;
-		callStack = callStack.push(state);
+		callStack = callStack.push(nonTerminal.end().id);
+	}
+
+	protected void pushCallStack(int nonTerminalReturnState) {
+		if (forceLL) return;
+
+		callStack = callStack.push(nonTerminalReturnState);
 	}
 
 	protected void popCallStack() {
@@ -312,36 +315,21 @@ public abstract class ParserBaseALL extends ParserBase {
 			if (callStack == CallStack.WILDCARD) {
 
 				// End states
-				IntSet useEndStates = grammar.getUseEndStates(nonTerminalEnd);
+				short[] useEndStates = grammar.getUseEndStates(nonTerminalEnd);
 				if (useEndStates != null) {
-					TIntIterator iterator = useEndStates.iterator();
-					while (iterator.hasNext()) {
-						int useEndStateId = iterator.next();
-						Configuration newConfiguration = newConfiguration(useEndStateId, prediction, CallStack.WILDCARD);
+					for (short useEndState : useEndStates) {
+						Configuration newConfiguration = newConfiguration(useEndState, prediction, CallStack.WILDCARD);
 						closureOf(newConfiguration, newConfigurations);
 					}
 				}
 
 				// Specific end states for the entry point
-				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminalEnd);
-				if (useEndStates != null) {
-					TIntIterator iterator = useEndStates.iterator();
-					while (iterator.hasNext()) {
-						int useEndStateId = iterator.next();
-						Configuration newConfiguration = newConfiguration(useEndStateId, prediction, CallStack.WILDCARD);
-						closureOf(newConfiguration, newConfigurations);
-					}
+				int useEndState = grammar.getEntryPointUseEndStates(entryPoint, nonTerminalEnd);
+				if (useEndState != -1) {
+					Configuration newConfiguration = newConfiguration(useEndState, prediction, CallStack.WILDCARD);
+					closureOf(newConfiguration, newConfigurations);
 				}
 			} else {
-
-				// Using inner class closure
-//				callStack.pop(new CallStackReader() {
-//					@Override
-//					public void handleNext(GrammarState head, CallStack tail) {
-//						Configuration newConfiguration = new Configuration(head, prediction, tail);
-//						closureOf(newConfiguration, newConfigurations, busy);
-//					}
-//				});
 
 				// Unrolled code without inner class closure
 				if (callStack.kind == CallStack.Kind.WILDCARD || callStack.kind == CallStack.Kind.EMPTY) return;
@@ -362,6 +350,7 @@ public abstract class ParserBaseALL extends ParserBase {
 				}
 			}
 		} else {
+
 			// Handle choice transitions
 			for (int choice = 0; choice < state.choiceTransitions.length; choice++) {
 				int targetId = state.choiceTransitions[choice];
@@ -448,7 +437,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		private Set<Configuration> merge(Set<Configuration> configurations) {
 			int previousSize = configurations.size();
-			IntPairObjectMap<CallStack> perStatePredictionCallStack = Collections.intPairObjectMap();
+			ShortPairObjectMap<CallStack> perStatePredictionCallStack = Collections.intPairObjectMap();
 			for (Configuration configuration : configurations) {
 				CallStack stack = perStatePredictionCallStack.get(configuration.stateId, configuration.prediction);
 				CallStack mergedStack = stack == null ? configuration.callStack : stack.merge(configuration.callStack);
@@ -458,7 +447,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 			configurations.clear();
 
-			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
+			ShortPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
 			while (iterator.hasNext()) {
 				iterator.advance();
 				configurations.add(base.newConfiguration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
@@ -478,7 +467,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 		private final ParserBaseALL base;
 		private final Set<Configuration> configurations = Collections.hashSet();
-		private final IntPairObjectMap<CallStack> perStatePredictionCallStack = Collections.intPairObjectMap();
+		private final ShortPairObjectMap<CallStack> perStatePredictionCallStack = Collections.intPairObjectMap();
 
 		private ConfigurationSetBuilderWithIncrementalMerge(ParserBaseALL base) {
 			this.base = base;
@@ -514,7 +503,7 @@ public abstract class ParserBaseALL extends ParserBase {
 
 			Set<Configuration> newConfigurations = Collections.hashSet();
 
-			IntPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
+			ShortPairObjectIterator<CallStack> iterator = perStatePredictionCallStack.iterator();
 			while (iterator.hasNext()) {
 				iterator.advance();
 				newConfigurations.add(base.newConfiguration(iterator.getKey1(), iterator.getKey2(), iterator.value()));
