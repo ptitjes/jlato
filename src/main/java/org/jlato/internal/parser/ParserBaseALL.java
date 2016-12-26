@@ -189,7 +189,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	}
 
 	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
-		int stateId = grammar.getStartState(choicePoint);
+		int stateId = grammar.getChoicePointState(choicePoint);
 
 		Configuration initialConfiguration = newConfiguration(stateId, -1, callStack);
 		Set<Configuration> configurations = singleton(initialConfiguration);
@@ -377,7 +377,7 @@ public abstract class ParserBaseALL extends ParserBase {
 			int symbol = state.nonTerminalTransition;
 			int targetId = state.nonTerminalTransitionEnd;
 			if (symbol != -1 && targetId != -1) {
-				int startId = grammar.getStartState(symbol);
+				int startId = grammar.getNonTerminalStartState(symbol);
 
 				Configuration newConfiguration = newConfiguration(startId, prediction, callStack.push(targetId));
 				closureOf(newConfiguration, newConfigurations);

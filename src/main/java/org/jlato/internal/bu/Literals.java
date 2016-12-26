@@ -70,7 +70,7 @@ public final class Literals {
 		}
 	}
 
-	private static String escapeString(String string) {
+	public static String escapeString(String string) {
 		StringBuilder buffer = new StringBuilder();
 		char[] chars = string.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
@@ -107,7 +107,7 @@ public final class Literals {
 		return buffer.toString();
 	}
 
-	private static String escapeChar(char c) {
+	public static String escapeChar(char c) {
 		switch (c) {
 			case '\t':
 				return "\\t";

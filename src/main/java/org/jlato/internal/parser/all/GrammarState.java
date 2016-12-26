@@ -22,17 +22,21 @@ package org.jlato.internal.parser.all;
 import org.jlato.internal.parser.Token;
 import org.jlato.internal.parser.TokenType;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * @author Didier Villevalois
  */
-public class GrammarState {
+public class GrammarState implements Externalizable {
 
-	public final int id;
-	public final String name;
+	public int id;
 
-	public final int nonTerminalEnd;
+	public int nonTerminalEnd;
 
-	public final int[] choiceTransitions = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,};
+	public int[] choiceTransitions;
 
 	public int nonTerminalTransition = -1;
 	public int nonTerminalTransitionEnd;
@@ -40,10 +44,23 @@ public class GrammarState {
 	public int terminalTransition = -1;
 	public int terminalTransitionEnd;
 
-	public GrammarState(int id, String name, int nonTerminalEnd) {
+	public GrammarState(int id, int nonTerminalEnd) {
+		this(id, nonTerminalEnd, new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, -1, -1, -1, -1);
+	}
+
+	public GrammarState() {
+	}
+
+	public GrammarState(int id, int nonTerminalEnd, int[] choiceTransitions,
+	                    int nonTerminalTransition, int nonTerminalTransitionEnd,
+	                    int terminalTransition, int terminalTransitionEnd) {
 		this.id = id;
-		this.name = name;
 		this.nonTerminalEnd = nonTerminalEnd;
+		this.choiceTransitions = choiceTransitions;
+		this.nonTerminalTransition = nonTerminalTransition;
+		this.nonTerminalTransitionEnd = nonTerminalTransitionEnd;
+		this.terminalTransition = terminalTransition;
+		this.terminalTransitionEnd = terminalTransitionEnd;
 	}
 
 	@Override
@@ -67,14 +84,14 @@ public class GrammarState {
 
 	void setNonTerminal(int symbol, GrammarState target) {
 		if (nonTerminalTransition != -1)
-			throw new IllegalStateException("Already defined non-terminal " + symbol + " transition for state " + name);
+			throw new IllegalStateException("Already defined non-terminal " + symbol);
 		nonTerminalTransition = symbol;
 		nonTerminalTransitionEnd = target.id;
 	}
 
 	void setTerminal(int tokenType, GrammarState target) {
 		if (terminalTransition != -1)
-			throw new IllegalStateException("Already defined terminal " + tokenType + " transition for state " + name);
+			throw new IllegalStateException("Already defined terminal " + tokenType);
 		terminalTransition = tokenType;
 		terminalTransitionEnd = target.id;
 	}
@@ -87,7 +104,7 @@ public class GrammarState {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("(" + name + ")");
+		builder.append("(" + id + ")");
 		builder.append(" ");
 		for (int choice = 0; choice < choiceTransitions.length; choice++) {
 			int target = choiceTransitions[choice];
@@ -103,5 +120,38 @@ public class GrammarState {
 		}
 
 		return builder.toString();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeInt(id);
+		out.writeInt(nonTerminalEnd);
+
+		out.writeInt(choiceTransitions.length);
+		for (int i = 0; i < choiceTransitions.length; i++) {
+			out.writeInt(choiceTransitions[i]);
+		}
+
+		out.writeInt(nonTerminalTransition);
+		out.writeInt(nonTerminalTransitionEnd);
+		out.writeInt(terminalTransition);
+		out.writeInt(terminalTransitionEnd);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		id = in.readInt();
+		nonTerminalEnd = in.readInt();
+
+		int choiceCount = in.readInt();
+		choiceTransitions = new int[choiceCount];
+		for (int i = 0; i < choiceCount; i++) {
+			choiceTransitions[i] = in.readInt();
+		}
+
+		nonTerminalTransition = in.readInt();
+		nonTerminalTransitionEnd = in.readInt();
+		terminalTransition = in.readInt();
+		terminalTransitionEnd = in.readInt();
 	}
 }
