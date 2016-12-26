@@ -56,7 +56,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int ADDITIVE_EXPRESSION_2 = 215;
 
-		static final int ADDITIVE_EXPRESSION_2_1 = 216;
+		static final int ADDITIVE_EXPRESSION_2_1_1 = 216;
 
 		static final int AND_EXPRESSION = 199;
 
@@ -130,7 +130,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int ARRAY_INITIALIZER_2 = 118;
 
-		static final int ARRAY_INITIALIZER_2_2 = 119;
+		static final int ARRAY_INITIALIZER_2_1_2 = 119;
 
 		static final int ARRAY_INITIALIZER_3 = 120;
 
@@ -224,7 +224,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int CONDITIONAL_EXPRESSION_2 = 191;
 
-		static final int CONDITIONAL_EXPRESSION_2_4 = 192;
+		static final int CONDITIONAL_EXPRESSION_2_1_4 = 192;
 
 		static final int CONDITIONAL_OR_EXPRESSION = 190;
 
@@ -292,7 +292,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int EQUALITY_EXPRESSION_2 = 204;
 
-		static final int EQUALITY_EXPRESSION_2_1 = 205;
+		static final int EQUALITY_EXPRESSION_2_1_1 = 205;
 
 		static final int EXCLUSIVE_OR_EXPRESSION = 197;
 
@@ -462,7 +462,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int MULTIPLICATIVE_EXPRESSION_2 = 218;
 
-		static final int MULTIPLICATIVE_EXPRESSION_2_1 = 219;
+		static final int MULTIPLICATIVE_EXPRESSION_2_1_1 = 219;
 
 		static final int NAME = 40;
 
@@ -538,7 +538,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int QUALIFIED_TYPE_3 = 160;
 
-		static final int QUALIFIED_TYPE_3_4 = 161;
+		static final int QUALIFIED_TYPE_3_1_4 = 161;
 
 		static final int REFERENCE_CAST_TYPE_REST = 181;
 
@@ -556,7 +556,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int RELATIONAL_EXPRESSION_2 = 209;
 
-		static final int RELATIONAL_EXPRESSION_2_1 = 210;
+		static final int RELATIONAL_EXPRESSION_2_1_1 = 210;
 
 		static final int RESOURCE_SPECIFICATION = 307;
 
@@ -576,7 +576,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final int SHIFT_EXPRESSION_2 = 212;
 
-		static final int SHIFT_EXPRESSION_2_1 = 213;
+		static final int SHIFT_EXPRESSION_2_1_1 = 213;
 
 		static final int SINGLE_ELEMENT_ANNOTATION = 324;
 
@@ -882,7 +882,7 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ImportDecl_3 = nonTerminal("ImportDecl_3", QUALIFIED_NAME);
 
-		static final ZeroOrOne ImportDecl_4 = zeroOrOne("ImportDecl_4", sequence("ImportDecl_4", terminal("ImportDecl_4_1", TokenType.DOT), terminal("ImportDecl_4_2", TokenType.STAR)));
+		static final ZeroOrOne ImportDecl_4 = zeroOrOne("ImportDecl_4", sequence("ImportDecl_4_1", terminal("ImportDecl_4_1_1", TokenType.DOT), terminal("ImportDecl_4_1_2", TokenType.STAR)));
 
 		static final Sequence ImportDecl = sequence("ImportDecl", terminal("ImportDecl_1", TokenType.IMPORT), ImportDecl_2, ImportDecl_3, ImportDecl_4, terminal("ImportDecl_5", TokenType.SEMICOLON));
 
@@ -928,9 +928,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final ZeroOrOne ClassOrInterfaceDecl_1_1_3 = zeroOrOne("ClassOrInterfaceDecl_1_1_3", ClassOrInterfaceDecl_1_1_3_1);
 
-		static final NonTerminal ClassOrInterfaceDecl_1_1_4_2 = nonTerminal("ClassOrInterfaceDecl_1_1_4_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal ClassOrInterfaceDecl_1_1_4_1_2 = nonTerminal("ClassOrInterfaceDecl_1_1_4_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final ZeroOrOne ClassOrInterfaceDecl_1_1_4 = zeroOrOne("ClassOrInterfaceDecl_1_1_4", sequence("ClassOrInterfaceDecl_1_1_4", terminal("ClassOrInterfaceDecl_1_1_4_1", TokenType.EXTENDS), ClassOrInterfaceDecl_1_1_4_2));
+		static final ZeroOrOne ClassOrInterfaceDecl_1_1_4 = zeroOrOne("ClassOrInterfaceDecl_1_1_4", sequence("ClassOrInterfaceDecl_1_1_4_1", terminal("ClassOrInterfaceDecl_1_1_4_1_1", TokenType.EXTENDS), ClassOrInterfaceDecl_1_1_4_1_2));
 
 		static final NonTerminal ClassOrInterfaceDecl_1_1_5_1 = nonTerminal("ClassOrInterfaceDecl_1_1_5_1", IMPLEMENTS_LIST);
 
@@ -956,9 +956,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ExtendsList_2_2_1 = nonTerminal("ExtendsList_2_2_1", ANNOTATED_QUALIFIED_TYPE);
 
-		static final NonTerminal ExtendsList_2_2_2_2 = nonTerminal("ExtendsList_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal ExtendsList_2_2_2_1_2 = nonTerminal("ExtendsList_2_2_2_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final ZeroOrMore ExtendsList_2_2_2 = zeroOrMore("ExtendsList_2_2_2", sequence("ExtendsList_2_2_2", terminal("ExtendsList_2_2_2_1", TokenType.COMMA), ExtendsList_2_2_2_2));
+		static final ZeroOrMore ExtendsList_2_2_2 = zeroOrMore("ExtendsList_2_2_2", sequence("ExtendsList_2_2_2_1", terminal("ExtendsList_2_2_2_1_1", TokenType.COMMA), ExtendsList_2_2_2_1_2));
 
 		static final Choice ExtendsList_2 = choice("ExtendsList_2", ExtendsList_2_1, sequence("ExtendsList_2_2", ExtendsList_2_2_1, ExtendsList_2_2_2));
 
@@ -968,9 +968,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ImplementsList_2_2_1 = nonTerminal("ImplementsList_2_2_1", ANNOTATED_QUALIFIED_TYPE);
 
-		static final NonTerminal ImplementsList_2_2_2_2 = nonTerminal("ImplementsList_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal ImplementsList_2_2_2_1_2 = nonTerminal("ImplementsList_2_2_2_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final ZeroOrMore ImplementsList_2_2_2 = zeroOrMore("ImplementsList_2_2_2", sequence("ImplementsList_2_2_2", terminal("ImplementsList_2_2_2_1", TokenType.COMMA), ImplementsList_2_2_2_2));
+		static final ZeroOrMore ImplementsList_2_2_2 = zeroOrMore("ImplementsList_2_2_2", sequence("ImplementsList_2_2_2_1", terminal("ImplementsList_2_2_2_1_1", TokenType.COMMA), ImplementsList_2_2_2_1_2));
 
 		static final Choice ImplementsList_2 = choice("ImplementsList_2", ImplementsList_2_1, sequence("ImplementsList_2_2", ImplementsList_2_2_1, ImplementsList_2_2_2));
 
@@ -986,9 +986,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal EnumDecl_5_1_2_1 = nonTerminal("EnumDecl_5_1_2_1", ENUM_CONSTANT_DECL);
 
-		static final NonTerminal EnumDecl_5_1_2_2_2 = nonTerminal("EnumDecl_5_1_2_2_2", ENUM_CONSTANT_DECL);
+		static final NonTerminal EnumDecl_5_1_2_2_1_2 = nonTerminal("EnumDecl_5_1_2_2_1_2", ENUM_CONSTANT_DECL);
 
-		static final ZeroOrMore EnumDecl_5_1_2_2 = zeroOrMore("EnumDecl_5_1_2_2", sequence("EnumDecl_5_1_2_2", terminal("EnumDecl_5_1_2_2_1", TokenType.COMMA), EnumDecl_5_1_2_2_2));
+		static final ZeroOrMore EnumDecl_5_1_2_2 = zeroOrMore("EnumDecl_5_1_2_2", sequence("EnumDecl_5_1_2_2_1", terminal("EnumDecl_5_1_2_2_1_1", TokenType.COMMA), EnumDecl_5_1_2_2_1_2));
 
 		static final Choice EnumDecl_5_1 = choice("EnumDecl_5_1", EnumDecl_5_1_1, sequence("EnumDecl_5_1_2", EnumDecl_5_1_2_1, EnumDecl_5_1_2_2));
 
@@ -996,9 +996,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final ZeroOrOne EnumDecl_6 = zeroOrOne("EnumDecl_6", terminal("EnumDecl_6_1", TokenType.COMMA));
 
-		static final NonTerminal EnumDecl_7_2 = nonTerminal("EnumDecl_7_2", CLASS_OR_INTERFACE_BODY_DECLS);
+		static final NonTerminal EnumDecl_7_1_2 = nonTerminal("EnumDecl_7_1_2", CLASS_OR_INTERFACE_BODY_DECLS);
 
-		static final ZeroOrOne EnumDecl_7 = zeroOrOne("EnumDecl_7", sequence("EnumDecl_7", terminal("EnumDecl_7_1", TokenType.SEMICOLON), EnumDecl_7_2));
+		static final ZeroOrOne EnumDecl_7 = zeroOrOne("EnumDecl_7", sequence("EnumDecl_7_1", terminal("EnumDecl_7_1_1", TokenType.SEMICOLON), EnumDecl_7_1_2));
 
 		static final Sequence EnumDecl = sequence("EnumDecl", terminal("EnumDecl_1", TokenType.ENUM), EnumDecl_2, EnumDecl_3, terminal("EnumDecl_4", TokenType.LBRACE), EnumDecl_5, EnumDecl_6, EnumDecl_7, terminal("EnumDecl_8", TokenType.RBRACE));
 
@@ -1058,9 +1058,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal AnnotationTypeMemberDecl_5 = nonTerminal("AnnotationTypeMemberDecl_5", ARRAY_DIMS);
 
-		static final NonTerminal AnnotationTypeMemberDecl_6_2 = nonTerminal("AnnotationTypeMemberDecl_6_2", ELEMENT_VALUE);
+		static final NonTerminal AnnotationTypeMemberDecl_6_1_2 = nonTerminal("AnnotationTypeMemberDecl_6_1_2", ELEMENT_VALUE);
 
-		static final ZeroOrOne AnnotationTypeMemberDecl_6 = zeroOrOne("AnnotationTypeMemberDecl_6", sequence("AnnotationTypeMemberDecl_6", terminal("AnnotationTypeMemberDecl_6_1", TokenType.DEFAULT), AnnotationTypeMemberDecl_6_2));
+		static final ZeroOrOne AnnotationTypeMemberDecl_6 = zeroOrOne("AnnotationTypeMemberDecl_6", sequence("AnnotationTypeMemberDecl_6_1", terminal("AnnotationTypeMemberDecl_6_1_1", TokenType.DEFAULT), AnnotationTypeMemberDecl_6_1_2));
 
 		static final Sequence AnnotationTypeMemberDecl = sequence("AnnotationTypeMemberDecl", AnnotationTypeMemberDecl_1, AnnotationTypeMemberDecl_2, terminal("AnnotationTypeMemberDecl_3", TokenType.LPAREN), terminal("AnnotationTypeMemberDecl_4", TokenType.RPAREN), AnnotationTypeMemberDecl_5, AnnotationTypeMemberDecl_6, terminal("AnnotationTypeMemberDecl_7", TokenType.SEMICOLON));
 
@@ -1068,9 +1068,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal TypeParameters_2_2_1 = nonTerminal("TypeParameters_2_2_1", TYPE_PARAMETER);
 
-		static final NonTerminal TypeParameters_2_2_2_2 = nonTerminal("TypeParameters_2_2_2_2", TYPE_PARAMETER);
+		static final NonTerminal TypeParameters_2_2_2_1_2 = nonTerminal("TypeParameters_2_2_2_1_2", TYPE_PARAMETER);
 
-		static final ZeroOrMore TypeParameters_2_2_2 = zeroOrMore("TypeParameters_2_2_2", sequence("TypeParameters_2_2_2", terminal("TypeParameters_2_2_2_1", TokenType.COMMA), TypeParameters_2_2_2_2));
+		static final ZeroOrMore TypeParameters_2_2_2 = zeroOrMore("TypeParameters_2_2_2", sequence("TypeParameters_2_2_2_1", terminal("TypeParameters_2_2_2_1_1", TokenType.COMMA), TypeParameters_2_2_2_1_2));
 
 		static final Choice TypeParameters_2 = choice("TypeParameters_2", TypeParameters_2_1, sequence("TypeParameters_2_2", TypeParameters_2_2_1, TypeParameters_2_2_2));
 
@@ -1090,9 +1090,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal TypeBounds_2_2_1 = nonTerminal("TypeBounds_2_2_1", ANNOTATED_QUALIFIED_TYPE);
 
-		static final NonTerminal TypeBounds_2_2_2_2 = nonTerminal("TypeBounds_2_2_2_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal TypeBounds_2_2_2_1_2 = nonTerminal("TypeBounds_2_2_2_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final ZeroOrMore TypeBounds_2_2_2 = zeroOrMore("TypeBounds_2_2_2", sequence("TypeBounds_2_2_2", terminal("TypeBounds_2_2_2_1", TokenType.BIT_AND), TypeBounds_2_2_2_2));
+		static final ZeroOrMore TypeBounds_2_2_2 = zeroOrMore("TypeBounds_2_2_2", sequence("TypeBounds_2_2_2_1", terminal("TypeBounds_2_2_2_1_1", TokenType.BIT_AND), TypeBounds_2_2_2_1_2));
 
 		static final Choice TypeBounds_2 = choice("TypeBounds_2", TypeBounds_2_1, sequence("TypeBounds_2_2", TypeBounds_2_2_1, TypeBounds_2_2_2));
 
@@ -1150,17 +1150,17 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal VariableDeclarators_1 = nonTerminal("VariableDeclarators_1", VARIABLE_DECLARATOR);
 
-		static final NonTerminal VariableDeclarators_2_2 = nonTerminal("VariableDeclarators_2_2", VARIABLE_DECLARATOR);
+		static final NonTerminal VariableDeclarators_2_1_2 = nonTerminal("VariableDeclarators_2_1_2", VARIABLE_DECLARATOR);
 
-		static final ZeroOrMore VariableDeclarators_2 = zeroOrMore("VariableDeclarators_2", sequence("VariableDeclarators_2", terminal("VariableDeclarators_2_1", TokenType.COMMA), VariableDeclarators_2_2));
+		static final ZeroOrMore VariableDeclarators_2 = zeroOrMore("VariableDeclarators_2", sequence("VariableDeclarators_2_1", terminal("VariableDeclarators_2_1_1", TokenType.COMMA), VariableDeclarators_2_1_2));
 
 		static final Sequence VariableDeclarators = sequence("VariableDeclarators", VariableDeclarators_1, VariableDeclarators_2);
 
 		static final NonTerminal VariableDeclarator_1 = nonTerminal("VariableDeclarator_1", VARIABLE_DECLARATOR_ID);
 
-		static final NonTerminal VariableDeclarator_2_2 = nonTerminal("VariableDeclarator_2_2", VARIABLE_INITIALIZER);
+		static final NonTerminal VariableDeclarator_2_1_2 = nonTerminal("VariableDeclarator_2_1_2", VARIABLE_INITIALIZER);
 
-		static final ZeroOrOne VariableDeclarator_2 = zeroOrOne("VariableDeclarator_2", sequence("VariableDeclarator_2", terminal("VariableDeclarator_2_1", TokenType.ASSIGN), VariableDeclarator_2_2));
+		static final ZeroOrOne VariableDeclarator_2 = zeroOrOne("VariableDeclarator_2", sequence("VariableDeclarator_2_1", terminal("VariableDeclarator_2_1_1", TokenType.ASSIGN), VariableDeclarator_2_1_2));
 
 		static final Sequence VariableDeclarator = sequence("VariableDeclarator", VariableDeclarator_1, VariableDeclarator_2);
 
@@ -1170,9 +1170,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final Sequence VariableDeclaratorId = sequence("VariableDeclaratorId", VariableDeclaratorId_1, VariableDeclaratorId_2);
 
-		static final NonTerminal ArrayDims_1_1 = nonTerminal("ArrayDims_1_1", ANNOTATIONS);
+		static final NonTerminal ArrayDims_1_1_1 = nonTerminal("ArrayDims_1_1_1", ANNOTATIONS);
 
-		static final ZeroOrMore ArrayDims_1 = zeroOrMore("ArrayDims_1", sequence("ArrayDims_1", ArrayDims_1_1, terminal("ArrayDims_1_2", TokenType.LBRACKET), terminal("ArrayDims_1_3", TokenType.RBRACKET)));
+		static final ZeroOrMore ArrayDims_1 = zeroOrMore("ArrayDims_1", sequence("ArrayDims_1_1", ArrayDims_1_1_1, terminal("ArrayDims_1_1_2", TokenType.LBRACKET), terminal("ArrayDims_1_1_3", TokenType.RBRACKET)));
 
 		static final Sequence ArrayDims = sequence("ArrayDims", ArrayDims_1);
 
@@ -1184,23 +1184,23 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final Sequence VariableInitializer = sequence("VariableInitializer", VariableInitializer_1);
 
-		static final NonTerminal ArrayInitializer_2_1 = nonTerminal("ArrayInitializer_2_1", VARIABLE_INITIALIZER);
+		static final NonTerminal ArrayInitializer_2_1_1 = nonTerminal("ArrayInitializer_2_1_1", VARIABLE_INITIALIZER);
 
-		static final NonTerminal ArrayInitializer_2_2_2 = nonTerminal("ArrayInitializer_2_2_2", VARIABLE_INITIALIZER);
+		static final NonTerminal ArrayInitializer_2_1_2_1_2 = nonTerminal("ArrayInitializer_2_1_2_1_2", VARIABLE_INITIALIZER);
 
-		static final ZeroOrMore ArrayInitializer_2_2 = zeroOrMore("ArrayInitializer_2_2", sequence("ArrayInitializer_2_2", terminal("ArrayInitializer_2_2_1", TokenType.COMMA), ArrayInitializer_2_2_2));
+		static final ZeroOrMore ArrayInitializer_2_1_2 = zeroOrMore("ArrayInitializer_2_1_2", sequence("ArrayInitializer_2_1_2_1", terminal("ArrayInitializer_2_1_2_1_1", TokenType.COMMA), ArrayInitializer_2_1_2_1_2));
 
-		static final ZeroOrOne ArrayInitializer_2 = zeroOrOne("ArrayInitializer_2", sequence("ArrayInitializer_2", ArrayInitializer_2_1, ArrayInitializer_2_2));
+		static final ZeroOrOne ArrayInitializer_2 = zeroOrOne("ArrayInitializer_2", sequence("ArrayInitializer_2_1", ArrayInitializer_2_1_1, ArrayInitializer_2_1_2));
 
 		static final ZeroOrOne ArrayInitializer_3 = zeroOrOne("ArrayInitializer_3", terminal("ArrayInitializer_3_1", TokenType.COMMA));
 
 		static final Sequence ArrayInitializer = sequence("ArrayInitializer", terminal("ArrayInitializer_1", TokenType.LBRACE), ArrayInitializer_2, ArrayInitializer_3, terminal("ArrayInitializer_4", TokenType.RBRACE));
 
-		static final NonTerminal MethodDecl_1_1 = nonTerminal("MethodDecl_1_1", TYPE_PARAMETERS);
+		static final NonTerminal MethodDecl_1_1_1 = nonTerminal("MethodDecl_1_1_1", TYPE_PARAMETERS);
 
-		static final NonTerminal MethodDecl_1_2 = nonTerminal("MethodDecl_1_2", ANNOTATIONS);
+		static final NonTerminal MethodDecl_1_1_2 = nonTerminal("MethodDecl_1_1_2", ANNOTATIONS);
 
-		static final ZeroOrOne MethodDecl_1 = zeroOrOne("MethodDecl_1", sequence("MethodDecl_1", MethodDecl_1_1, MethodDecl_1_2));
+		static final ZeroOrOne MethodDecl_1 = zeroOrOne("MethodDecl_1", sequence("MethodDecl_1_1", MethodDecl_1_1_1, MethodDecl_1_1_2));
 
 		static final NonTerminal MethodDecl_2 = nonTerminal("MethodDecl_2", RESULT_TYPE);
 
@@ -1230,9 +1230,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal FormalParameterList_1_2_1 = nonTerminal("FormalParameterList_1_2_1", FORMAL_PARAMETER);
 
-		static final NonTerminal FormalParameterList_1_2_2_2 = nonTerminal("FormalParameterList_1_2_2_2", FORMAL_PARAMETER);
+		static final NonTerminal FormalParameterList_1_2_2_1_2 = nonTerminal("FormalParameterList_1_2_2_1_2", FORMAL_PARAMETER);
 
-		static final ZeroOrMore FormalParameterList_1_2_2 = zeroOrMore("FormalParameterList_1_2_2", sequence("FormalParameterList_1_2_2", terminal("FormalParameterList_1_2_2_1", TokenType.COMMA), FormalParameterList_1_2_2_2));
+		static final ZeroOrMore FormalParameterList_1_2_2 = zeroOrMore("FormalParameterList_1_2_2", sequence("FormalParameterList_1_2_2_1", terminal("FormalParameterList_1_2_2_1_1", TokenType.COMMA), FormalParameterList_1_2_2_1_2));
 
 		static final Choice FormalParameterList_1 = choice("FormalParameterList_1", FormalParameterList_1_1, sequence("FormalParameterList_1_2", FormalParameterList_1_2_1, FormalParameterList_1_2_2));
 
@@ -1242,13 +1242,13 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal FormalParameter_2 = nonTerminal("FormalParameter_2", TYPE);
 
-		static final NonTerminal FormalParameter_3_1 = nonTerminal("FormalParameter_3_1", ANNOTATIONS);
+		static final NonTerminal FormalParameter_3_1_1 = nonTerminal("FormalParameter_3_1_1", ANNOTATIONS);
 
-		static final ZeroOrOne FormalParameter_3 = zeroOrOne("FormalParameter_3", sequence("FormalParameter_3", FormalParameter_3_1, terminal("FormalParameter_3_2", TokenType.ELLIPSIS)));
+		static final ZeroOrOne FormalParameter_3 = zeroOrOne("FormalParameter_3", sequence("FormalParameter_3_1", FormalParameter_3_1_1, terminal("FormalParameter_3_1_2", TokenType.ELLIPSIS)));
 
-		static final NonTerminal FormalParameter_4_1_1_1 = nonTerminal("FormalParameter_4_1_1_1", NAME);
+		static final NonTerminal FormalParameter_4_1_1_1_1 = nonTerminal("FormalParameter_4_1_1_1_1", NAME);
 
-		static final ZeroOrOne FormalParameter_4_1_1 = zeroOrOne("FormalParameter_4_1_1", sequence("FormalParameter_4_1_1", FormalParameter_4_1_1_1, terminal("FormalParameter_4_1_1_2", TokenType.DOT)));
+		static final ZeroOrOne FormalParameter_4_1_1 = zeroOrOne("FormalParameter_4_1_1", sequence("FormalParameter_4_1_1_1", FormalParameter_4_1_1_1_1, terminal("FormalParameter_4_1_1_1_2", TokenType.DOT)));
 
 		static final NonTerminal FormalParameter_4_2 = nonTerminal("FormalParameter_4_2", VARIABLE_DECLARATOR_ID);
 
@@ -1258,9 +1258,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ThrowsClause_2 = nonTerminal("ThrowsClause_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final NonTerminal ThrowsClause_3_2 = nonTerminal("ThrowsClause_3_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal ThrowsClause_3_1_2 = nonTerminal("ThrowsClause_3_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final ZeroOrMore ThrowsClause_3 = zeroOrMore("ThrowsClause_3", sequence("ThrowsClause_3", terminal("ThrowsClause_3_1", TokenType.COMMA), ThrowsClause_3_2));
+		static final ZeroOrMore ThrowsClause_3 = zeroOrMore("ThrowsClause_3", sequence("ThrowsClause_3_1", terminal("ThrowsClause_3_1_1", TokenType.COMMA), ThrowsClause_3_1_2));
 
 		static final Sequence ThrowsClause = sequence("ThrowsClause", terminal("ThrowsClause_1", TokenType.THROWS), ThrowsClause_2, ThrowsClause_3);
 
@@ -1286,9 +1286,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ExplicitConstructorInvocation_1_1_3 = nonTerminal("ExplicitConstructorInvocation_1_1_3", ARGUMENTS);
 
-		static final NonTerminal ExplicitConstructorInvocation_1_2_1_1 = nonTerminal("ExplicitConstructorInvocation_1_2_1_1", PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX);
+		static final NonTerminal ExplicitConstructorInvocation_1_2_1_1_1 = nonTerminal("ExplicitConstructorInvocation_1_2_1_1_1", PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX);
 
-		static final ZeroOrOne ExplicitConstructorInvocation_1_2_1 = zeroOrOne("ExplicitConstructorInvocation_1_2_1", sequence("ExplicitConstructorInvocation_1_2_1", ExplicitConstructorInvocation_1_2_1_1, terminal("ExplicitConstructorInvocation_1_2_1_2", TokenType.DOT)));
+		static final ZeroOrOne ExplicitConstructorInvocation_1_2_1 = zeroOrOne("ExplicitConstructorInvocation_1_2_1", sequence("ExplicitConstructorInvocation_1_2_1_1", ExplicitConstructorInvocation_1_2_1_1_1, terminal("ExplicitConstructorInvocation_1_2_1_1_2", TokenType.DOT)));
 
 		static final NonTerminal ExplicitConstructorInvocation_1_2_2_1 = nonTerminal("ExplicitConstructorInvocation_1_2_2_1", TYPE_ARGUMENTS);
 
@@ -1356,15 +1356,15 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final ZeroOrOne QualifiedType_2 = zeroOrOne("QualifiedType_2", QualifiedType_2_1);
 
-		static final NonTerminal QualifiedType_3_2 = nonTerminal("QualifiedType_3_2", ANNOTATIONS);
+		static final NonTerminal QualifiedType_3_1_2 = nonTerminal("QualifiedType_3_1_2", ANNOTATIONS);
 
-		static final NonTerminal QualifiedType_3_3 = nonTerminal("QualifiedType_3_3", NAME);
+		static final NonTerminal QualifiedType_3_1_3 = nonTerminal("QualifiedType_3_1_3", NAME);
 
-		static final NonTerminal QualifiedType_3_4_1 = nonTerminal("QualifiedType_3_4_1", TYPE_ARGUMENTS_OR_DIAMOND);
+		static final NonTerminal QualifiedType_3_1_4_1 = nonTerminal("QualifiedType_3_1_4_1", TYPE_ARGUMENTS_OR_DIAMOND);
 
-		static final ZeroOrOne QualifiedType_3_4 = zeroOrOne("QualifiedType_3_4", QualifiedType_3_4_1);
+		static final ZeroOrOne QualifiedType_3_1_4 = zeroOrOne("QualifiedType_3_1_4", QualifiedType_3_1_4_1);
 
-		static final ZeroOrMore QualifiedType_3 = zeroOrMore("QualifiedType_3", sequence("QualifiedType_3", terminal("QualifiedType_3_1", TokenType.DOT), QualifiedType_3_2, QualifiedType_3_3, QualifiedType_3_4));
+		static final ZeroOrMore QualifiedType_3 = zeroOrMore("QualifiedType_3", sequence("QualifiedType_3_1", terminal("QualifiedType_3_1_1", TokenType.DOT), QualifiedType_3_1_2, QualifiedType_3_1_3, QualifiedType_3_1_4));
 
 		static final Sequence QualifiedType = sequence("QualifiedType", QualifiedType_1, QualifiedType_2, QualifiedType_3);
 
@@ -1382,9 +1382,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal TypeArgumentList_2_1 = nonTerminal("TypeArgumentList_2_1", TYPE_ARGUMENT);
 
-		static final NonTerminal TypeArgumentList_2_2_2 = nonTerminal("TypeArgumentList_2_2_2", TYPE_ARGUMENT);
+		static final NonTerminal TypeArgumentList_2_2_1_2 = nonTerminal("TypeArgumentList_2_2_1_2", TYPE_ARGUMENT);
 
-		static final ZeroOrMore TypeArgumentList_2_2 = zeroOrMore("TypeArgumentList_2_2", sequence("TypeArgumentList_2_2", terminal("TypeArgumentList_2_2_1", TokenType.COMMA), TypeArgumentList_2_2_2));
+		static final ZeroOrMore TypeArgumentList_2_2 = zeroOrMore("TypeArgumentList_2_2", sequence("TypeArgumentList_2_2_1", terminal("TypeArgumentList_2_2_1_1", TokenType.COMMA), TypeArgumentList_2_2_1_2));
 
 		static final Choice TypeArgumentList = choice("TypeArgumentList", sequence("TypeArgumentList_1", TypeArgumentList_1_1), sequence("TypeArgumentList_2", TypeArgumentList_2_1, TypeArgumentList_2_2));
 
@@ -1430,9 +1430,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal QualifiedName_1 = nonTerminal("QualifiedName_1", NAME);
 
-		static final NonTerminal QualifiedName_2_2 = nonTerminal("QualifiedName_2_2", NAME);
+		static final NonTerminal QualifiedName_2_1_2 = nonTerminal("QualifiedName_2_1_2", NAME);
 
-		static final ZeroOrMore QualifiedName_2 = zeroOrMore("QualifiedName_2", sequence("QualifiedName_2", terminal("QualifiedName_2_1", TokenType.DOT), QualifiedName_2_2));
+		static final ZeroOrMore QualifiedName_2 = zeroOrMore("QualifiedName_2", sequence("QualifiedName_2_1", terminal("QualifiedName_2_1_1", TokenType.DOT), QualifiedName_2_1_2));
 
 		static final Sequence QualifiedName = sequence("QualifiedName", QualifiedName_1, QualifiedName_2);
 
@@ -1452,11 +1452,11 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal AssignmentExpression_1 = nonTerminal("AssignmentExpression_1", CONDITIONAL_EXPRESSION);
 
-		static final NonTerminal AssignmentExpression_2_1 = nonTerminal("AssignmentExpression_2_1", ASSIGNMENT_OPERATOR);
+		static final NonTerminal AssignmentExpression_2_1_1 = nonTerminal("AssignmentExpression_2_1_1", ASSIGNMENT_OPERATOR);
 
-		static final NonTerminal AssignmentExpression_2_2 = nonTerminal("AssignmentExpression_2_2", EXPRESSION);
+		static final NonTerminal AssignmentExpression_2_1_2 = nonTerminal("AssignmentExpression_2_1_2", EXPRESSION);
 
-		static final ZeroOrOne AssignmentExpression_2 = zeroOrOne("AssignmentExpression_2", sequence("AssignmentExpression_2", AssignmentExpression_2_1, AssignmentExpression_2_2));
+		static final ZeroOrOne AssignmentExpression_2 = zeroOrOne("AssignmentExpression_2", sequence("AssignmentExpression_2_1", AssignmentExpression_2_1_1, AssignmentExpression_2_1_2));
 
 		static final Sequence AssignmentExpression = sequence("AssignmentExpression", AssignmentExpression_1, AssignmentExpression_2);
 
@@ -1502,9 +1502,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal InferredFormalParameterList_1 = nonTerminal("InferredFormalParameterList_1", INFERRED_FORMAL_PARAMETER);
 
-		static final NonTerminal InferredFormalParameterList_2_2 = nonTerminal("InferredFormalParameterList_2_2", INFERRED_FORMAL_PARAMETER);
+		static final NonTerminal InferredFormalParameterList_2_1_2 = nonTerminal("InferredFormalParameterList_2_1_2", INFERRED_FORMAL_PARAMETER);
 
-		static final ZeroOrMore InferredFormalParameterList_2 = zeroOrMore("InferredFormalParameterList_2", sequence("InferredFormalParameterList_2", terminal("InferredFormalParameterList_2_1", TokenType.COMMA), InferredFormalParameterList_2_2));
+		static final ZeroOrMore InferredFormalParameterList_2 = zeroOrMore("InferredFormalParameterList_2", sequence("InferredFormalParameterList_2_1", terminal("InferredFormalParameterList_2_1_1", TokenType.COMMA), InferredFormalParameterList_2_1_2));
 
 		static final Sequence InferredFormalParameterList = sequence("InferredFormalParameterList", InferredFormalParameterList_1, InferredFormalParameterList_2);
 
@@ -1518,115 +1518,115 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ConditionalExpression_1 = nonTerminal("ConditionalExpression_1", CONDITIONAL_OR_EXPRESSION);
 
-		static final NonTerminal ConditionalExpression_2_2 = nonTerminal("ConditionalExpression_2_2", EXPRESSION);
+		static final NonTerminal ConditionalExpression_2_1_2 = nonTerminal("ConditionalExpression_2_1_2", EXPRESSION);
 
-		static final NonTerminal ConditionalExpression_2_4_1 = nonTerminal("ConditionalExpression_2_4_1", CONDITIONAL_EXPRESSION);
+		static final NonTerminal ConditionalExpression_2_1_4_1 = nonTerminal("ConditionalExpression_2_1_4_1", CONDITIONAL_EXPRESSION);
 
-		static final NonTerminal ConditionalExpression_2_4_2 = nonTerminal("ConditionalExpression_2_4_2", LAMBDA_EXPRESSION);
+		static final NonTerminal ConditionalExpression_2_1_4_2 = nonTerminal("ConditionalExpression_2_1_4_2", LAMBDA_EXPRESSION);
 
-		static final Choice ConditionalExpression_2_4 = choice("ConditionalExpression_2_4", ConditionalExpression_2_4_1, ConditionalExpression_2_4_2);
+		static final Choice ConditionalExpression_2_1_4 = choice("ConditionalExpression_2_1_4", ConditionalExpression_2_1_4_1, ConditionalExpression_2_1_4_2);
 
-		static final ZeroOrOne ConditionalExpression_2 = zeroOrOne("ConditionalExpression_2", sequence("ConditionalExpression_2", terminal("ConditionalExpression_2_1", TokenType.HOOK), ConditionalExpression_2_2, terminal("ConditionalExpression_2_3", TokenType.COLON), ConditionalExpression_2_4));
+		static final ZeroOrOne ConditionalExpression_2 = zeroOrOne("ConditionalExpression_2", sequence("ConditionalExpression_2_1", terminal("ConditionalExpression_2_1_1", TokenType.HOOK), ConditionalExpression_2_1_2, terminal("ConditionalExpression_2_1_3", TokenType.COLON), ConditionalExpression_2_1_4));
 
 		static final Sequence ConditionalExpression = sequence("ConditionalExpression", ConditionalExpression_1, ConditionalExpression_2);
 
 		static final NonTerminal ConditionalOrExpression_1 = nonTerminal("ConditionalOrExpression_1", CONDITIONAL_AND_EXPRESSION);
 
-		static final NonTerminal ConditionalOrExpression_2_2 = nonTerminal("ConditionalOrExpression_2_2", CONDITIONAL_AND_EXPRESSION);
+		static final NonTerminal ConditionalOrExpression_2_1_2 = nonTerminal("ConditionalOrExpression_2_1_2", CONDITIONAL_AND_EXPRESSION);
 
-		static final ZeroOrMore ConditionalOrExpression_2 = zeroOrMore("ConditionalOrExpression_2", sequence("ConditionalOrExpression_2", terminal("ConditionalOrExpression_2_1", TokenType.SC_OR), ConditionalOrExpression_2_2));
+		static final ZeroOrMore ConditionalOrExpression_2 = zeroOrMore("ConditionalOrExpression_2", sequence("ConditionalOrExpression_2_1", terminal("ConditionalOrExpression_2_1_1", TokenType.SC_OR), ConditionalOrExpression_2_1_2));
 
 		static final Sequence ConditionalOrExpression = sequence("ConditionalOrExpression", ConditionalOrExpression_1, ConditionalOrExpression_2);
 
 		static final NonTerminal ConditionalAndExpression_1 = nonTerminal("ConditionalAndExpression_1", INCLUSIVE_OR_EXPRESSION);
 
-		static final NonTerminal ConditionalAndExpression_2_2 = nonTerminal("ConditionalAndExpression_2_2", INCLUSIVE_OR_EXPRESSION);
+		static final NonTerminal ConditionalAndExpression_2_1_2 = nonTerminal("ConditionalAndExpression_2_1_2", INCLUSIVE_OR_EXPRESSION);
 
-		static final ZeroOrMore ConditionalAndExpression_2 = zeroOrMore("ConditionalAndExpression_2", sequence("ConditionalAndExpression_2", terminal("ConditionalAndExpression_2_1", TokenType.SC_AND), ConditionalAndExpression_2_2));
+		static final ZeroOrMore ConditionalAndExpression_2 = zeroOrMore("ConditionalAndExpression_2", sequence("ConditionalAndExpression_2_1", terminal("ConditionalAndExpression_2_1_1", TokenType.SC_AND), ConditionalAndExpression_2_1_2));
 
 		static final Sequence ConditionalAndExpression = sequence("ConditionalAndExpression", ConditionalAndExpression_1, ConditionalAndExpression_2);
 
 		static final NonTerminal InclusiveOrExpression_1 = nonTerminal("InclusiveOrExpression_1", EXCLUSIVE_OR_EXPRESSION);
 
-		static final NonTerminal InclusiveOrExpression_2_2 = nonTerminal("InclusiveOrExpression_2_2", EXCLUSIVE_OR_EXPRESSION);
+		static final NonTerminal InclusiveOrExpression_2_1_2 = nonTerminal("InclusiveOrExpression_2_1_2", EXCLUSIVE_OR_EXPRESSION);
 
-		static final ZeroOrMore InclusiveOrExpression_2 = zeroOrMore("InclusiveOrExpression_2", sequence("InclusiveOrExpression_2", terminal("InclusiveOrExpression_2_1", TokenType.BIT_OR), InclusiveOrExpression_2_2));
+		static final ZeroOrMore InclusiveOrExpression_2 = zeroOrMore("InclusiveOrExpression_2", sequence("InclusiveOrExpression_2_1", terminal("InclusiveOrExpression_2_1_1", TokenType.BIT_OR), InclusiveOrExpression_2_1_2));
 
 		static final Sequence InclusiveOrExpression = sequence("InclusiveOrExpression", InclusiveOrExpression_1, InclusiveOrExpression_2);
 
 		static final NonTerminal ExclusiveOrExpression_1 = nonTerminal("ExclusiveOrExpression_1", AND_EXPRESSION);
 
-		static final NonTerminal ExclusiveOrExpression_2_2 = nonTerminal("ExclusiveOrExpression_2_2", AND_EXPRESSION);
+		static final NonTerminal ExclusiveOrExpression_2_1_2 = nonTerminal("ExclusiveOrExpression_2_1_2", AND_EXPRESSION);
 
-		static final ZeroOrMore ExclusiveOrExpression_2 = zeroOrMore("ExclusiveOrExpression_2", sequence("ExclusiveOrExpression_2", terminal("ExclusiveOrExpression_2_1", TokenType.XOR), ExclusiveOrExpression_2_2));
+		static final ZeroOrMore ExclusiveOrExpression_2 = zeroOrMore("ExclusiveOrExpression_2", sequence("ExclusiveOrExpression_2_1", terminal("ExclusiveOrExpression_2_1_1", TokenType.XOR), ExclusiveOrExpression_2_1_2));
 
 		static final Sequence ExclusiveOrExpression = sequence("ExclusiveOrExpression", ExclusiveOrExpression_1, ExclusiveOrExpression_2);
 
 		static final NonTerminal AndExpression_1 = nonTerminal("AndExpression_1", EQUALITY_EXPRESSION);
 
-		static final NonTerminal AndExpression_2_2 = nonTerminal("AndExpression_2_2", EQUALITY_EXPRESSION);
+		static final NonTerminal AndExpression_2_1_2 = nonTerminal("AndExpression_2_1_2", EQUALITY_EXPRESSION);
 
-		static final ZeroOrMore AndExpression_2 = zeroOrMore("AndExpression_2", sequence("AndExpression_2", terminal("AndExpression_2_1", TokenType.BIT_AND), AndExpression_2_2));
+		static final ZeroOrMore AndExpression_2 = zeroOrMore("AndExpression_2", sequence("AndExpression_2_1", terminal("AndExpression_2_1_1", TokenType.BIT_AND), AndExpression_2_1_2));
 
 		static final Sequence AndExpression = sequence("AndExpression", AndExpression_1, AndExpression_2);
 
 		static final NonTerminal EqualityExpression_1 = nonTerminal("EqualityExpression_1", INSTANCE_OF_EXPRESSION);
 
-		static final Choice EqualityExpression_2_1 = choice("EqualityExpression_2_1", sequence("EqualityExpression_2_1_1", terminal("EqualityExpression_2_1_1_1", TokenType.EQ)), sequence("EqualityExpression_2_1_2", terminal("EqualityExpression_2_1_2_1", TokenType.NE)));
+		static final Choice EqualityExpression_2_1_1 = choice("EqualityExpression_2_1_1", sequence("EqualityExpression_2_1_1_1", terminal("EqualityExpression_2_1_1_1_1", TokenType.EQ)), sequence("EqualityExpression_2_1_1_2", terminal("EqualityExpression_2_1_1_2_1", TokenType.NE)));
 
-		static final NonTerminal EqualityExpression_2_2 = nonTerminal("EqualityExpression_2_2", INSTANCE_OF_EXPRESSION);
+		static final NonTerminal EqualityExpression_2_1_2 = nonTerminal("EqualityExpression_2_1_2", INSTANCE_OF_EXPRESSION);
 
-		static final ZeroOrMore EqualityExpression_2 = zeroOrMore("EqualityExpression_2", sequence("EqualityExpression_2", EqualityExpression_2_1, EqualityExpression_2_2));
+		static final ZeroOrMore EqualityExpression_2 = zeroOrMore("EqualityExpression_2", sequence("EqualityExpression_2_1", EqualityExpression_2_1_1, EqualityExpression_2_1_2));
 
 		static final Sequence EqualityExpression = sequence("EqualityExpression", EqualityExpression_1, EqualityExpression_2);
 
 		static final NonTerminal InstanceOfExpression_1 = nonTerminal("InstanceOfExpression_1", RELATIONAL_EXPRESSION);
 
-		static final NonTerminal InstanceOfExpression_2_2 = nonTerminal("InstanceOfExpression_2_2", ANNOTATIONS);
+		static final NonTerminal InstanceOfExpression_2_1_2 = nonTerminal("InstanceOfExpression_2_1_2", ANNOTATIONS);
 
-		static final NonTerminal InstanceOfExpression_2_3 = nonTerminal("InstanceOfExpression_2_3", TYPE);
+		static final NonTerminal InstanceOfExpression_2_1_3 = nonTerminal("InstanceOfExpression_2_1_3", TYPE);
 
-		static final ZeroOrOne InstanceOfExpression_2 = zeroOrOne("InstanceOfExpression_2", sequence("InstanceOfExpression_2", terminal("InstanceOfExpression_2_1", TokenType.INSTANCEOF), InstanceOfExpression_2_2, InstanceOfExpression_2_3));
+		static final ZeroOrOne InstanceOfExpression_2 = zeroOrOne("InstanceOfExpression_2", sequence("InstanceOfExpression_2_1", terminal("InstanceOfExpression_2_1_1", TokenType.INSTANCEOF), InstanceOfExpression_2_1_2, InstanceOfExpression_2_1_3));
 
 		static final Sequence InstanceOfExpression = sequence("InstanceOfExpression", InstanceOfExpression_1, InstanceOfExpression_2);
 
 		static final NonTerminal RelationalExpression_1 = nonTerminal("RelationalExpression_1", SHIFT_EXPRESSION);
 
-		static final Choice RelationalExpression_2_1 = choice("RelationalExpression_2_1", sequence("RelationalExpression_2_1_1", terminal("RelationalExpression_2_1_1_1", TokenType.LT)), sequence("RelationalExpression_2_1_2", terminal("RelationalExpression_2_1_2_1", TokenType.GT)), sequence("RelationalExpression_2_1_3", terminal("RelationalExpression_2_1_3_1", TokenType.LE)), sequence("RelationalExpression_2_1_4", terminal("RelationalExpression_2_1_4_1", TokenType.GE)));
+		static final Choice RelationalExpression_2_1_1 = choice("RelationalExpression_2_1_1", sequence("RelationalExpression_2_1_1_1", terminal("RelationalExpression_2_1_1_1_1", TokenType.LT)), sequence("RelationalExpression_2_1_1_2", terminal("RelationalExpression_2_1_1_2_1", TokenType.GT)), sequence("RelationalExpression_2_1_1_3", terminal("RelationalExpression_2_1_1_3_1", TokenType.LE)), sequence("RelationalExpression_2_1_1_4", terminal("RelationalExpression_2_1_1_4_1", TokenType.GE)));
 
-		static final NonTerminal RelationalExpression_2_2 = nonTerminal("RelationalExpression_2_2", SHIFT_EXPRESSION);
+		static final NonTerminal RelationalExpression_2_1_2 = nonTerminal("RelationalExpression_2_1_2", SHIFT_EXPRESSION);
 
-		static final ZeroOrMore RelationalExpression_2 = zeroOrMore("RelationalExpression_2", sequence("RelationalExpression_2", RelationalExpression_2_1, RelationalExpression_2_2));
+		static final ZeroOrMore RelationalExpression_2 = zeroOrMore("RelationalExpression_2", sequence("RelationalExpression_2_1", RelationalExpression_2_1_1, RelationalExpression_2_1_2));
 
 		static final Sequence RelationalExpression = sequence("RelationalExpression", RelationalExpression_1, RelationalExpression_2);
 
 		static final NonTerminal ShiftExpression_1 = nonTerminal("ShiftExpression_1", ADDITIVE_EXPRESSION);
 
-		static final Choice ShiftExpression_2_1 = choice("ShiftExpression_2_1", sequence("ShiftExpression_2_1_1", terminal("ShiftExpression_2_1_1_1", TokenType.LSHIFT)), sequence("ShiftExpression_2_1_2", terminal("ShiftExpression_2_1_2_1", TokenType.GT), terminal("ShiftExpression_2_1_2_2", TokenType.GT), terminal("ShiftExpression_2_1_2_3", TokenType.GT)), sequence("ShiftExpression_2_1_3", terminal("ShiftExpression_2_1_3_1", TokenType.GT), terminal("ShiftExpression_2_1_3_2", TokenType.GT)));
+		static final Choice ShiftExpression_2_1_1 = choice("ShiftExpression_2_1_1", sequence("ShiftExpression_2_1_1_1", terminal("ShiftExpression_2_1_1_1_1", TokenType.LSHIFT)), sequence("ShiftExpression_2_1_1_2", terminal("ShiftExpression_2_1_1_2_1", TokenType.GT), terminal("ShiftExpression_2_1_1_2_2", TokenType.GT), terminal("ShiftExpression_2_1_1_2_3", TokenType.GT)), sequence("ShiftExpression_2_1_1_3", terminal("ShiftExpression_2_1_1_3_1", TokenType.GT), terminal("ShiftExpression_2_1_1_3_2", TokenType.GT)));
 
-		static final NonTerminal ShiftExpression_2_2 = nonTerminal("ShiftExpression_2_2", ADDITIVE_EXPRESSION);
+		static final NonTerminal ShiftExpression_2_1_2 = nonTerminal("ShiftExpression_2_1_2", ADDITIVE_EXPRESSION);
 
-		static final ZeroOrMore ShiftExpression_2 = zeroOrMore("ShiftExpression_2", sequence("ShiftExpression_2", ShiftExpression_2_1, ShiftExpression_2_2));
+		static final ZeroOrMore ShiftExpression_2 = zeroOrMore("ShiftExpression_2", sequence("ShiftExpression_2_1", ShiftExpression_2_1_1, ShiftExpression_2_1_2));
 
 		static final Sequence ShiftExpression = sequence("ShiftExpression", ShiftExpression_1, ShiftExpression_2);
 
 		static final NonTerminal AdditiveExpression_1 = nonTerminal("AdditiveExpression_1", MULTIPLICATIVE_EXPRESSION);
 
-		static final Choice AdditiveExpression_2_1 = choice("AdditiveExpression_2_1", sequence("AdditiveExpression_2_1_1", terminal("AdditiveExpression_2_1_1_1", TokenType.PLUS)), sequence("AdditiveExpression_2_1_2", terminal("AdditiveExpression_2_1_2_1", TokenType.MINUS)));
+		static final Choice AdditiveExpression_2_1_1 = choice("AdditiveExpression_2_1_1", sequence("AdditiveExpression_2_1_1_1", terminal("AdditiveExpression_2_1_1_1_1", TokenType.PLUS)), sequence("AdditiveExpression_2_1_1_2", terminal("AdditiveExpression_2_1_1_2_1", TokenType.MINUS)));
 
-		static final NonTerminal AdditiveExpression_2_2 = nonTerminal("AdditiveExpression_2_2", MULTIPLICATIVE_EXPRESSION);
+		static final NonTerminal AdditiveExpression_2_1_2 = nonTerminal("AdditiveExpression_2_1_2", MULTIPLICATIVE_EXPRESSION);
 
-		static final ZeroOrMore AdditiveExpression_2 = zeroOrMore("AdditiveExpression_2", sequence("AdditiveExpression_2", AdditiveExpression_2_1, AdditiveExpression_2_2));
+		static final ZeroOrMore AdditiveExpression_2 = zeroOrMore("AdditiveExpression_2", sequence("AdditiveExpression_2_1", AdditiveExpression_2_1_1, AdditiveExpression_2_1_2));
 
 		static final Sequence AdditiveExpression = sequence("AdditiveExpression", AdditiveExpression_1, AdditiveExpression_2);
 
 		static final NonTerminal MultiplicativeExpression_1 = nonTerminal("MultiplicativeExpression_1", UNARY_EXPRESSION);
 
-		static final Choice MultiplicativeExpression_2_1 = choice("MultiplicativeExpression_2_1", sequence("MultiplicativeExpression_2_1_1", terminal("MultiplicativeExpression_2_1_1_1", TokenType.STAR)), sequence("MultiplicativeExpression_2_1_2", terminal("MultiplicativeExpression_2_1_2_1", TokenType.SLASH)), sequence("MultiplicativeExpression_2_1_3", terminal("MultiplicativeExpression_2_1_3_1", TokenType.REM)));
+		static final Choice MultiplicativeExpression_2_1_1 = choice("MultiplicativeExpression_2_1_1", sequence("MultiplicativeExpression_2_1_1_1", terminal("MultiplicativeExpression_2_1_1_1_1", TokenType.STAR)), sequence("MultiplicativeExpression_2_1_1_2", terminal("MultiplicativeExpression_2_1_1_2_1", TokenType.SLASH)), sequence("MultiplicativeExpression_2_1_1_3", terminal("MultiplicativeExpression_2_1_1_3_1", TokenType.REM)));
 
-		static final NonTerminal MultiplicativeExpression_2_2 = nonTerminal("MultiplicativeExpression_2_2", UNARY_EXPRESSION);
+		static final NonTerminal MultiplicativeExpression_2_1_2 = nonTerminal("MultiplicativeExpression_2_1_2", UNARY_EXPRESSION);
 
-		static final ZeroOrMore MultiplicativeExpression_2 = zeroOrMore("MultiplicativeExpression_2", sequence("MultiplicativeExpression_2", MultiplicativeExpression_2_1, MultiplicativeExpression_2_2));
+		static final ZeroOrMore MultiplicativeExpression_2 = zeroOrMore("MultiplicativeExpression_2", sequence("MultiplicativeExpression_2_1", MultiplicativeExpression_2_1_1, MultiplicativeExpression_2_1_2));
 
 		static final Sequence MultiplicativeExpression = sequence("MultiplicativeExpression", MultiplicativeExpression_1, MultiplicativeExpression_2);
 
@@ -1684,11 +1684,11 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final Sequence CastExpression = sequence("CastExpression", terminal("CastExpression_1", TokenType.LPAREN), CastExpression_2, CastExpression_3);
 
-		static final NonTerminal ReferenceCastTypeRest_1_1_2 = nonTerminal("ReferenceCastTypeRest_1_1_2", ANNOTATIONS);
+		static final NonTerminal ReferenceCastTypeRest_1_1_1_2 = nonTerminal("ReferenceCastTypeRest_1_1_1_2", ANNOTATIONS);
 
-		static final NonTerminal ReferenceCastTypeRest_1_1_3 = nonTerminal("ReferenceCastTypeRest_1_1_3", REFERENCE_TYPE);
+		static final NonTerminal ReferenceCastTypeRest_1_1_1_3 = nonTerminal("ReferenceCastTypeRest_1_1_1_3", REFERENCE_TYPE);
 
-		static final OneOrMore ReferenceCastTypeRest_1_1 = oneOrMore("ReferenceCastTypeRest_1_1", sequence("ReferenceCastTypeRest_1_1", terminal("ReferenceCastTypeRest_1_1_1", TokenType.BIT_AND), ReferenceCastTypeRest_1_1_2, ReferenceCastTypeRest_1_1_3));
+		static final OneOrMore ReferenceCastTypeRest_1_1 = oneOrMore("ReferenceCastTypeRest_1_1", sequence("ReferenceCastTypeRest_1_1_1", terminal("ReferenceCastTypeRest_1_1_1_1", TokenType.BIT_AND), ReferenceCastTypeRest_1_1_1_2, ReferenceCastTypeRest_1_1_1_3));
 
 		static final ZeroOrOne ReferenceCastTypeRest_1 = zeroOrOne("ReferenceCastTypeRest_1", ReferenceCastTypeRest_1_1);
 
@@ -1792,9 +1792,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal Arguments_2_1_2_1 = nonTerminal("Arguments_2_1_2_1", EXPRESSION);
 
-		static final NonTerminal Arguments_2_1_2_2_2 = nonTerminal("Arguments_2_1_2_2_2", EXPRESSION);
+		static final NonTerminal Arguments_2_1_2_2_1_2 = nonTerminal("Arguments_2_1_2_2_1_2", EXPRESSION);
 
-		static final ZeroOrMore Arguments_2_1_2_2 = zeroOrMore("Arguments_2_1_2_2", sequence("Arguments_2_1_2_2", terminal("Arguments_2_1_2_2_1", TokenType.COMMA), Arguments_2_1_2_2_2));
+		static final ZeroOrMore Arguments_2_1_2_2 = zeroOrMore("Arguments_2_1_2_2", sequence("Arguments_2_1_2_2_1", terminal("Arguments_2_1_2_2_1_1", TokenType.COMMA), Arguments_2_1_2_2_1_2));
 
 		static final Choice Arguments_2_1 = choice("Arguments_2_1", Arguments_2_1_1, sequence("Arguments_2_1_2", Arguments_2_1_2_1, Arguments_2_1_2_2));
 
@@ -1854,17 +1854,17 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final Choice ArrayCreationExprRest = choice("ArrayCreationExprRest", sequence("ArrayCreationExprRest_1", ArrayCreationExprRest_1_1, ArrayCreationExprRest_1_2), sequence("ArrayCreationExprRest_2", ArrayCreationExprRest_2_1, ArrayCreationExprRest_2_2));
 
-		static final NonTerminal ArrayDimExprsMandatory_1_1 = nonTerminal("ArrayDimExprsMandatory_1_1", ANNOTATIONS);
+		static final NonTerminal ArrayDimExprsMandatory_1_1_1 = nonTerminal("ArrayDimExprsMandatory_1_1_1", ANNOTATIONS);
 
-		static final NonTerminal ArrayDimExprsMandatory_1_3 = nonTerminal("ArrayDimExprsMandatory_1_3", EXPRESSION);
+		static final NonTerminal ArrayDimExprsMandatory_1_1_3 = nonTerminal("ArrayDimExprsMandatory_1_1_3", EXPRESSION);
 
-		static final OneOrMore ArrayDimExprsMandatory_1 = oneOrMore("ArrayDimExprsMandatory_1", sequence("ArrayDimExprsMandatory_1", ArrayDimExprsMandatory_1_1, terminal("ArrayDimExprsMandatory_1_2", TokenType.LBRACKET), ArrayDimExprsMandatory_1_3, terminal("ArrayDimExprsMandatory_1_4", TokenType.RBRACKET)));
+		static final OneOrMore ArrayDimExprsMandatory_1 = oneOrMore("ArrayDimExprsMandatory_1", sequence("ArrayDimExprsMandatory_1_1", ArrayDimExprsMandatory_1_1_1, terminal("ArrayDimExprsMandatory_1_1_2", TokenType.LBRACKET), ArrayDimExprsMandatory_1_1_3, terminal("ArrayDimExprsMandatory_1_1_4", TokenType.RBRACKET)));
 
 		static final Sequence ArrayDimExprsMandatory = sequence("ArrayDimExprsMandatory", ArrayDimExprsMandatory_1);
 
-		static final NonTerminal ArrayDimsMandatory_1_1 = nonTerminal("ArrayDimsMandatory_1_1", ANNOTATIONS);
+		static final NonTerminal ArrayDimsMandatory_1_1_1 = nonTerminal("ArrayDimsMandatory_1_1_1", ANNOTATIONS);
 
-		static final OneOrMore ArrayDimsMandatory_1 = oneOrMore("ArrayDimsMandatory_1", sequence("ArrayDimsMandatory_1", ArrayDimsMandatory_1_1, terminal("ArrayDimsMandatory_1_2", TokenType.LBRACKET), terminal("ArrayDimsMandatory_1_3", TokenType.RBRACKET)));
+		static final OneOrMore ArrayDimsMandatory_1 = oneOrMore("ArrayDimsMandatory_1", sequence("ArrayDimsMandatory_1_1", ArrayDimsMandatory_1_1_1, terminal("ArrayDimsMandatory_1_1_2", TokenType.LBRACKET), terminal("ArrayDimsMandatory_1_1_3", TokenType.RBRACKET)));
 
 		static final Sequence ArrayDimsMandatory = sequence("ArrayDimsMandatory", ArrayDimsMandatory_1);
 
@@ -1906,9 +1906,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal AssertStatement_2 = nonTerminal("AssertStatement_2", EXPRESSION);
 
-		static final NonTerminal AssertStatement_3_2 = nonTerminal("AssertStatement_3_2", EXPRESSION);
+		static final NonTerminal AssertStatement_3_1_2 = nonTerminal("AssertStatement_3_1_2", EXPRESSION);
 
-		static final ZeroOrOne AssertStatement_3 = zeroOrOne("AssertStatement_3", sequence("AssertStatement_3", terminal("AssertStatement_3_1", TokenType.COLON), AssertStatement_3_2));
+		static final ZeroOrOne AssertStatement_3 = zeroOrOne("AssertStatement_3", sequence("AssertStatement_3_1", terminal("AssertStatement_3_1_1", TokenType.COLON), AssertStatement_3_1_2));
 
 		static final Sequence AssertStatement = sequence("AssertStatement", terminal("AssertStatement_1", TokenType.ASSERT), AssertStatement_2, AssertStatement_3, terminal("AssertStatement_4", TokenType.SEMICOLON));
 
@@ -1970,9 +1970,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal IfStatement_5 = nonTerminal("IfStatement_5", STATEMENT);
 
-		static final NonTerminal IfStatement_6_2 = nonTerminal("IfStatement_6_2", STATEMENT);
+		static final NonTerminal IfStatement_6_1_2 = nonTerminal("IfStatement_6_1_2", STATEMENT);
 
-		static final ZeroOrOne IfStatement_6 = zeroOrOne("IfStatement_6", sequence("IfStatement_6", terminal("IfStatement_6_1", TokenType.ELSE), IfStatement_6_2));
+		static final ZeroOrOne IfStatement_6 = zeroOrOne("IfStatement_6", sequence("IfStatement_6_1", terminal("IfStatement_6_1_1", TokenType.ELSE), IfStatement_6_1_2));
 
 		static final Sequence IfStatement = sequence("IfStatement", terminal("IfStatement_1", TokenType.IF), terminal("IfStatement_2", TokenType.LPAREN), IfStatement_3, terminal("IfStatement_4", TokenType.RPAREN), IfStatement_5, IfStatement_6);
 
@@ -2020,9 +2020,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal StatementExpressionList_1 = nonTerminal("StatementExpressionList_1", STATEMENT_EXPRESSION);
 
-		static final NonTerminal StatementExpressionList_2_2 = nonTerminal("StatementExpressionList_2_2", STATEMENT_EXPRESSION);
+		static final NonTerminal StatementExpressionList_2_1_2 = nonTerminal("StatementExpressionList_2_1_2", STATEMENT_EXPRESSION);
 
-		static final ZeroOrMore StatementExpressionList_2 = zeroOrMore("StatementExpressionList_2", sequence("StatementExpressionList_2", terminal("StatementExpressionList_2_1", TokenType.COMMA), StatementExpressionList_2_2));
+		static final ZeroOrMore StatementExpressionList_2 = zeroOrMore("StatementExpressionList_2", sequence("StatementExpressionList_2_1", terminal("StatementExpressionList_2_1_1", TokenType.COMMA), StatementExpressionList_2_1_2));
 
 		static final Sequence StatementExpressionList = sequence("StatementExpressionList", StatementExpressionList_1, StatementExpressionList_2);
 
@@ -2066,17 +2066,17 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final ZeroOrOne TryStatement_2_1_3 = zeroOrOne("TryStatement_2_1_3", TryStatement_2_1_3_1);
 
-		static final NonTerminal TryStatement_2_1_4_2 = nonTerminal("TryStatement_2_1_4_2", BLOCK);
+		static final NonTerminal TryStatement_2_1_4_1_2 = nonTerminal("TryStatement_2_1_4_1_2", BLOCK);
 
-		static final ZeroOrOne TryStatement_2_1_4 = zeroOrOne("TryStatement_2_1_4", sequence("TryStatement_2_1_4", terminal("TryStatement_2_1_4_1", TokenType.FINALLY), TryStatement_2_1_4_2));
+		static final ZeroOrOne TryStatement_2_1_4 = zeroOrOne("TryStatement_2_1_4", sequence("TryStatement_2_1_4_1", terminal("TryStatement_2_1_4_1_1", TokenType.FINALLY), TryStatement_2_1_4_1_2));
 
 		static final NonTerminal TryStatement_2_2_1 = nonTerminal("TryStatement_2_2_1", BLOCK);
 
 		static final NonTerminal TryStatement_2_2_2_1_1 = nonTerminal("TryStatement_2_2_2_1_1", CATCH_CLAUSES);
 
-		static final NonTerminal TryStatement_2_2_2_1_2_2 = nonTerminal("TryStatement_2_2_2_1_2_2", BLOCK);
+		static final NonTerminal TryStatement_2_2_2_1_2_1_2 = nonTerminal("TryStatement_2_2_2_1_2_1_2", BLOCK);
 
-		static final ZeroOrOne TryStatement_2_2_2_1_2 = zeroOrOne("TryStatement_2_2_2_1_2", sequence("TryStatement_2_2_2_1_2", terminal("TryStatement_2_2_2_1_2_1", TokenType.FINALLY), TryStatement_2_2_2_1_2_2));
+		static final ZeroOrOne TryStatement_2_2_2_1_2 = zeroOrOne("TryStatement_2_2_2_1_2", sequence("TryStatement_2_2_2_1_2_1", terminal("TryStatement_2_2_2_1_2_1_1", TokenType.FINALLY), TryStatement_2_2_2_1_2_1_2));
 
 		static final NonTerminal TryStatement_2_2_2_2_2 = nonTerminal("TryStatement_2_2_2_2_2", BLOCK);
 
@@ -2102,9 +2102,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal CatchFormalParameter_2 = nonTerminal("CatchFormalParameter_2", QUALIFIED_TYPE);
 
-		static final NonTerminal CatchFormalParameter_3_1_2 = nonTerminal("CatchFormalParameter_3_1_2", ANNOTATED_QUALIFIED_TYPE);
+		static final NonTerminal CatchFormalParameter_3_1_1_2 = nonTerminal("CatchFormalParameter_3_1_1_2", ANNOTATED_QUALIFIED_TYPE);
 
-		static final OneOrMore CatchFormalParameter_3_1 = oneOrMore("CatchFormalParameter_3_1", sequence("CatchFormalParameter_3_1", terminal("CatchFormalParameter_3_1_1", TokenType.BIT_OR), CatchFormalParameter_3_1_2));
+		static final OneOrMore CatchFormalParameter_3_1 = oneOrMore("CatchFormalParameter_3_1", sequence("CatchFormalParameter_3_1_1", terminal("CatchFormalParameter_3_1_1_1", TokenType.BIT_OR), CatchFormalParameter_3_1_1_2));
 
 		static final ZeroOrOne CatchFormalParameter_3 = zeroOrOne("CatchFormalParameter_3", CatchFormalParameter_3_1);
 
@@ -2114,9 +2114,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ResourceSpecification_2 = nonTerminal("ResourceSpecification_2", VARIABLE_DECL_EXPRESSION);
 
-		static final NonTerminal ResourceSpecification_3_2 = nonTerminal("ResourceSpecification_3_2", VARIABLE_DECL_EXPRESSION);
+		static final NonTerminal ResourceSpecification_3_1_2 = nonTerminal("ResourceSpecification_3_1_2", VARIABLE_DECL_EXPRESSION);
 
-		static final ZeroOrMore ResourceSpecification_3 = zeroOrMore("ResourceSpecification_3", sequence("ResourceSpecification_3", terminal("ResourceSpecification_3_1", TokenType.SEMICOLON), ResourceSpecification_3_2));
+		static final ZeroOrMore ResourceSpecification_3 = zeroOrMore("ResourceSpecification_3", sequence("ResourceSpecification_3_1", terminal("ResourceSpecification_3_1_1", TokenType.SEMICOLON), ResourceSpecification_3_1_2));
 
 		static final ZeroOrOne ResourceSpecification_4 = zeroOrOne("ResourceSpecification_4", terminal("ResourceSpecification_4_1", TokenType.SEMICOLON));
 
@@ -2158,9 +2158,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ElementValuePairList_1 = nonTerminal("ElementValuePairList_1", ELEMENT_VALUE_PAIR);
 
-		static final NonTerminal ElementValuePairList_2_2 = nonTerminal("ElementValuePairList_2_2", ELEMENT_VALUE_PAIR);
+		static final NonTerminal ElementValuePairList_2_1_2 = nonTerminal("ElementValuePairList_2_1_2", ELEMENT_VALUE_PAIR);
 
-		static final ZeroOrMore ElementValuePairList_2 = zeroOrMore("ElementValuePairList_2", sequence("ElementValuePairList_2", terminal("ElementValuePairList_2_1", TokenType.COMMA), ElementValuePairList_2_2));
+		static final ZeroOrMore ElementValuePairList_2 = zeroOrMore("ElementValuePairList_2", sequence("ElementValuePairList_2_1", terminal("ElementValuePairList_2_1_1", TokenType.COMMA), ElementValuePairList_2_1_2));
 
 		static final Sequence ElementValuePairList = sequence("ElementValuePairList", ElementValuePairList_1, ElementValuePairList_2);
 
@@ -2190,9 +2190,9 @@ class ParserImplementation extends ParserBaseALL {
 
 		static final NonTerminal ElementValueList_1 = nonTerminal("ElementValueList_1", ELEMENT_VALUE);
 
-		static final NonTerminal ElementValueList_2_2 = nonTerminal("ElementValueList_2_2", ELEMENT_VALUE);
+		static final NonTerminal ElementValueList_2_1_2 = nonTerminal("ElementValueList_2_1_2", ELEMENT_VALUE);
 
-		static final ZeroOrMore ElementValueList_2 = zeroOrMore("ElementValueList_2", sequence("ElementValueList_2", terminal("ElementValueList_2_1", TokenType.COMMA), ElementValueList_2_2));
+		static final ZeroOrMore ElementValueList_2 = zeroOrMore("ElementValueList_2", sequence("ElementValueList_2_1", terminal("ElementValueList_2_1_1", TokenType.COMMA), ElementValueList_2_1_2));
 
 		static final Sequence ElementValueList = sequence("ElementValueList", ElementValueList_1, ElementValueList_2);
 
@@ -2301,7 +2301,7 @@ class ParserImplementation extends ParserBaseALL {
 			addChoicePoint(VARIABLE_INITIALIZER_1, VariableInitializer_1);
 			addProduction(ARRAY_INITIALIZER, ArrayInitializer, false);
 			addChoicePoint(ARRAY_INITIALIZER_2, ArrayInitializer_2);
-			addChoicePoint(ARRAY_INITIALIZER_2_2, ArrayInitializer_2_2);
+			addChoicePoint(ARRAY_INITIALIZER_2_1_2, ArrayInitializer_2_1_2);
 			addChoicePoint(ARRAY_INITIALIZER_3, ArrayInitializer_3);
 			addProduction(METHOD_DECL, MethodDecl, false);
 			addChoicePoint(METHOD_DECL_1, MethodDecl_1);
@@ -2342,7 +2342,7 @@ class ParserImplementation extends ParserBaseALL {
 			addProduction(QUALIFIED_TYPE, QualifiedType, false);
 			addChoicePoint(QUALIFIED_TYPE_2, QualifiedType_2);
 			addChoicePoint(QUALIFIED_TYPE_3, QualifiedType_3);
-			addChoicePoint(QUALIFIED_TYPE_3_4, QualifiedType_3_4);
+			addChoicePoint(QUALIFIED_TYPE_3_1_4, QualifiedType_3_1_4);
 			addProduction(TYPE_ARGUMENTS, TypeArguments, false);
 			addProduction(TYPE_ARGUMENTS_OR_DIAMOND, TypeArgumentsOrDiamond, false);
 			addChoicePoint(TYPE_ARGUMENTS_OR_DIAMOND_2, TypeArgumentsOrDiamond_2);
@@ -2380,7 +2380,7 @@ class ParserImplementation extends ParserBaseALL {
 			addChoicePoint(ASSIGNMENT_OPERATOR_1, AssignmentOperator_1);
 			addProduction(CONDITIONAL_EXPRESSION, ConditionalExpression, false);
 			addChoicePoint(CONDITIONAL_EXPRESSION_2, ConditionalExpression_2);
-			addChoicePoint(CONDITIONAL_EXPRESSION_2_4, ConditionalExpression_2_4);
+			addChoicePoint(CONDITIONAL_EXPRESSION_2_1_4, ConditionalExpression_2_1_4);
 			addProduction(CONDITIONAL_OR_EXPRESSION, ConditionalOrExpression, false);
 			addChoicePoint(CONDITIONAL_OR_EXPRESSION_2, ConditionalOrExpression_2);
 			addProduction(CONDITIONAL_AND_EXPRESSION, ConditionalAndExpression, false);
@@ -2393,21 +2393,21 @@ class ParserImplementation extends ParserBaseALL {
 			addChoicePoint(AND_EXPRESSION_2, AndExpression_2);
 			addProduction(EQUALITY_EXPRESSION, EqualityExpression, false);
 			addChoicePoint(EQUALITY_EXPRESSION_2, EqualityExpression_2);
-			addChoicePoint(EQUALITY_EXPRESSION_2_1, EqualityExpression_2_1);
+			addChoicePoint(EQUALITY_EXPRESSION_2_1_1, EqualityExpression_2_1_1);
 			addProduction(INSTANCE_OF_EXPRESSION, InstanceOfExpression, false);
 			addChoicePoint(INSTANCE_OF_EXPRESSION_2, InstanceOfExpression_2);
 			addProduction(RELATIONAL_EXPRESSION, RelationalExpression, false);
 			addChoicePoint(RELATIONAL_EXPRESSION_2, RelationalExpression_2);
-			addChoicePoint(RELATIONAL_EXPRESSION_2_1, RelationalExpression_2_1);
+			addChoicePoint(RELATIONAL_EXPRESSION_2_1_1, RelationalExpression_2_1_1);
 			addProduction(SHIFT_EXPRESSION, ShiftExpression, false);
 			addChoicePoint(SHIFT_EXPRESSION_2, ShiftExpression_2);
-			addChoicePoint(SHIFT_EXPRESSION_2_1, ShiftExpression_2_1);
+			addChoicePoint(SHIFT_EXPRESSION_2_1_1, ShiftExpression_2_1_1);
 			addProduction(ADDITIVE_EXPRESSION, AdditiveExpression, false);
 			addChoicePoint(ADDITIVE_EXPRESSION_2, AdditiveExpression_2);
-			addChoicePoint(ADDITIVE_EXPRESSION_2_1, AdditiveExpression_2_1);
+			addChoicePoint(ADDITIVE_EXPRESSION_2_1_1, AdditiveExpression_2_1_1);
 			addProduction(MULTIPLICATIVE_EXPRESSION, MultiplicativeExpression, false);
 			addChoicePoint(MULTIPLICATIVE_EXPRESSION_2, MultiplicativeExpression_2);
-			addChoicePoint(MULTIPLICATIVE_EXPRESSION_2_1, MultiplicativeExpression_2_1);
+			addChoicePoint(MULTIPLICATIVE_EXPRESSION_2_1_1, MultiplicativeExpression_2_1_1);
 			addProduction(UNARY_EXPRESSION, UnaryExpression, false);
 			addChoicePoint(UNARY_EXPRESSION_1, UnaryExpression_1);
 			addChoicePoint(UNARY_EXPRESSION_1_2_1, UnaryExpression_1_2_1);
@@ -3063,9 +3063,11 @@ class ParserImplementation extends ParserBaseALL {
 		)
 		nonTerminal(name, QualifiedName)
 		zeroOrOne(
-			terminal(DOT)
-			terminal(STAR)
-			action({ isAsterisk = true; })
+			sequence(
+				terminal(DOT)
+				terminal(STAR)
+				action({ isAsterisk = true; })
+			)
 		)
 		terminal(SEMICOLON)
 		action({ return dress(SImportDecl.make(name, isStatic, isAsterisk)); })
@@ -3399,8 +3401,10 @@ class ParserImplementation extends ParserBaseALL {
 					nonTerminal(typeParams, TypeParameters)
 				)
 				zeroOrOne(
-					terminal(EXTENDS)
-					nonTerminal(superClassType, AnnotatedQualifiedType)
+					sequence(
+						terminal(EXTENDS)
+						nonTerminal(superClassType, AnnotatedQualifiedType)
+					)
 				)
 				zeroOrOne(
 					nonTerminal(implementsClause, ImplementsList)
@@ -3453,7 +3457,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			if (__token == TokenType.EXTENDS) {
 				consume(TokenType.EXTENDS);
-				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_4_2);
+				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_4_1_2);
 				superClassType = parseAnnotatedQualifiedType();
 				popCallStack();
 			}
@@ -3501,9 +3505,11 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(cit, AnnotatedQualifiedType)
 				action({ ret = append(ret, cit); })
 				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(cit, AnnotatedQualifiedType)
-					action({ ret = append(ret, cit); })
+					sequence(
+						terminal(COMMA)
+						nonTerminal(cit, AnnotatedQualifiedType)
+						action({ ret = append(ret, cit); })
+					)
 				)
 			)
 		)
@@ -3528,7 +3534,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.EXTENDS_LIST_2_2_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.ExtendsList_2_2_2_2);
+				pushCallStack(JavaGrammar.ExtendsList_2_2_2_1_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
@@ -3547,9 +3553,11 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(cit, AnnotatedQualifiedType)
 				action({ ret = append(ret, cit); })
 				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(cit, AnnotatedQualifiedType)
-					action({ ret = append(ret, cit); })
+					sequence(
+						terminal(COMMA)
+						nonTerminal(cit, AnnotatedQualifiedType)
+						action({ ret = append(ret, cit); })
+					)
 				)
 				action({
 					if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
@@ -3577,7 +3585,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (__token == TokenType.COMMA) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.ImplementsList_2_2_2_2);
+				pushCallStack(JavaGrammar.ImplementsList_2_2_2_1_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
@@ -3603,9 +3611,11 @@ class ParserImplementation extends ParserBaseALL {
 					nonTerminal(entry, EnumConstantDecl)
 					action({ constants = append(constants, entry); })
 					zeroOrMore(
-						terminal(COMMA)
-						nonTerminal(entry, EnumConstantDecl)
-						action({ constants = append(constants, entry); })
+						sequence(
+							terminal(COMMA)
+							nonTerminal(entry, EnumConstantDecl)
+							action({ constants = append(constants, entry); })
+						)
 					)
 				)
 			)
@@ -3615,8 +3625,10 @@ class ParserImplementation extends ParserBaseALL {
 			action({ trailingComma = true; })
 		)
 		zeroOrOne(
-			terminal(SEMICOLON)
-			nonTerminal(members, ClassOrInterfaceBodyDecls)
+			sequence(
+				terminal(SEMICOLON)
+				nonTerminal(members, ClassOrInterfaceBodyDecls)
+			)
 		)
 		terminal(RBRACE)
 		action({ return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value); })
@@ -3654,7 +3666,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.ENUM_DECL_5_1_2_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.EnumDecl_5_1_2_2_2);
+				pushCallStack(JavaGrammar.EnumDecl_5_1_2_2_1_2);
 				entry = parseEnumConstantDecl();
 				popCallStack();
 				constants = append(constants, entry);
@@ -3669,7 +3681,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.SEMICOLON) {
 			consume(TokenType.SEMICOLON);
-			pushCallStack(JavaGrammar.EnumDecl_7_2);
+			pushCallStack(JavaGrammar.EnumDecl_7_1_2);
 			members = parseClassOrInterfaceBodyDecls(TypeKind.Enum);
 			popCallStack();
 		}
@@ -3850,9 +3862,11 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(RPAREN)
 		nonTerminal(dims, ArrayDims)
 		zeroOrOne(
-			terminal(DEFAULT)
-			nonTerminal(value, ElementValue)
-			action({ defaultValue = optionOf(value); })
+			sequence(
+				terminal(DEFAULT)
+				nonTerminal(value, ElementValue)
+				action({ defaultValue = optionOf(value); })
+			)
 		)
 		terminal(SEMICOLON)
 		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultValue)); })
@@ -3878,7 +3892,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.DEFAULT) {
 			consume(TokenType.DEFAULT);
-			pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_6_2);
+			pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_6_1_2);
 			value = parseElementValue();
 			popCallStack();
 			defaultValue = optionOf(value);
@@ -3895,9 +3909,11 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(tp, TypeParameter)
 				action({ ret = append(ret, tp); })
 				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(tp, TypeParameter)
-					action({ ret = append(ret, tp); })
+					sequence(
+						terminal(COMMA)
+						nonTerminal(tp, TypeParameter)
+						action({ ret = append(ret, tp); })
+					)
 				)
 			)
 		)
@@ -3922,7 +3938,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.TYPE_PARAMETERS_2_2_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.TypeParameters_2_2_2_2);
+				pushCallStack(JavaGrammar.TypeParameters_2_2_2_1_2);
 				tp = parseTypeParameter();
 				popCallStack();
 				ret = append(ret, tp);
@@ -3972,9 +3988,11 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(cit, AnnotatedQualifiedType)
 				action({ ret = append(ret, cit); })
 				zeroOrMore(
-					terminal(BIT_AND)
-					nonTerminal(cit, AnnotatedQualifiedType)
-					action({ ret = append(ret, cit); })
+					sequence(
+						terminal(BIT_AND)
+						nonTerminal(cit, AnnotatedQualifiedType)
+						action({ ret = append(ret, cit); })
+					)
 				)
 			)
 		)
@@ -3999,7 +4017,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.TYPE_BOUNDS_2_2_2) == 1) {
 				consume(TokenType.BIT_AND);
-				pushCallStack(JavaGrammar.TypeBounds_2_2_2_2);
+				pushCallStack(JavaGrammar.TypeBounds_2_2_2_1_2);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
 				ret = append(ret, cit);
@@ -4202,9 +4220,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(val, VariableDeclarator)
 		action({ variables = append(variables, val); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(val, VariableDeclarator)
-			action({ variables = append(variables, val); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(val, VariableDeclarator)
+				action({ variables = append(variables, val); })
+			)
 		)
 		action({ return variables; })
 	) */
@@ -4219,7 +4239,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (__token == TokenType.COMMA) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.VariableDeclarators_2_2);
+			pushCallStack(JavaGrammar.VariableDeclarators_2_1_2);
 			val = parseVariableDeclarator();
 			popCallStack();
 			variables = append(variables, val);
@@ -4232,9 +4252,11 @@ class ParserImplementation extends ParserBaseALL {
 		action({ run(); })
 		nonTerminal(id, VariableDeclaratorId)
 		zeroOrOne(
-			terminal(ASSIGN)
-			nonTerminal(initExpr, VariableInitializer)
-			action({ init = optionOf(initExpr); })
+			sequence(
+				terminal(ASSIGN)
+				nonTerminal(initExpr, VariableInitializer)
+				action({ init = optionOf(initExpr); })
+			)
 		)
 		action({ return dress(SVariableDeclarator.make(id, init)); })
 	) */
@@ -4250,7 +4272,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.ASSIGN) {
 			consume(TokenType.ASSIGN);
-			pushCallStack(JavaGrammar.VariableDeclarator_2_2);
+			pushCallStack(JavaGrammar.VariableDeclarator_2_1_2);
 			initExpr = parseVariableInitializer();
 			popCallStack();
 			init = optionOf(initExpr);
@@ -4280,11 +4302,13 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrMore(
-			action({ run(); })
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-			action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+			sequence(
+				action({ run(); })
+				nonTerminal(annotations, Annotations)
+				terminal(LBRACKET)
+				terminal(RBRACKET)
+				action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+			)
 		)
 		action({ return arrayDims; })
 	) */
@@ -4295,7 +4319,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(JavaGrammar.ARRAY_DIMS_1) == 1) {
 			run();
-			pushCallStack(JavaGrammar.ArrayDims_1_1);
+			pushCallStack(JavaGrammar.ArrayDims_1_1_1);
 			annotations = parseAnnotations();
 			popCallStack();
 			consume(TokenType.LBRACKET);
@@ -4334,12 +4358,16 @@ class ParserImplementation extends ParserBaseALL {
 		action({ run(); })
 		terminal(LBRACE)
 		zeroOrOne(
-			nonTerminal(val, VariableInitializer)
-			action({ values = append(values, val); })
-			zeroOrMore(
-				terminal(COMMA)
+			sequence(
 				nonTerminal(val, VariableInitializer)
 				action({ values = append(values, val); })
+				zeroOrMore(
+					sequence(
+						terminal(COMMA)
+						nonTerminal(val, VariableInitializer)
+						action({ values = append(values, val); })
+					)
+				)
 			)
 		)
 		zeroOrOne(
@@ -4358,14 +4386,14 @@ class ParserImplementation extends ParserBaseALL {
 		consume(TokenType.LBRACE);
 		__token = getToken(0).kind;
 		if (((__token - 11 & ~63) == 0 && (1L << __token - 11 & (1L << TokenType.BOOLEAN - 11 | 1L << TokenType.BYTE - 11 | 1L << TokenType.CHAR - 11 | 1L << TokenType.DOUBLE - 11 | 1L << TokenType.FALSE - 11 | 1L << TokenType.FLOAT - 11 | 1L << TokenType.INT - 11 | 1L << TokenType.LONG - 11 | 1L << TokenType.NEW - 11 | 1L << TokenType.NULL - 11 | 1L << TokenType.SHORT - 11 | 1L << TokenType.SUPER - 11 | 1L << TokenType.THIS - 11 | 1L << TokenType.TRUE - 11 | 1L << TokenType.VOID - 11 | 1L << TokenType.LONG_LITERAL - 11 | 1L << TokenType.INTEGER_LITERAL - 11 | 1L << TokenType.FLOAT_LITERAL - 11 | 1L << TokenType.DOUBLE_LITERAL - 11)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
-			pushCallStack(JavaGrammar.ArrayInitializer_2_1);
+			pushCallStack(JavaGrammar.ArrayInitializer_2_1_1);
 			val = parseVariableInitializer();
 			popCallStack();
 			values = append(values, val);
 			__token = getToken(0).kind;
-			while (predict(JavaGrammar.ARRAY_INITIALIZER_2_2) == 1) {
+			while (predict(JavaGrammar.ARRAY_INITIALIZER_2_1_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.ArrayInitializer_2_2_2);
+				pushCallStack(JavaGrammar.ArrayInitializer_2_1_2_1_2);
 				val = parseVariableInitializer();
 				popCallStack();
 				values = append(values, val);
@@ -4383,8 +4411,10 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrOne(
-			nonTerminal(typeParameters, TypeParameters)
-			nonTerminal(additionalAnnotations, Annotations)
+			sequence(
+				nonTerminal(typeParameters, TypeParameters)
+				nonTerminal(additionalAnnotations, Annotations)
+			)
 		)
 		nonTerminal(type, ResultType)
 		nonTerminal(name, Name)
@@ -4417,10 +4447,10 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		__token = getToken(0).kind;
 		if (__token == TokenType.LT) {
-			pushCallStack(JavaGrammar.MethodDecl_1_1);
+			pushCallStack(JavaGrammar.MethodDecl_1_1_1);
 			typeParameters = parseTypeParameters();
 			popCallStack();
-			pushCallStack(JavaGrammar.MethodDecl_1_2);
+			pushCallStack(JavaGrammar.MethodDecl_1_1_2);
 			additionalAnnotations = parseAnnotations();
 			popCallStack();
 		}
@@ -4485,9 +4515,11 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(par, FormalParameter)
 				action({ ret = append(ret, par); })
 				zeroOrMore(
-					terminal(COMMA)
-					nonTerminal(par, FormalParameter)
-					action({ ret = append(ret, par); })
+					sequence(
+						terminal(COMMA)
+						nonTerminal(par, FormalParameter)
+						action({ ret = append(ret, par); })
+					)
 				)
 			)
 		)
@@ -4510,7 +4542,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.FORMAL_PARAMETER_LIST_1_2_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.FormalParameterList_1_2_2_2);
+				pushCallStack(JavaGrammar.FormalParameterList_1_2_2_1_2);
 				par = parseFormalParameter();
 				popCallStack();
 				ret = append(ret, par);
@@ -4526,15 +4558,19 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(type, Type)
 		zeroOrOne(
-			nonTerminal(ellipsisAnnotations, Annotations)
-			terminal(ELLIPSIS)
-			action({ isVarArg = true; })
+			sequence(
+				nonTerminal(ellipsisAnnotations, Annotations)
+				terminal(ELLIPSIS)
+				action({ isVarArg = true; })
+			)
 		)
 		choice(
 			sequence(
 				zeroOrOne(
-					nonTerminal(receiverTypeName, Name)
-					terminal(DOT)
+					sequence(
+						nonTerminal(receiverTypeName, Name)
+						terminal(DOT)
+					)
 				)
 				terminal(THIS)
 				action({ isReceiver = true; })
@@ -4561,7 +4597,7 @@ class ParserImplementation extends ParserBaseALL {
 		popCallStack();
 		__token = getToken(0).kind;
 		if (__token == TokenType.AT || __token == TokenType.ELLIPSIS) {
-			pushCallStack(JavaGrammar.FormalParameter_3_1);
+			pushCallStack(JavaGrammar.FormalParameter_3_1_1);
 			ellipsisAnnotations = parseAnnotations();
 			popCallStack();
 			consume(TokenType.ELLIPSIS);
@@ -4571,7 +4607,7 @@ class ParserImplementation extends ParserBaseALL {
 			case 1:
 				__token = getToken(0).kind;
 				if (__token == TokenType.NODE_VARIABLE || __token == TokenType.IDENTIFIER) {
-					pushCallStack(JavaGrammar.FormalParameter_4_1_1_1);
+					pushCallStack(JavaGrammar.FormalParameter_4_1_1_1_1);
 					receiverTypeName = parseName();
 					popCallStack();
 					consume(TokenType.DOT);
@@ -4595,9 +4631,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(cit, AnnotatedQualifiedType)
 		action({ ret = append(ret, cit); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(cit, AnnotatedQualifiedType)
-			action({ ret = append(ret, cit); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(cit, AnnotatedQualifiedType)
+				action({ ret = append(ret, cit); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -4613,7 +4651,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (__token == TokenType.COMMA) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.ThrowsClause_3_2);
+			pushCallStack(JavaGrammar.ThrowsClause_3_1_2);
 			cit = parseAnnotatedQualifiedType();
 			popCallStack();
 			ret = append(ret, cit);
@@ -4690,8 +4728,10 @@ class ParserImplementation extends ParserBaseALL {
 			)
 			sequence(
 				zeroOrOne(
-					nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-					terminal(DOT)
+					sequence(
+						nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+						terminal(DOT)
+					)
 				)
 				zeroOrOne(
 					nonTerminal(typeArgs, TypeArguments)
@@ -4728,7 +4768,7 @@ class ParserImplementation extends ParserBaseALL {
 			case 2:
 				__token = getToken(0).kind;
 				if (predict(JavaGrammar.EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1) == 1) {
-					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_1_1);
+					pushCallStack(JavaGrammar.ExplicitConstructorInvocation_1_2_1_1_1);
 					expr = parsePrimaryExpressionWithoutSuperSuffix();
 					popCallStack();
 					consume(TokenType.DOT);
@@ -4931,15 +4971,17 @@ class ParserImplementation extends ParserBaseALL {
 		)
 		action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(DOT)
-			action({ scope = optionOf(ret); })
-			nonTerminal(annotations, Annotations)
-			nonTerminal(name, Name)
-			zeroOrOne(
-				nonTerminal(typeArgs, TypeArgumentsOrDiamond)
+			sequence(
+				action({ lateRun(); })
+				terminal(DOT)
+				action({ scope = optionOf(ret); })
+				nonTerminal(annotations, Annotations)
+				nonTerminal(name, Name)
+				zeroOrOne(
+					nonTerminal(typeArgs, TypeArgumentsOrDiamond)
+				)
+				action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
 			)
-			action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
 		)
 		action({ return ret; })
 	) */
@@ -4968,15 +5010,15 @@ class ParserImplementation extends ParserBaseALL {
 			lateRun();
 			consume(TokenType.DOT);
 			scope = optionOf(ret);
-			pushCallStack(JavaGrammar.QualifiedType_3_2);
+			pushCallStack(JavaGrammar.QualifiedType_3_1_2);
 			annotations = parseAnnotations();
 			popCallStack();
-			pushCallStack(JavaGrammar.QualifiedType_3_3);
+			pushCallStack(JavaGrammar.QualifiedType_3_1_3);
 			name = parseName();
 			popCallStack();
 			__token = getToken(0).kind;
-			if (predict(JavaGrammar.QUALIFIED_TYPE_3_4) == 1) {
-				pushCallStack(JavaGrammar.QualifiedType_3_4_1);
+			if (predict(JavaGrammar.QUALIFIED_TYPE_3_1_4) == 1) {
+				pushCallStack(JavaGrammar.QualifiedType_3_1_4_1);
 				typeArgs = parseTypeArgumentsOrDiamond();
 				popCallStack();
 			}
@@ -5036,9 +5078,11 @@ class ParserImplementation extends ParserBaseALL {
 			nonTerminal(type, TypeArgument)
 			action({ ret = append(ret, type); })
 			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(type, TypeArgument)
-				action({ ret = append(ret, type); })
+				sequence(
+					terminal(COMMA)
+					nonTerminal(type, TypeArgument)
+					action({ ret = append(ret, type); })
+				)
 			)
 			action({ return ret; })
 		)
@@ -5061,7 +5105,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (__token == TokenType.COMMA) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.TypeArgumentList_2_2_2);
+				pushCallStack(JavaGrammar.TypeArgumentList_2_2_1_2);
 				type = parseTypeArgument();
 				popCallStack();
 				ret = append(ret, type);
@@ -5295,11 +5339,13 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(name, Name)
 		action({ ret = dress(SQualifiedName.make(qualifier, name)); })
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(DOT)
-			action({ qualifier = optionOf(ret); })
-			nonTerminal(name, Name)
-			action({ ret = dress(SQualifiedName.make(qualifier, name)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(DOT)
+				action({ qualifier = optionOf(ret); })
+				nonTerminal(name, Name)
+				action({ ret = dress(SQualifiedName.make(qualifier, name)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5318,7 +5364,7 @@ class ParserImplementation extends ParserBaseALL {
 			lateRun();
 			consume(TokenType.DOT);
 			qualifier = optionOf(ret);
-			pushCallStack(JavaGrammar.QualifiedName_2_2);
+			pushCallStack(JavaGrammar.QualifiedName_2_1_2);
 			name = parseName();
 			popCallStack();
 			ret = dress(SQualifiedName.make(qualifier, name));
@@ -5386,10 +5432,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, ConditionalExpression)
 		zeroOrOne(
-			action({ lateRun(); })
-			nonTerminal(op, AssignmentOperator)
-			nonTerminal(expr, Expression)
-			action({ ret = dress(SAssignExpr.make(ret, op, expr)); })
+			sequence(
+				action({ lateRun(); })
+				nonTerminal(op, AssignmentOperator)
+				nonTerminal(expr, Expression)
+				action({ ret = dress(SAssignExpr.make(ret, op, expr)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5404,10 +5452,10 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if ((__token - 90 & ~63) == 0 && (1L << __token - 90 & (1L << TokenType.ASSIGN - 90 | 1L << TokenType.PLUSASSIGN - 90 | 1L << TokenType.MINUSASSIGN - 90 | 1L << TokenType.STARASSIGN - 90 | 1L << TokenType.SLASHASSIGN - 90 | 1L << TokenType.ANDASSIGN - 90 | 1L << TokenType.ORASSIGN - 90 | 1L << TokenType.XORASSIGN - 90 | 1L << TokenType.REMASSIGN - 90 | 1L << TokenType.LSHIFTASSIGN - 90 | 1L << TokenType.RSIGNEDSHIFTASSIGN - 90 | 1L << TokenType.RUNSIGNEDSHIFTASSIGN - 90)) != 0) {
 			lateRun();
-			pushCallStack(JavaGrammar.AssignmentExpression_2_1);
+			pushCallStack(JavaGrammar.AssignmentExpression_2_1_1);
 			op = parseAssignmentOperator();
 			popCallStack();
-			pushCallStack(JavaGrammar.AssignmentExpression_2_2);
+			pushCallStack(JavaGrammar.AssignmentExpression_2_1_2);
 			expr = parseExpression();
 			popCallStack();
 			ret = dress(SAssignExpr.make(ret, op, expr));
@@ -5589,9 +5637,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(param, InferredFormalParameter)
 		action({ ret = append(ret, param); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(param, InferredFormalParameter)
-			action({ ret = append(ret, param); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(param, InferredFormalParameter)
+				action({ ret = append(ret, param); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5606,7 +5656,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (__token == TokenType.COMMA) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.InferredFormalParameterList_2_2);
+			pushCallStack(JavaGrammar.InferredFormalParameterList_2_1_2);
 			param = parseInferredFormalParameter();
 			popCallStack();
 			ret = append(ret, param);
@@ -5729,15 +5779,17 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, ConditionalOrExpression)
 		zeroOrOne(
-			action({ lateRun(); })
-			terminal(HOOK)
-			nonTerminal(left, Expression)
-			terminal(COLON)
-			choice(
-				nonTerminal(right, ConditionalExpression)
-				nonTerminal(right, LambdaExpression)
+			sequence(
+				action({ lateRun(); })
+				terminal(HOOK)
+				nonTerminal(left, Expression)
+				terminal(COLON)
+				choice(
+					nonTerminal(right, ConditionalExpression)
+					nonTerminal(right, LambdaExpression)
+				)
+				action({ ret = dress(SConditionalExpr.make(ret, left, right)); })
 			)
-			action({ ret = dress(SConditionalExpr.make(ret, left, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -5753,18 +5805,18 @@ class ParserImplementation extends ParserBaseALL {
 		if (__token == TokenType.HOOK) {
 			lateRun();
 			consume(TokenType.HOOK);
-			pushCallStack(JavaGrammar.ConditionalExpression_2_2);
+			pushCallStack(JavaGrammar.ConditionalExpression_2_1_2);
 			left = parseExpression();
 			popCallStack();
 			consume(TokenType.COLON);
-			switch (predict(JavaGrammar.CONDITIONAL_EXPRESSION_2_4)) {
+			switch (predict(JavaGrammar.CONDITIONAL_EXPRESSION_2_1_4)) {
 				case 1:
-					pushCallStack(JavaGrammar.ConditionalExpression_2_4_1);
+					pushCallStack(JavaGrammar.ConditionalExpression_2_1_4_1);
 					right = parseConditionalExpression();
 					popCallStack();
 					break;
 				case 2:
-					pushCallStack(JavaGrammar.ConditionalExpression_2_4_2);
+					pushCallStack(JavaGrammar.ConditionalExpression_2_1_4_2);
 					right = parseLambdaExpression();
 					popCallStack();
 					break;
@@ -5779,10 +5831,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, ConditionalAndExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(SC_OR)
-			nonTerminal(right, ConditionalAndExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(SC_OR)
+				nonTerminal(right, ConditionalAndExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5797,7 +5851,7 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.SC_OR) {
 			lateRun();
 			consume(TokenType.SC_OR);
-			pushCallStack(JavaGrammar.ConditionalOrExpression_2_2);
+			pushCallStack(JavaGrammar.ConditionalOrExpression_2_1_2);
 			right = parseConditionalAndExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
@@ -5809,10 +5863,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, InclusiveOrExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(SC_AND)
-			nonTerminal(right, InclusiveOrExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(SC_AND)
+				nonTerminal(right, InclusiveOrExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5827,7 +5883,7 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.SC_AND) {
 			lateRun();
 			consume(TokenType.SC_AND);
-			pushCallStack(JavaGrammar.ConditionalAndExpression_2_2);
+			pushCallStack(JavaGrammar.ConditionalAndExpression_2_1_2);
 			right = parseInclusiveOrExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
@@ -5839,10 +5895,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, ExclusiveOrExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(BIT_OR)
-			nonTerminal(right, ExclusiveOrExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(BIT_OR)
+				nonTerminal(right, ExclusiveOrExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5857,7 +5915,7 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.BIT_OR) {
 			lateRun();
 			consume(TokenType.BIT_OR);
-			pushCallStack(JavaGrammar.InclusiveOrExpression_2_2);
+			pushCallStack(JavaGrammar.InclusiveOrExpression_2_1_2);
 			right = parseExclusiveOrExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
@@ -5869,10 +5927,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, AndExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(XOR)
-			nonTerminal(right, AndExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(XOR)
+				nonTerminal(right, AndExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5887,7 +5947,7 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.XOR) {
 			lateRun();
 			consume(TokenType.XOR);
-			pushCallStack(JavaGrammar.ExclusiveOrExpression_2_2);
+			pushCallStack(JavaGrammar.ExclusiveOrExpression_2_1_2);
 			right = parseAndExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
@@ -5899,10 +5959,12 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, EqualityExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(BIT_AND)
-			nonTerminal(right, EqualityExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(BIT_AND)
+				nonTerminal(right, EqualityExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5917,7 +5979,7 @@ class ParserImplementation extends ParserBaseALL {
 		while (__token == TokenType.BIT_AND) {
 			lateRun();
 			consume(TokenType.BIT_AND);
-			pushCallStack(JavaGrammar.AndExpression_2_2);
+			pushCallStack(JavaGrammar.AndExpression_2_1_2);
 			right = parseEqualityExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
@@ -5929,19 +5991,21 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, InstanceOfExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(EQ)
-					action({ op = BinaryOp.Equal; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(EQ)
+						action({ op = BinaryOp.Equal; })
+					)
+					sequence(
+						terminal(NE)
+						action({ op = BinaryOp.NotEqual; })
+					)
 				)
-				sequence(
-					terminal(NE)
-					action({ op = BinaryOp.NotEqual; })
-				)
+				nonTerminal(right, InstanceOfExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 			)
-			nonTerminal(right, InstanceOfExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -5965,7 +6029,7 @@ class ParserImplementation extends ParserBaseALL {
 				op = BinaryOp.NotEqual;
 			} else
 				throw produceParseException(TokenType.EQ, TokenType.NE);
-			pushCallStack(JavaGrammar.EqualityExpression_2_2);
+			pushCallStack(JavaGrammar.EqualityExpression_2_1_2);
 			right = parseInstanceOfExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -5977,12 +6041,14 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, RelationalExpression)
 		zeroOrOne(
-			action({ lateRun(); })
-			terminal(INSTANCEOF)
-			action({ run(); })
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, Type)
-			action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
+			sequence(
+				action({ lateRun(); })
+				terminal(INSTANCEOF)
+				action({ run(); })
+				nonTerminal(annotations, Annotations)
+				nonTerminal(type, Type)
+				action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5999,10 +6065,10 @@ class ParserImplementation extends ParserBaseALL {
 			lateRun();
 			consume(TokenType.INSTANCEOF);
 			run();
-			pushCallStack(JavaGrammar.InstanceOfExpression_2_2);
+			pushCallStack(JavaGrammar.InstanceOfExpression_2_1_2);
 			annotations = parseAnnotations();
 			popCallStack();
-			pushCallStack(JavaGrammar.InstanceOfExpression_2_3);
+			pushCallStack(JavaGrammar.InstanceOfExpression_2_1_3);
 			type = parseType(annotations);
 			popCallStack();
 			ret = dress(SInstanceOfExpr.make(ret, type));
@@ -6013,27 +6079,29 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, ShiftExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(LT)
-					action({ op = BinaryOp.Less; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(LT)
+						action({ op = BinaryOp.Less; })
+					)
+					sequence(
+						terminal(GT)
+						action({ op = BinaryOp.Greater; })
+					)
+					sequence(
+						terminal(LE)
+						action({ op = BinaryOp.LessOrEqual; })
+					)
+					sequence(
+						terminal(GE)
+						action({ op = BinaryOp.GreaterOrEqual; })
+					)
 				)
-				sequence(
-					terminal(GT)
-					action({ op = BinaryOp.Greater; })
-				)
-				sequence(
-					terminal(LE)
-					action({ op = BinaryOp.LessOrEqual; })
-				)
-				sequence(
-					terminal(GE)
-					action({ op = BinaryOp.GreaterOrEqual; })
-				)
+				nonTerminal(right, ShiftExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 			)
-			nonTerminal(right, ShiftExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -6063,7 +6131,7 @@ class ParserImplementation extends ParserBaseALL {
 				op = BinaryOp.GreaterOrEqual;
 			} else
 				throw produceParseException(TokenType.LT, TokenType.LE, TokenType.GE, TokenType.GT);
-			pushCallStack(JavaGrammar.RelationalExpression_2_2);
+			pushCallStack(JavaGrammar.RelationalExpression_2_1_2);
 			right = parseShiftExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -6075,28 +6143,30 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, AdditiveExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(LSHIFT)
-					action({ op = BinaryOp.LeftShift; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(LSHIFT)
+						action({ op = BinaryOp.LeftShift; })
+					)
+					sequence(
+						terminal(GT)
+						terminal(GT)
+						terminal(GT)
+						action({ popNewWhitespaces(2); })
+						action({ op = BinaryOp.RightUnsignedShift; })
+					)
+					sequence(
+						terminal(GT)
+						terminal(GT)
+						action({ popNewWhitespaces(1); })
+						action({ op = BinaryOp.RightSignedShift; })
+					)
 				)
-				sequence(
-					terminal(GT)
-					terminal(GT)
-					terminal(GT)
-					action({ popNewWhitespaces(2); })
-					action({ op = BinaryOp.RightUnsignedShift; })
-				)
-				sequence(
-					terminal(GT)
-					terminal(GT)
-					action({ popNewWhitespaces(1); })
-					action({ op = BinaryOp.RightSignedShift; })
-				)
+				nonTerminal(right, AdditiveExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 			)
-			nonTerminal(right, AdditiveExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -6111,7 +6181,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(JavaGrammar.SHIFT_EXPRESSION_2) == 1) {
 			lateRun();
-			switch (predict(JavaGrammar.SHIFT_EXPRESSION_2_1)) {
+			switch (predict(JavaGrammar.SHIFT_EXPRESSION_2_1_1)) {
 				case 1:
 					consume(TokenType.LSHIFT);
 					op = BinaryOp.LeftShift;
@@ -6132,7 +6202,7 @@ class ParserImplementation extends ParserBaseALL {
 				default:
 					throw produceParseException(TokenType.LSHIFT, TokenType.GT);
 			}
-			pushCallStack(JavaGrammar.ShiftExpression_2_2);
+			pushCallStack(JavaGrammar.ShiftExpression_2_1_2);
 			right = parseAdditiveExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -6144,19 +6214,21 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, MultiplicativeExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(PLUS)
-					action({ op = BinaryOp.Plus; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(PLUS)
+						action({ op = BinaryOp.Plus; })
+					)
+					sequence(
+						terminal(MINUS)
+						action({ op = BinaryOp.Minus; })
+					)
 				)
-				sequence(
-					terminal(MINUS)
-					action({ op = BinaryOp.Minus; })
-				)
+				nonTerminal(right, MultiplicativeExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 			)
-			nonTerminal(right, MultiplicativeExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -6180,7 +6252,7 @@ class ParserImplementation extends ParserBaseALL {
 				op = BinaryOp.Minus;
 			} else
 				throw produceParseException(TokenType.PLUS, TokenType.MINUS);
-			pushCallStack(JavaGrammar.AdditiveExpression_2_2);
+			pushCallStack(JavaGrammar.AdditiveExpression_2_1_2);
 			right = parseMultiplicativeExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -6192,23 +6264,25 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, UnaryExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(STAR)
-					action({ op = BinaryOp.Times; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(STAR)
+						action({ op = BinaryOp.Times; })
+					)
+					sequence(
+						terminal(SLASH)
+						action({ op = BinaryOp.Divide; })
+					)
+					sequence(
+						terminal(REM)
+						action({ op = BinaryOp.Remainder; })
+					)
 				)
-				sequence(
-					terminal(SLASH)
-					action({ op = BinaryOp.Divide; })
-				)
-				sequence(
-					terminal(REM)
-					action({ op = BinaryOp.Remainder; })
-				)
+				nonTerminal(right, UnaryExpression)
+				action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 			)
-			nonTerminal(right, UnaryExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
@@ -6235,7 +6309,7 @@ class ParserImplementation extends ParserBaseALL {
 				op = BinaryOp.Remainder;
 			} else
 				throw produceParseException(TokenType.STAR, TokenType.SLASH, TokenType.REM);
-			pushCallStack(JavaGrammar.MultiplicativeExpression_2_2);
+			pushCallStack(JavaGrammar.MultiplicativeExpression_2_1_2);
 			right = parseUnaryExpression();
 			popCallStack();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -6505,11 +6579,13 @@ class ParserImplementation extends ParserBaseALL {
 			action({ types = append(types, type); })
 			action({ lateRun(); })
 			oneOrMore(
-				terminal(BIT_AND)
-				action({ run(); })
-				nonTerminal(annotations, Annotations)
-				nonTerminal(type, ReferenceType)
-				action({ types = append(types, type); })
+				sequence(
+					terminal(BIT_AND)
+					action({ run(); })
+					nonTerminal(annotations, Annotations)
+					nonTerminal(type, ReferenceType)
+					action({ types = append(types, type); })
+				)
 			)
 			action({ type = dress(SIntersectionType.make(types)); })
 		)
@@ -6526,10 +6602,10 @@ class ParserImplementation extends ParserBaseALL {
 			do {
 				consume(TokenType.BIT_AND);
 				run();
-				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_2);
+				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_1_2);
 				annotations = parseAnnotations();
 				popCallStack();
-				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_3);
+				pushCallStack(JavaGrammar.ReferenceCastTypeRest_1_1_1_3);
 				type = parseReferenceType(annotations);
 				popCallStack();
 				types = append(types, type);
@@ -7005,9 +7081,11 @@ class ParserImplementation extends ParserBaseALL {
 					nonTerminal(expr, Expression)
 					action({ ret = append(ret, expr); })
 					zeroOrMore(
-						terminal(COMMA)
-						nonTerminal(expr, Expression)
-						action({ ret = append(ret, expr); })
+						sequence(
+							terminal(COMMA)
+							nonTerminal(expr, Expression)
+							action({ ret = append(ret, expr); })
+						)
 					)
 				)
 			)
@@ -7033,7 +7111,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			while (predict(JavaGrammar.ARGUMENTS_2_1_2_2) == 1) {
 				consume(TokenType.COMMA);
-				pushCallStack(JavaGrammar.Arguments_2_1_2_2_2);
+				pushCallStack(JavaGrammar.Arguments_2_1_2_2_1_2);
 				expr = parseExpression();
 				popCallStack();
 				ret = append(ret, expr);
@@ -7234,12 +7312,14 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		oneOrMore(
-			action({ run(); })
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			nonTerminal(expr, Expression)
-			terminal(RBRACKET)
-			action({ arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr))); })
+			sequence(
+				action({ run(); })
+				nonTerminal(annotations, Annotations)
+				terminal(LBRACKET)
+				nonTerminal(expr, Expression)
+				terminal(RBRACKET)
+				action({ arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr))); })
+			)
 		)
 		action({ return arrayDimExprs; })
 	) */
@@ -7250,11 +7330,11 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		do {
 			run();
-			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_1);
+			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_1_1);
 			annotations = parseAnnotations();
 			popCallStack();
 			consume(TokenType.LBRACKET);
-			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_3);
+			pushCallStack(JavaGrammar.ArrayDimExprsMandatory_1_1_3);
 			expr = parseExpression();
 			popCallStack();
 			consume(TokenType.RBRACKET);
@@ -7266,11 +7346,13 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		oneOrMore(
-			action({ run(); })
-			nonTerminal(annotations, Annotations)
-			terminal(LBRACKET)
-			terminal(RBRACKET)
-			action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+			sequence(
+				action({ run(); })
+				nonTerminal(annotations, Annotations)
+				terminal(LBRACKET)
+				terminal(RBRACKET)
+				action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+			)
 		)
 		action({ return arrayDims; })
 	) */
@@ -7280,7 +7362,7 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		do {
 			run();
-			pushCallStack(JavaGrammar.ArrayDimsMandatory_1_1);
+			pushCallStack(JavaGrammar.ArrayDimsMandatory_1_1_1);
 			annotations = parseAnnotations();
 			popCallStack();
 			consume(TokenType.LBRACKET);
@@ -7407,8 +7489,10 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(ASSERT)
 		nonTerminal(check, Expression)
 		zeroOrOne(
-			terminal(COLON)
-			nonTerminal(msg, Expression)
+			sequence(
+				terminal(COLON)
+				nonTerminal(msg, Expression)
+			)
 		)
 		terminal(SEMICOLON)
 		action({ return dress(SAssertStmt.make(check, optionOf(msg))); })
@@ -7425,7 +7509,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.COLON) {
 			consume(TokenType.COLON);
-			pushCallStack(JavaGrammar.AssertStatement_3_2);
+			pushCallStack(JavaGrammar.AssertStatement_3_1_2);
 			msg = parseExpression();
 			popCallStack();
 		}
@@ -7678,8 +7762,10 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(RPAREN)
 		nonTerminal(thenStmt, Statement)
 		zeroOrOne(
-			terminal(ELSE)
-			nonTerminal(elseStmt, Statement)
+			sequence(
+				terminal(ELSE)
+				nonTerminal(elseStmt, Statement)
+			)
 		)
 		action({ return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt))); })
 	) */
@@ -7701,7 +7787,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		if (__token == TokenType.ELSE) {
 			consume(TokenType.ELSE);
-			pushCallStack(JavaGrammar.IfStatement_6_2);
+			pushCallStack(JavaGrammar.IfStatement_6_1_2);
 			elseStmt = parseStatement();
 			popCallStack();
 		}
@@ -7888,9 +7974,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(expr, StatementExpression)
 		action({ ret = append(ret, expr); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(expr, StatementExpression)
-			action({ ret = append(ret, expr); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(expr, StatementExpression)
+				action({ ret = append(ret, expr); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -7905,7 +7993,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (__token == TokenType.COMMA) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.StatementExpressionList_2_2);
+			pushCallStack(JavaGrammar.StatementExpressionList_2_1_2);
 			expr = parseStatementExpression();
 			popCallStack();
 			ret = append(ret, expr);
@@ -8055,8 +8143,10 @@ class ParserImplementation extends ParserBaseALL {
 					nonTerminal(catchClauses, CatchClauses)
 				)
 				zeroOrOne(
-					terminal(FINALLY)
-					nonTerminal(finallyBlock, Block)
+					sequence(
+						terminal(FINALLY)
+						nonTerminal(finallyBlock, Block)
+					)
 				)
 			)
 			sequence(
@@ -8065,8 +8155,10 @@ class ParserImplementation extends ParserBaseALL {
 					sequence(
 						nonTerminal(catchClauses, CatchClauses)
 						zeroOrOne(
-							terminal(FINALLY)
-							nonTerminal(finallyBlock, Block)
+							sequence(
+								terminal(FINALLY)
+								nonTerminal(finallyBlock, Block)
+							)
 						)
 					)
 					sequence(
@@ -8104,7 +8196,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			if (predict(JavaGrammar.TRY_STATEMENT_2_1_4) == 1) {
 				consume(TokenType.FINALLY);
-				pushCallStack(JavaGrammar.TryStatement_2_1_4_2);
+				pushCallStack(JavaGrammar.TryStatement_2_1_4_1_2);
 				finallyBlock = parseBlock();
 				popCallStack();
 			}
@@ -8120,7 +8212,7 @@ class ParserImplementation extends ParserBaseALL {
 				__token = getToken(0).kind;
 				if (predict(JavaGrammar.TRY_STATEMENT_2_2_2_1_2) == 1) {
 					consume(TokenType.FINALLY);
-					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_2);
+					pushCallStack(JavaGrammar.TryStatement_2_2_2_1_2_1_2);
 					finallyBlock = parseBlock();
 					popCallStack();
 				}
@@ -8191,9 +8283,11 @@ class ParserImplementation extends ParserBaseALL {
 		zeroOrOne(
 			action({ lateRun(); })
 			oneOrMore(
-				terminal(BIT_OR)
-				nonTerminal(exceptType, AnnotatedQualifiedType)
-				action({ exceptTypes = append(exceptTypes, exceptType); })
+				sequence(
+					terminal(BIT_OR)
+					nonTerminal(exceptType, AnnotatedQualifiedType)
+					action({ exceptTypes = append(exceptTypes, exceptType); })
+				)
 			)
 			action({ exceptType = dress(SUnionType.make(exceptTypes)); })
 		)
@@ -8219,7 +8313,7 @@ class ParserImplementation extends ParserBaseALL {
 			lateRun();
 			do {
 				consume(TokenType.BIT_OR);
-				pushCallStack(JavaGrammar.CatchFormalParameter_3_1_2);
+				pushCallStack(JavaGrammar.CatchFormalParameter_3_1_1_2);
 				exceptType = parseAnnotatedQualifiedType();
 				popCallStack();
 				exceptTypes = append(exceptTypes, exceptType);
@@ -8238,9 +8332,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(var, VariableDeclExpression)
 		action({ vars = append(vars, var); })
 		zeroOrMore(
-			terminal(SEMICOLON)
-			nonTerminal(var, VariableDeclExpression)
-			action({ vars = append(vars, var); })
+			sequence(
+				terminal(SEMICOLON)
+				nonTerminal(var, VariableDeclExpression)
+				action({ vars = append(vars, var); })
+			)
 		)
 		zeroOrOne(
 			terminal(SEMICOLON)
@@ -8261,7 +8357,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(JavaGrammar.RESOURCE_SPECIFICATION_3) == 1) {
 			consume(TokenType.SEMICOLON);
-			pushCallStack(JavaGrammar.ResourceSpecification_3_2);
+			pushCallStack(JavaGrammar.ResourceSpecification_3_1_2);
 			var = parseVariableDeclExpression();
 			popCallStack();
 			vars = append(vars, var);
@@ -8409,9 +8505,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(pair, ElementValuePair)
 		action({ ret = append(ret, pair); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(pair, ElementValuePair)
-			action({ ret = append(ret, pair); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(pair, ElementValuePair)
+				action({ ret = append(ret, pair); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -8426,7 +8524,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (__token == TokenType.COMMA) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.ElementValuePairList_2_2);
+			pushCallStack(JavaGrammar.ElementValuePairList_2_1_2);
 			pair = parseElementValuePair();
 			popCallStack();
 			ret = append(ret, pair);
@@ -8524,9 +8622,11 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(value, ElementValue)
 		action({ ret = append(ret, value); })
 		zeroOrMore(
-			terminal(COMMA)
-			nonTerminal(value, ElementValue)
-			action({ ret = append(ret, value); })
+			sequence(
+				terminal(COMMA)
+				nonTerminal(value, ElementValue)
+				action({ ret = append(ret, value); })
+			)
 		)
 		action({ return ret; })
 	) */
@@ -8541,7 +8641,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(JavaGrammar.ELEMENT_VALUE_LIST_2) == 1) {
 			consume(TokenType.COMMA);
-			pushCallStack(JavaGrammar.ElementValueList_2_2);
+			pushCallStack(JavaGrammar.ElementValueList_2_1_2);
 			value = parseElementValue();
 			popCallStack();
 			ret = append(ret, value);
