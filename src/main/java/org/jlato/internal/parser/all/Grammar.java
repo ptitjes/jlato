@@ -36,11 +36,13 @@ public class Grammar implements Externalizable {
 		oos.close();
 		byte[] bytes = baos.toByteArray();
 
-		int length = bytes.length / 2;
+		int length = bytes.length / 2 + (bytes.length % 2);
 		char[] chars = new char[length];
 		for (int i = 0; i < length; i++) {
 			int j = i * 2;
-			chars[i] = (char) (((int) bytes[j] << 8 | (int) bytes[j + 1] & 0xff) + 2 & 0xFFFF);
+			byte byte1 = bytes[j];
+			byte byte2 = j + 1 < bytes.length ? bytes[j + 1] : 0;
+			chars[i] = (char) (((int) byte1 << 8 | (int) byte2 & 0xff) + 2 & 0xFFFF);
 		}
 
 		return new String(chars);
