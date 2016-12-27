@@ -7372,7 +7372,7 @@ class ParserImplementation extends ParserBaseALL {
 		return ret;
 	}
 
-	private static final String serializedGrammar = "" +
+	private static final String serializedGrammar = "" + 
 	"\uACEF\7\u7A02\6\5\uF702\u0101\uFF02\2\u1702\u0201\1\uFF02\u0102\2\u0101\1\1\1\uFF02\u0301\uFF02" + 
 	"\2\u1802\u0501\1\uFF02\u0302\u0102\u0101\1\1\1\uFF02\u0501\uFF02\2\u1402\u0401\1\uFF02\u0601\uFF02" + 
 	"\2\u1A02\u0801\1\uFF02\u0602\u0202\u0101\1\1\1\uFF02\u0801\uFF02\2\u1402\u0701\1\uFF02\u0901\uFF02" + 

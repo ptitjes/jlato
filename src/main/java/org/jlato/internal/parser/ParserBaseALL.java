@@ -105,8 +105,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
-		// TODO Generate data for the number of choice points and number of alternative predictions
-		// TODO Pre-initialize automaton with there final states and the shared error state
+		// TODO Pre-initialize automata with their final states and the shared error state ?
 		CachedAutomaton automaton = automata.get(entryPoint, choicePoint);
 
 		if (automaton == null) {
@@ -384,7 +383,7 @@ public abstract class ParserBaseALL extends ParserBase {
 		configurationPool.push(configuration);
 	}
 
-	Deque<Configuration> configurationPool = new ArrayDeque<Configuration>();
+	private Deque<Configuration> configurationPool = new ArrayDeque<Configuration>();
 
 	private static class ConfigurationSetBuilderWithoutMerge implements ConfigurationSetBuilder {
 		private final Set<Configuration> configurations = Collections.hashSet();
