@@ -29,53 +29,18 @@ import java.io.*;
  */
 public class Grammar implements Externalizable {
 
-	public static String encode(Grammar buildGrammar) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(buildGrammar);
-		oos.close();
-		byte[] bytes = baos.toByteArray();
-
-		int length = bytes.length / 2 + (bytes.length % 2);
-		char[] chars = new char[length];
-		for (int i = 0; i < length; i++) {
-			int j = i * 2;
-			byte byte1 = bytes[j];
-			byte byte2 = j + 1 < bytes.length ? bytes[j + 1] : 0;
-			chars[i] = (char) (((int) byte1 << 8 | (int) byte2 & 0xff) + 2 & 0xFFFF);
-		}
-
-		return new String(chars);
-	}
-
-	public static Grammar decode(String data) throws IOException, ClassNotFoundException {
-		char[] chars = data.toCharArray();
-
-		int length = chars.length;
-		byte[] bytes = new byte[length * 2];
-		for (int i = 0; i < length; i++) {
-			int j = i * 2;
-			int c = chars[i] - 2;
-			bytes[j] = (byte) (c >>> 8);
-			bytes[j + 1] = (byte) (c & 0xff);
-		}
-
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-		return (Grammar) ois.readObject();
-	}
-
 	private int stateCount = 0;
-	private GrammarState[] states;
+	GrammarState[] states;
 
-	private short[] nonTerminalStartStates;
-	private short[] choicePointStates;
+	short[] nonTerminalStartStates;
+	short[] choicePointStates;
 
-	private short[][] nonTerminalUseEndStates;
+	short[][] nonTerminalUseEndStates;
 
-	private short[] entryPointNonTerminalUse;
-	private short[] entryPointNonTerminalUseEndState;
+	short[] entryPointNonTerminalUse;
+	short[] entryPointNonTerminalUseEndState;
 
-	private short[] nonTerminalUseCount;
+	short[] nonTerminalUseCount;
 
 	public Grammar(int stateCount, int constantCount) {
 		states = new GrammarState[stateCount];
