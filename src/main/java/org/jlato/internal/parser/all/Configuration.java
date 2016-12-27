@@ -23,11 +23,11 @@ package org.jlato.internal.parser.all;
  * @author Didier Villevalois
  */
 public class Configuration {
-	public int stateId;
-	public int prediction;
+	public short stateId;
+	public short prediction;
 	public CallStack callStack;
 
-	public Configuration(int stateId, int prediction, CallStack callStack) {
+	public Configuration(short stateId, short prediction, CallStack callStack) {
 		this.prediction = prediction;
 		this.stateId = stateId;
 		this.callStack = callStack;

@@ -370,11 +370,11 @@ public abstract class ParserBaseALL extends ParserBase {
 
 	private Configuration newConfiguration(int stateId, int prediction, CallStack callStack) {
 		if (configurationPool.isEmpty())
-			return new Configuration(stateId, prediction, callStack);
+			return new Configuration((short) stateId, (short) prediction, callStack);
 		else {
 			Configuration configuration = configurationPool.pop();
-			configuration.stateId = stateId;
-			configuration.prediction = prediction;
+			configuration.stateId = (short) stateId;
+			configuration.prediction = (short) prediction;
 			configuration.callStack = callStack;
 			return configuration;
 		}

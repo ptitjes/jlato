@@ -93,7 +93,7 @@ public class PredictionState {
 		for (Configuration configuration : configurations) {
 			int stateId = configuration.stateId;
 			CallStack callStack = configuration.callStack;
-			Integer prediction = configuration.prediction;
+			int prediction = configuration.prediction;
 			if (prediction == -1) continue;
 
 			StateCallStackPair pair = new StateCallStackPair(stateId, callStack);
@@ -112,7 +112,7 @@ public class PredictionState {
 		Map<Integer, BitSet> stateToAlts = Collections.hashMap();
 		for (Configuration configuration : configurations) {
 			int stateId = configuration.stateId;
-			Integer prediction = configuration.prediction;
+			int prediction = configuration.prediction;
 			if (prediction == -1) continue;
 
 			BitSet alts = stateToAlts.get(stateId);
