@@ -68,4 +68,41 @@ public class Grammar {
 		if (entryPointNonTerminalUse[entryPoint] != nonTerminal) return -1;
 		return entryPointNonTerminalUseEndState[entryPoint];
 	}
+
+	public boolean contentEquals(Grammar other) {
+		if (states.length != other.states.length) return false;
+		for (int i = 0; i < states.length; i++) {
+			if (!states[i].contentEquals(other.states[i])) return false;
+		}
+
+		if (nonTerminalStartStates.length != other.nonTerminalStartStates.length) return false;
+		for (int i = 0; i < nonTerminalStartStates.length; i++) {
+			if (nonTerminalStartStates[i] != other.nonTerminalStartStates[i]) return false;
+		}
+
+		if (choicePointStates.length != other.choicePointStates.length) return false;
+		for (int i = 0; i < choicePointStates.length; i++) {
+			if (choicePointStates[i] != other.choicePointStates[i]) return false;
+		}
+
+		if (nonTerminalUseEndStates.length != other.nonTerminalUseEndStates.length) return false;
+		for (int i = 0; i < nonTerminalUseEndStates.length; i++) {
+			if (nonTerminalUseEndStates[i].length != other.nonTerminalUseEndStates[i].length) return false;
+			for (int j = 0; j < nonTerminalUseEndStates[i].length; j++) {
+				if (nonTerminalUseEndStates[i][j] != other.nonTerminalUseEndStates[i][j]) return false;
+			}
+		}
+
+		if (entryPointNonTerminalUse.length != other.entryPointNonTerminalUse.length) return false;
+		for (int i = 0; i < entryPointNonTerminalUse.length; i++) {
+			if (entryPointNonTerminalUse[i] != other.entryPointNonTerminalUse[i]) return false;
+		}
+
+		if (entryPointNonTerminalUseEndState.length != other.entryPointNonTerminalUseEndState.length) return false;
+		for (int i = 0; i < entryPointNonTerminalUseEndState.length; i++) {
+			if (entryPointNonTerminalUseEndState[i] != other.entryPointNonTerminalUseEndState[i]) return false;
+		}
+
+		return true;
+	}
 }

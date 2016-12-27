@@ -35,25 +35,27 @@ public class GrammarSerialization {
 
 	public static final Format VERSION_1 = new Format() {
 
+		private static final long UUID = 0xa199ceb7f6dbd9aaL;
+
 		@Override
 		public String encode(Grammar grammar) throws IOException {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			DataOutputStream dos = new DataOutputStream(baos);
 			try {
-				writeGrammar(grammar, oos);
+				dos.writeLong(UUID);
+				writeGrammar(grammar, dos);
 			} finally {
 				baos.close();
 			}
 
 			byte[] bytes = baos.toByteArray();
 
-			int length = bytes.length / 2 + (bytes.length % 2);
-			char[] chars = new char[length];
-			for (int i = 0; i < length; i++) {
-				int j = i * 2;
-				byte byte1 = bytes[j];
-				byte byte2 = j + 1 < bytes.length ? bytes[j + 1] : 0;
-				chars[i] = (char) (((int) byte1 << 8 | (int) byte2 & 0xff) + 2 & 0xFFFF);
+			int length = bytes.length;
+			char[] chars = new char[length / 2 + length % 2];
+			for (int i = 0; i < length; i += 2) {
+				byte byte1 = bytes[i];
+				byte byte2 = i + 1 < length ? bytes[i + 1] : 0;
+				chars[i / 2] = (char) ((int) byte1 << 8 | (int) byte2 & 0xff);
 			}
 
 			return new String(chars);
@@ -63,40 +65,42 @@ public class GrammarSerialization {
 		public Grammar decode(String data) throws IOException {
 			char[] chars = data.toCharArray();
 
-			int length = chars.length;
-			byte[] bytes = new byte[length * 2];
-			for (int i = 0; i < length; i++) {
-				int j = i * 2;
-				int c = chars[i] - 2;
-				bytes[j] = (byte) (c >>> 8);
-				bytes[j + 1] = (byte) (c & 0xff);
+			int length = chars.length * 2;
+			byte[] bytes = new byte[length];
+			for (int i = 0; i < length; i += 2) {
+				int c = chars[i / 2];
+				bytes[i] = (byte) (c >>> 8);
+				bytes[i + 1] = (byte) (c & 0xff);
 			}
 
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+			DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 			try {
-				Grammar grammar = readGrammar(ois);
-				return grammar;
+				if (UUID != dis.readLong()) throw new IOException("Invalid grammar format version");
+				return readGrammar(dis);
 			} finally {
-				ois.close();
+				dis.close();
 			}
 		}
 
-		private void writeGrammar(Grammar grammar, ObjectOutputStream out) throws IOException {
-
+		private void writeGrammar(Grammar grammar, DataOutputStream out) throws IOException {
 			int stateCount = grammar.states.length;
+			int nonTerminalCount = grammar.nonTerminalStartStates.length;
+			int choicePointCount = grammar.choicePointStates.length;
+			int entryPointCount = grammar.entryPointNonTerminalUse.length;
+
 			out.writeShort(stateCount);
+			out.writeShort(nonTerminalCount);
+			out.writeShort(choicePointCount);
+			out.writeShort(entryPointCount);
+
 			for (int i = 0; i < stateCount; i++) {
 				writeGrammarState(grammar.states[i], out);
 			}
 
-			int nonTerminalCount = grammar.nonTerminalStartStates.length;
-			out.writeShort(nonTerminalCount);
 			for (int i = 0; i < nonTerminalCount; i++) {
 				out.writeShort(grammar.nonTerminalStartStates[i]);
 			}
 
-			int choicePointCount = grammar.choicePointStates.length;
-			out.writeShort(choicePointCount);
 			for (int i = 0; i < choicePointCount; i++) {
 				out.writeShort(grammar.choicePointStates[i]);
 			}
@@ -109,20 +113,19 @@ public class GrammarSerialization {
 				}
 			}
 
-			int entryPointCount = grammar.entryPointNonTerminalUse.length;
-			out.writeShort(entryPointCount);
 			for (int i = 0; i < entryPointCount; i++) {
 				out.writeShort(grammar.entryPointNonTerminalUse[i]);
 				out.writeShort(grammar.entryPointNonTerminalUseEndState[i]);
 			}
 		}
 
-		private void writeGrammarState(GrammarState state, ObjectOutput out) throws IOException {
+		private void writeGrammarState(GrammarState state, DataOutputStream out) throws IOException {
 			out.writeShort(state.id);
 			out.writeShort(state.nonTerminalEnd);
 
-			out.writeShort(state.choiceTransitions.length);
-			for (int i = 0; i < state.choiceTransitions.length; i++) {
+			int choiceCount = state.choiceTransitions.length;
+			out.writeShort(choiceCount);
+			for (int i = 0; i < choiceCount; i++) {
 				out.writeShort(state.choiceTransitions[i]);
 			}
 
@@ -132,27 +135,33 @@ public class GrammarSerialization {
 			out.writeShort(state.terminalTransitionEnd);
 		}
 
-		private Grammar readGrammar(ObjectInput in) throws IOException {
+		private Grammar readGrammar(DataInputStream in) throws IOException {
 			Grammar grammar = new Grammar();
+
 			int stateCount = in.readShort();
+			int nonTerminalCount = in.readShort();
+			int choicePointCount = in.readShort();
+			int entryPointCount = in.readShort();
+
 			grammar.states = new GrammarState[stateCount];
+			grammar.nonTerminalStartStates = new short[nonTerminalCount];
+			grammar.choicePointStates = new short[choicePointCount];
+			grammar.nonTerminalUseEndStates = new short[nonTerminalCount][];
+			grammar.entryPointNonTerminalUse = new short[entryPointCount];
+			grammar.entryPointNonTerminalUseEndState = new short[entryPointCount];
+
 			for (int i = 0; i < stateCount; i++) {
 				grammar.states[i] = readGrammarState(in);
 			}
 
-			int nonTerminalCount = in.readShort();
-			grammar.nonTerminalStartStates = new short[nonTerminalCount];
 			for (int i = 0; i < nonTerminalCount; i++) {
 				grammar.nonTerminalStartStates[i] = in.readShort();
 			}
 
-			int choicePointCount = in.readShort();
-			grammar.choicePointStates = new short[choicePointCount];
 			for (int i = 0; i < choicePointCount; i++) {
 				grammar.choicePointStates[i] = in.readShort();
 			}
 
-			grammar.nonTerminalUseEndStates = new short[nonTerminalCount][];
 			for (int i = 0; i < nonTerminalCount; i++) {
 				int useCount = in.readShort();
 				grammar.nonTerminalUseEndStates[i] = new short[useCount];
@@ -161,9 +170,6 @@ public class GrammarSerialization {
 				}
 			}
 
-			int entryPointCount = in.readShort();
-			grammar.entryPointNonTerminalUse = new short[entryPointCount];
-			grammar.entryPointNonTerminalUseEndState = new short[entryPointCount];
 			for (int i = 0; i < entryPointCount; i++) {
 				grammar.entryPointNonTerminalUse[i] = in.readShort();
 				grammar.entryPointNonTerminalUseEndState[i] = in.readShort();
@@ -172,7 +178,7 @@ public class GrammarSerialization {
 			return grammar;
 		}
 
-		private GrammarState readGrammarState(ObjectInput in) throws IOException {
+		private GrammarState readGrammarState(DataInputStream in) throws IOException {
 			GrammarState state = new GrammarState();
 			state.id = in.readShort();
 			state.nonTerminalEnd = in.readShort();

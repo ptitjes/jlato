@@ -94,4 +94,21 @@ public class GrammarState {
 
 		return builder.toString();
 	}
+
+	public boolean contentEquals(GrammarState other) {
+		if (id != other.id) return false;
+		if (nonTerminalEnd != other.nonTerminalEnd) return false;
+
+		if (choiceTransitions.length != other.choiceTransitions.length) return false;
+		for (int i = 0; i < choiceTransitions.length; i++) {
+			if (choiceTransitions[i] != other.choiceTransitions[i]) return false;
+		}
+
+		if (nonTerminalTransition != other.nonTerminalTransition) return false;
+		if (nonTerminalTransitionEnd != other.nonTerminalTransitionEnd) return false;
+		if (terminalTransition != other.terminalTransition) return false;
+		if (terminalTransitionEnd != other.terminalTransitionEnd) return false;
+
+		return true;
+	}
 }
