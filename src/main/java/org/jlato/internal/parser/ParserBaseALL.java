@@ -81,12 +81,6 @@ public abstract class ParserBaseALL extends ParserBase {
 		}
 	}
 
-	protected void pushCallStack(GrammarProduction.NonTerminal nonTerminal) {
-		if (forceLL) return;
-
-		callStack = callStack.push(nonTerminal.end().id);
-	}
-
 	protected void pushCallStack(int nonTerminalReturnState) {
 		if (forceLL) return;
 

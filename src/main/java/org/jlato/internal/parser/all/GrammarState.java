@@ -22,15 +22,10 @@ package org.jlato.internal.parser.all;
 import org.jlato.internal.parser.Token;
 import org.jlato.internal.parser.TokenType;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 /**
  * @author Didier Villevalois
  */
-public class GrammarState implements Externalizable {
+public class GrammarState {
 
 	public short id;
 
@@ -43,10 +38,6 @@ public class GrammarState implements Externalizable {
 
 	public short terminalTransition = -1;
 	public short terminalTransitionEnd;
-
-	public GrammarState(int id, int nonTerminalEnd) {
-		this((short) id, (short) nonTerminalEnd, new short[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, (short) -1, (short) -1, (short) -1, (short) -1);
-	}
 
 	public GrammarState() {
 	}
@@ -78,24 +69,6 @@ public class GrammarState implements Externalizable {
 		return id;
 	}
 
-	void addChoice(int index, GrammarState target) {
-		choiceTransitions[index] = target.id;
-	}
-
-	void setNonTerminal(int symbol, GrammarState target) {
-		if (nonTerminalTransition != -1)
-			throw new IllegalStateException("Already defined non-terminal " + symbol);
-		nonTerminalTransition = (short) symbol;
-		nonTerminalTransitionEnd = target.id;
-	}
-
-	void setTerminal(int tokenType, GrammarState target) {
-		if (terminalTransition != -1)
-			throw new IllegalStateException("Already defined terminal " + tokenType);
-		terminalTransition = (short) tokenType;
-		terminalTransitionEnd = target.id;
-	}
-
 	public int match(Token token) {
 		return terminalTransition == token.kind ? terminalTransitionEnd : -1;
 	}
@@ -120,38 +93,5 @@ public class GrammarState implements Externalizable {
 		}
 
 		return builder.toString();
-	}
-
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeShort(id);
-		out.writeShort(nonTerminalEnd);
-
-		out.writeShort(choiceTransitions.length);
-		for (int i = 0; i < choiceTransitions.length; i++) {
-			out.writeShort(choiceTransitions[i]);
-		}
-
-		out.writeShort(nonTerminalTransition);
-		out.writeShort(nonTerminalTransitionEnd);
-		out.writeShort(terminalTransition);
-		out.writeShort(terminalTransitionEnd);
-	}
-
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		id = in.readShort();
-		nonTerminalEnd = in.readShort();
-
-		int choiceCount = in.readShort();
-		choiceTransitions = new short[choiceCount];
-		for (int i = 0; i < choiceCount; i++) {
-			choiceTransitions[i] = in.readShort();
-		}
-
-		nonTerminalTransition = in.readShort();
-		nonTerminalTransitionEnd = in.readShort();
-		terminalTransition = in.readShort();
-		terminalTransitionEnd = in.readShort();
 	}
 }
