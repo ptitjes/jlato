@@ -36,7 +36,7 @@ public abstract class ParserBaseALL extends ParserBase {
 	private static final boolean CACHE_STATS = false;
 	private static final boolean MERGE_STATS = false;
 	private static final boolean MERGE = true;
-	private static final boolean INCREMENTAL_MERGE = true;
+	private static final boolean INCREMENTAL_MERGE = false;
 
 	private boolean forceLL = true;
 
