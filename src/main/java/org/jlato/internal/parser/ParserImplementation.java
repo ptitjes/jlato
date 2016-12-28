@@ -41,7 +41,7 @@ import java.io.IOException;
 /**
  * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */
-// Decision count: 181 (LL1: 138; ALL*: 43)
+// Decision count: 181 (LL1: 142; ALL*: 39)
 // State count: 1015 (Non-terminal end: 156; choices: 181; non-terminal: 402; terminal: 276)
 class ParserImplementation extends ParserBaseALL {
 
@@ -376,83 +376,75 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int ANNOTATION_TYPE_BODY_DECL_1_2_2 = 3;
 
-	static final int TYPE_PARAMETER_3 = 4;
+	static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_2 = 4;
 
-	static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_2 = 5;
+	static final int ARRAY_INITIALIZER_2_1_2 = 5;
 
-	static final int ARRAY_DIMS_1 = 6;
+	static final int FORMAL_PARAMETER_4 = 6;
 
-	static final int ARRAY_INITIALIZER_2_1_2 = 7;
+	static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1 = 7;
 
-	static final int FORMAL_PARAMETER_4 = 8;
+	static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1 = 8;
 
-	static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1 = 9;
+	static final int STATEMENTS_1 = 9;
 
-	static final int EXPLICIT_CONSTRUCTOR_INVOCATION_1_2_1 = 10;
+	static final int STATEMENTS_1_1_2_1 = 10;
 
-	static final int STATEMENTS_1 = 11;
+	static final int TYPE_1_1_2 = 11;
 
-	static final int STATEMENTS_1_1_2_1 = 12;
+	static final int TYPE_1_2_2 = 12;
 
-	static final int TYPE_1_2_2 = 13;
+	static final int QUALIFIED_TYPE_3 = 13;
 
-	static final int QUALIFIED_TYPE_2 = 14;
+	static final int QUALIFIED_NAME_2 = 14;
 
-	static final int QUALIFIED_TYPE_3 = 15;
+	static final int EXPRESSION_1 = 15;
 
-	static final int QUALIFIED_TYPE_3_1_4 = 16;
+	static final int LAMBDA_EXPRESSION_1 = 16;
 
-	static final int QUALIFIED_NAME_2 = 17;
+	static final int LAMBDA_EXPRESSION_WITHOUT_CAST_1 = 17;
 
-	static final int EXPRESSION_1 = 18;
+	static final int CONDITIONAL_EXPRESSION_2_1_4 = 18;
 
-	static final int LAMBDA_EXPRESSION_1 = 19;
+	static final int SHIFT_EXPRESSION_2 = 19;
 
-	static final int LAMBDA_EXPRESSION_WITHOUT_CAST_1 = 20;
+	static final int SHIFT_EXPRESSION_2_1_1 = 20;
 
-	static final int CONDITIONAL_EXPRESSION_2_1_4 = 21;
+	static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1 = 21;
 
-	static final int SHIFT_EXPRESSION_2 = 22;
+	static final int CAST_EXPRESSION_3 = 22;
 
-	static final int SHIFT_EXPRESSION_2_1_1 = 23;
+	static final int PRIMARY_EXPRESSION_1 = 23;
 
-	static final int UNARY_EXPRESSION_NOT_PLUS_MINUS_1 = 24;
+	static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 24;
 
-	static final int CAST_EXPRESSION_3 = 25;
+	static final int PRIMARY_PREFIX_1 = 25;
 
-	static final int PRIMARY_EXPRESSION_1 = 26;
+	static final int PRIMARY_PREFIX_1_3_2_1_2 = 26;
 
-	static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 27;
+	static final int PRIMARY_SUFFIX_1 = 27;
 
-	static final int PRIMARY_PREFIX_1 = 28;
+	static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 28;
 
-	static final int PRIMARY_PREFIX_1_3_2_1_2 = 29;
+	static final int ARRAY_CREATION_EXPR_REST_1 = 29;
 
-	static final int PRIMARY_SUFFIX_1 = 30;
+	static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 30;
 
-	static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 31;
+	static final int ARRAY_DIMS_MANDATORY_1 = 31;
 
-	static final int ARRAY_CREATION_EXPR_REST_1 = 32;
+	static final int STATEMENT_1 = 32;
 
-	static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 33;
+	static final int BLOCK_STATEMENT_1 = 33;
 
-	static final int ARRAY_DIMS_MANDATORY_1 = 34;
+	static final int FOR_STATEMENT_3 = 34;
 
-	static final int STATEMENT_1 = 35;
+	static final int FOR_INIT_1 = 35;
 
-	static final int BLOCK_STATEMENT_1 = 36;
+	static final int RESOURCE_SPECIFICATION_3 = 36;
 
-	static final int FOR_STATEMENT_3 = 37;
+	static final int ANNOTATION_1 = 37;
 
-	static final int FOR_INIT_1 = 38;
-
-	static final int TRY_STATEMENT_2_2_2_1_2 = 39;
-
-	static final int RESOURCE_SPECIFICATION_3 = 40;
-
-	static final int ANNOTATION_1 = 41;
-
-	static final int ELEMENT_VALUE_LIST_2 = 42;
+	static final int ELEMENT_VALUE_LIST_2 = 38;
 
 	/* Identifiers for non-terminal return states */
 	static final int COMPILATION_UNIT_ENTRY_1 = 1;
@@ -2704,7 +2696,7 @@ class ParserImplementation extends ParserBaseALL {
 		name = parseName();
 		popCallStack();
 		__token = getToken(0).kind;
-		if (predict(TYPE_PARAMETER_3) == 1) {
+		if (__token == TokenType.EXTENDS) {
 			pushCallStack(TYPE_PARAMETER_3_1);
 			typeBounds = parseTypeBounds();
 			popCallStack();
@@ -3051,7 +3043,7 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SNodeList> annotations;
 		int __token;
 		__token = getToken(0).kind;
-		while (predict(ARRAY_DIMS_1) == 1) {
+		while (__token == TokenType.LBRACKET || __token == TokenType.AT) {
 			run();
 			pushCallStack(ARRAY_DIMS_1_1_1);
 			annotations = parseAnnotations();
@@ -3627,7 +3619,7 @@ class ParserImplementation extends ParserBaseALL {
 			primitiveType = parsePrimitiveType(annotations);
 			popCallStack();
 			__token = getToken(0).kind;
-			if (__token == TokenType.LBRACKET || __token == TokenType.AT) {
+			if (predict(TYPE_1_1_2) == 1) {
 				lateRun();
 				pushCallStack(TYPE_1_1_2_1_1);
 				arrayDims = parseArrayDimsMandatory();
@@ -3745,7 +3737,7 @@ class ParserImplementation extends ParserBaseALL {
 		name = parseName();
 		popCallStack();
 		__token = getToken(0).kind;
-		if (predict(QUALIFIED_TYPE_2) == 1) {
+		if (__token == TokenType.LT) {
 			pushCallStack(QUALIFIED_TYPE_2_1);
 			typeArgs = parseTypeArgumentsOrDiamond();
 			popCallStack();
@@ -3763,7 +3755,7 @@ class ParserImplementation extends ParserBaseALL {
 			name = parseName();
 			popCallStack();
 			__token = getToken(0).kind;
-			if (predict(QUALIFIED_TYPE_3_1_4) == 1) {
+			if (__token == TokenType.LT) {
 				pushCallStack(QUALIFIED_TYPE_3_1_4_1);
 				typeArgs = parseTypeArgumentsOrDiamond();
 				popCallStack();
@@ -6968,7 +6960,7 @@ class ParserImplementation extends ParserBaseALL {
 				catchClauses = parseCatchClauses();
 				popCallStack();
 				__token = getToken(0).kind;
-				if (predict(TRY_STATEMENT_2_2_2_1_2) == 1) {
+				if (__token == TokenType.FINALLY) {
 					consume(TokenType.FINALLY);
 					pushCallStack(TRY_STATEMENT_2_2_2_1_2_1_2);
 					finallyBlock = parseBlock();
@@ -7419,7 +7411,7 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	static final String serializedGrammar = "" + 
-	"\uA199\uCEB7\uF6DB\uD9AA\u03F7\234\53\25\0\uFFFF\0\27\1\uFFFF\uFFFF\1\0\0\uFFFF\uFFFF\uFFFF\uFFFF" + 
+	"\uA199\uCEB7\uF6DB\uD9AA\u03F7\234\47\25\0\uFFFF\0\27\1\uFFFF\uFFFF\1\0\0\uFFFF\uFFFF\uFFFF\uFFFF" + 
 	"\2\uFFFF\0\30\4\uFFFF\uFFFF\3\1\0\uFFFF\uFFFF\uFFFF\uFFFF\4\uFFFF\0\24\3\uFFFF\uFFFF\5\uFFFF\0\32" + 
 	"\7\uFFFF\uFFFF\6\2\0\uFFFF\uFFFF\uFFFF\uFFFF\7\uFFFF\0\24\6\uFFFF\uFFFF\10\uFFFF\0\36\12\uFFFF\uFFFF" + 
 	"\11\3\0\uFFFF\uFFFF\uFFFF\uFFFF\12\uFFFF\0\24\11\uFFFF\uFFFF\13\uFFFF\0\55\15\uFFFF\uFFFF\14\4\0" + 
@@ -7825,31 +7817,30 @@ class ParserImplementation extends ParserBaseALL {
 	"\u027B\u0281\u028C\u0292\u029D\u02A1\u02A5\u02A9\u02BF\u02C5\u02D0\u02D2\u02D7\u02E1\u02E8\u02F1" + 
 	"\u02FA\u0300\u0306\u030B\u031D\u0324\u0328\u032C\u0333\u0336\u0338\u033B\u033D\u0346\u034D\u0356" + 
 	"\u035C\u0364\u0375\u0379\u037E\u0380\u0385\u038A\u038F\u0393\u0399\u03AB\u03AE\u03B4\u03BC\u03C5" + 
-	"\u03C8\u03CD\u03D4\u03D7\u03DD\u03E2\u03E6\u03EB\u03F2\105\137\263\323\357\u0107\u0123\u0131\u0153" + 
-	"\u016B\u0172\u017A\u017E\u018A\u0195\u0196\u019B\u01CF\u01D6\u01DF\u01E8\u021A\u024E\u024F\u0273" + 
-	"\u0284\u029D\u02A7\u02A9\u02B0\u02BF\u02C8\u02FA\u0302\u0308\u030B\u032C\u0367\u0375\u03A6\u03BF" + 
-	"\u03C8\u03F4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1\106\13\231\241\257\312\346\362\376\u0149" + 
-	"\u017B\u01A7\u02DA\1\u01D3\0\1\107\1\111\1\120\1\112\6\202\275\323\u0107\u0151\u03B6\2\u032F\u0335" + 
-	"\1\134\4\177\320\u0104\u032D\1\210\2\210\254\3\177\320\u0104\1\263\3\177\320\u0104\1\303\1\316\1" + 
-	"\320\4\214\225\u013A\u0163\1\351\1\355\3\207\274\u02E9\2\270\374\1\u0102\2\320\u0104\1\u0334\2\u0112" + 
-	"\u0114\1\u0118\3\u011D\u0150\u03B5\4\337\u0121\u013E\u02FB\2\u011C\u0131\2\u0129\u02FB\1\u0104\2" + 
-	"\u013D\u0166\2\u0146\u01F8\1\u014C\2\u013F\u0167\1\u0104\1\u017F\2\u016A\u032B\1\u0104\6\333\u0111" + 
-	"\u0115\u0152\u01C7\u023E\5\u01AE\u01B3\u01E4\u0289\u028F\6\u018A\u0191\u01CB\u02EE\u02F7\u03B7\6" + 
-	"\u016E\u0176\u02D4\u02E4\u02EB\u02F4\1\u0196\2\u01A0\u01A4\1\u01AA\1\u01AE\4\u0187\u018F\u0286\u02F7" + 
-	"\3\u013B\u02B6\u02B9\6\216\235\245\366\u015E\u03BA\5\117\130\u03D0\u03D5\u03DA\30\213\224\253\276" + 
-	"\306\334\357\u0122\u013C\u0159\u0165\u0195\u019B\u01CF\u01EB\u0205\u02AA\u02D1\u02D6\u02E2\u0326" + 
-	"\u0383\u0388\u03E4\24\u0129\u01DB\u01FC\u0219\u02BE\u02CF\u02DE\u0305\u0320\u0321\u033C\u0341\u0351" + 
-	"\u035A\u0362\u0368\u0370\u038D\u0392\u0397\1\u01D7\3\u01D7\u01E0\u0215\1\u01E0\1\u01E9\1\u01F3\1" + 
-	"\u0201\1\u01DE\3\u01DC\u0215\u03E7\1\u0216\1\u021F\1\u0224\1\u0229\1\u022E\1\u0233\1\u0238\1\u023F" + 
-	"\1\u0245\1\u024E\1\u0259\5\u0260\u0267\u026F\u0274\u0282\1\u0267\2\u0267\u0282\1\u0274\1\u0274\2" + 
-	"\u01E5\u028A\1\u02AA\1\u027D\1\u029E\1\u0175\2\u02A3\u02A7\1\u02A3\2\u02A7\u02C0\2\u02AA\u02C6\2" + 
-	"\u02AA\u02C6\5\277\u0171\u0179\u02D3\u02EF\2\u02AA\u02C0\2\u02AA\u02C6\1\u029E\1\u02F2\1\u02FD\3" + 
-	"\u0185\u018D\u02FF\7\u0325\u032D\u034E\u0353\u0357\u035F\u0365\1\u030C\1\u030C\11\u0137\u0183\u01FC" + 
-	"\u030C\u0394\u039A\u039E\u03A4\u03AF\1\u017F\4\u0331\u036A\u0376\u03BF\1\u030C\1\u030C\2\u033A\u037B" + 
-	"\1\u030C\1\u0343\1\u030C\1\u030C\1\u030C\1\u030C\1\u036D\2\u0376\u037F\1\u0368\1\u030C\1\u030C\1" + 
-	"\u030C\1\u030C\1\u030C\1\u030C\2\u039F\u03A6\1\u03AD\1\u03B2\1\u039D\22\115\356\u0126\u0138\u0155" + 
-	"\u019A\u01AF\u01B8\u01BB\u01CC\u01E3\u0242\u0284\u0291\u02ED\u02F6\u0303\u0309\4\137\157\u03C5\u03E7" + 
-	"\1\u03C9\1\u03C9\1\u03C9\1\u03D2\1\u03DF\4\340\u03DC\u03E3\u03F4\1\u03E7\1\u03EE\27\1\30\4\32\7" + 
-	"\36\12\55\15\46\20\34\23\222\26\66\32\56\36\47\42\43\45\71\50\51\53\75\56\172\61\114\64\77\70\112" + 
-	"\73\113\76\75\u0347";
+	"\u03C8\u03CD\u03D4\u03D7\u03DD\u03E2\u03E6\u03EB\u03F2\105\137\263\323\u0107\u0131\u0153\u016B\u0172" + 
+	"\u017A\u017E\u0187\u018A\u0196\u01CF\u01D6\u01DF\u01E8\u021A\u024E\u024F\u0273\u0284\u029D\u02A7" + 
+	"\u02A9\u02B0\u02BF\u02C8\u02FA\u0302\u0308\u030B\u032C\u0367\u0375\u03BF\u03C8\u03F4\0\0\0\0\0\0" + 
+	"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1\106\13\231\241\257\312\346\362\376\u0149\u017B\u01A7\u02DA\1\u01D3" + 
+	"\0\1\107\1\111\1\120\1\112\6\202\275\323\u0107\u0151\u03B6\2\u032F\u0335\1\134\4\177\320\u0104\u032D" + 
+	"\1\210\2\210\254\3\177\320\u0104\1\263\3\177\320\u0104\1\303\1\316\1\320\4\214\225\u013A\u0163\1" + 
+	"\351\1\355\3\207\274\u02E9\2\270\374\1\u0102\2\320\u0104\1\u0334\2\u0112\u0114\1\u0118\3\u011D\u0150" + 
+	"\u03B5\4\337\u0121\u013E\u02FB\2\u011C\u0131\2\u0129\u02FB\1\u0104\2\u013D\u0166\2\u0146\u01F8\1" + 
+	"\u014C\2\u013F\u0167\1\u0104\1\u017F\2\u016A\u032B\1\u0104\6\333\u0111\u0115\u0152\u01C7\u023E\5" + 
+	"\u01AE\u01B3\u01E4\u0289\u028F\6\u018A\u0191\u01CB\u02EE\u02F7\u03B7\6\u016E\u0176\u02D4\u02E4\u02EB" + 
+	"\u02F4\1\u0196\2\u01A0\u01A4\1\u01AA\1\u01AE\4\u0187\u018F\u0286\u02F7\3\u013B\u02B6\u02B9\6\216" + 
+	"\235\245\366\u015E\u03BA\5\117\130\u03D0\u03D5\u03DA\30\213\224\253\276\306\334\357\u0122\u013C" + 
+	"\u0159\u0165\u0195\u019B\u01CF\u01EB\u0205\u02AA\u02D1\u02D6\u02E2\u0326\u0383\u0388\u03E4\24\u0129" + 
+	"\u01DB\u01FC\u0219\u02BE\u02CF\u02DE\u0305\u0320\u0321\u033C\u0341\u0351\u035A\u0362\u0368\u0370" + 
+	"\u038D\u0392\u0397\1\u01D7\3\u01D7\u01E0\u0215\1\u01E0\1\u01E9\1\u01F3\1\u0201\1\u01DE\3\u01DC\u0215" + 
+	"\u03E7\1\u0216\1\u021F\1\u0224\1\u0229\1\u022E\1\u0233\1\u0238\1\u023F\1\u0245\1\u024E\1\u0259\5" + 
+	"\u0260\u0267\u026F\u0274\u0282\1\u0267\2\u0267\u0282\1\u0274\1\u0274\2\u01E5\u028A\1\u02AA\1\u027D" + 
+	"\1\u029E\1\u0175\2\u02A3\u02A7\1\u02A3\2\u02A7\u02C0\2\u02AA\u02C6\2\u02AA\u02C6\5\277\u0171\u0179" + 
+	"\u02D3\u02EF\2\u02AA\u02C0\2\u02AA\u02C6\1\u029E\1\u02F2\1\u02FD\3\u0185\u018D\u02FF\7\u0325\u032D" + 
+	"\u034E\u0353\u0357\u035F\u0365\1\u030C\1\u030C\11\u0137\u0183\u01FC\u030C\u0394\u039A\u039E\u03A4" + 
+	"\u03AF\1\u017F\4\u0331\u036A\u0376\u03BF\1\u030C\1\u030C\2\u033A\u037B\1\u030C\1\u0343\1\u030C\1" + 
+	"\u030C\1\u030C\1\u030C\1\u036D\2\u0376\u037F\1\u0368\1\u030C\1\u030C\1\u030C\1\u030C\1\u030C\1\u030C" + 
+	"\2\u039F\u03A6\1\u03AD\1\u03B2\1\u039D\22\115\356\u0126\u0138\u0155\u019A\u01AF\u01B8\u01BB\u01CC" + 
+	"\u01E3\u0242\u0284\u0291\u02ED\u02F6\u0303\u0309\4\137\157\u03C5\u03E7\1\u03C9\1\u03C9\1\u03C9\1" + 
+	"\u03D2\1\u03DF\4\340\u03DC\u03E3\u03F4\1\u03E7\1\u03EE\27\1\30\4\32\7\36\12\55\15\46\20\34\23\222" + 
+	"\26\66\32\56\36\47\42\43\45\71\50\51\53\75\56\172\61\114\64\77\70\112\73\113\76\75\u0347";
 }
