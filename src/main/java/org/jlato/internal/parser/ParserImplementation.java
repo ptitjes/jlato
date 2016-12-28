@@ -41,6 +41,8 @@ import java.io.IOException;
 /**
  * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */
+// Decision count: 181 (LL1: 138; ALL*: 43)
+// State count: 1015 (Non-terminal end: 156; choices: 181; non-terminal: 402; terminal: 276)
 class ParserImplementation extends ParserBaseALL {
 
 	@Override
