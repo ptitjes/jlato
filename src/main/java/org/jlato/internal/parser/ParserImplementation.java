@@ -553,11 +553,11 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int PACKAGE_DECL_3 = 79;
 
-	static final int IMPORT_DECLS_1_1 = 80;
+	static final int IMPORT_DECLS_1_1_1 = 80;
 
 	static final int IMPORT_DECL_3 = 88;
 
-	static final int TYPE_DECLS_1_1 = 92;
+	static final int TYPE_DECLS_1_1_1 = 92;
 
 	static final int MODIFIERS_1_1_13_1 = 95;
 
@@ -625,7 +625,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int ANNOTATION_TYPE_BODY_2_1_1 = 202;
 
-	static final int ANNOTATION_TYPE_BODY_2_1_2_1 = 206;
+	static final int ANNOTATION_TYPE_BODY_2_1_2_1_1 = 206;
 
 	static final int ANNOTATION_TYPE_BODY_DECL_1_2_1 = 211;
 
@@ -669,7 +669,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_1 = 254;
 
-	static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_2_1 = 258;
+	static final int CLASS_OR_INTERFACE_BODY_DECLS_1_1_2_1_1 = 258;
 
 	static final int CLASS_OR_INTERFACE_BODY_DECL_1_2_1 = 263;
 
@@ -777,19 +777,19 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int STATEMENTS_1_1_1 = 379;
 
-	static final int STATEMENTS_1_1_2_1_1 = 383;
+	static final int STATEMENTS_1_1_2_1_1_1 = 383;
 
-	static final int STATEMENTS_1_1_2_2_1 = 383;
+	static final int STATEMENTS_1_1_2_2_1_1 = 383;
 
 	static final int INITIALIZER_DECL_1 = 387;
 
 	static final int TYPE_1_1_1 = 391;
 
-	static final int TYPE_1_1_2_1 = 389;
+	static final int TYPE_1_1_2_1_1 = 389;
 
 	static final int TYPE_1_2_1 = 394;
 
-	static final int TYPE_1_2_2_1 = 389;
+	static final int TYPE_1_2_2_1_1 = 389;
 
 	static final int REFERENCE_TYPE_1_1_1 = 399;
 
@@ -797,7 +797,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int REFERENCE_TYPE_1_2_1 = 401;
 
-	static final int REFERENCE_TYPE_1_2_2_1 = 397;
+	static final int REFERENCE_TYPE_1_2_2_1_1 = 397;
 
 	static final int QUALIFIED_TYPE_1 = 405;
 
@@ -971,9 +971,9 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int CAST_EXPRESSION_3_2_4 = 642;
 
-	static final int REFERENCE_CAST_TYPE_REST_1_1_1_2 = 657;
+	static final int REFERENCE_CAST_TYPE_REST_1_1_1_1_2 = 657;
 
-	static final int REFERENCE_CAST_TYPE_REST_1_1_1_3 = 655;
+	static final int REFERENCE_CAST_TYPE_REST_1_1_1_1_3 = 655;
 
 	static final int PRIMARY_EXPRESSION_1_1 = 670;
 
@@ -981,11 +981,11 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int PRIMARY_NO_NEW_ARRAY_1 = 675;
 
-	static final int PRIMARY_NO_NEW_ARRAY_2_1 = 675;
+	static final int PRIMARY_NO_NEW_ARRAY_2_1_1 = 675;
 
 	static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_1 = 679;
 
-	static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2_1 = 679;
+	static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2_1_1 = 679;
 
 	static final int PRIMARY_PREFIX_1_1 = 682;
 
@@ -1133,7 +1133,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int SWITCH_STATEMENT_3 = 833;
 
-	static final int SWITCH_STATEMENT_6_1 = 835;
+	static final int SWITCH_STATEMENT_6_1_1 = 835;
 
 	static final int SWITCH_ENTRY_1_1_2 = 840;
 
@@ -1203,7 +1203,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int TRY_STATEMENT_2_2_2_2_2 = 922;
 
-	static final int CATCH_CLAUSES_1_1 = 941;
+	static final int CATCH_CLAUSES_1_1_1 = 941;
 
 	static final int CATCH_CLAUSE_3 = 946;
 
@@ -1213,7 +1213,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int CATCH_FORMAL_PARAMETER_2 = 951;
 
-	static final int CATCH_FORMAL_PARAMETER_3_1_1_2 = 954;
+	static final int CATCH_FORMAL_PARAMETER_3_1_1_1_2 = 954;
 
 	static final int CATCH_FORMAL_PARAMETER_4 = 949;
 
@@ -1221,7 +1221,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	static final int RESOURCE_SPECIFICATION_3_1_2 = 959;
 
-	static final int ANNOTATIONS_1_1 = 965;
+	static final int ANNOTATIONS_1_1_1 = 965;
 
 	static final int ANNOTATION_1_1 = 969;
 
@@ -1756,8 +1756,10 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrMore(
-			nonTerminal(importDecl, ImportDecl)
-			action({ imports = append(imports, importDecl); })
+			sequence(
+				nonTerminal(importDecl, ImportDecl)
+				action({ imports = append(imports, importDecl); })
+			)
 		)
 		action({ return imports; })
 	) */
@@ -1767,7 +1769,7 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		__token = getToken(0).kind;
 		while (__token == TokenType.IMPORT) {
-			pushCallStack(IMPORT_DECLS_1_1);
+			pushCallStack(IMPORT_DECLS_1_1_1);
 			importDecl = parseImportDecl();
 			popCallStack();
 			imports = append(imports, importDecl);
@@ -1780,8 +1782,10 @@ class ParserImplementation extends ParserBaseALL {
 		action({ run(); })
 		terminal(IMPORT)
 		zeroOrOne(
-			terminal(STATIC)
-			action({ isStatic = true; })
+			sequence(
+				terminal(STATIC)
+				action({ isStatic = true; })
+			)
 		)
 		nonTerminal(name, QualifiedName)
 		zeroOrOne(
@@ -1821,8 +1825,10 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrMore(
-			nonTerminal(typeDecl, TypeDecl)
-			action({ types = append(types, typeDecl); })
+			sequence(
+				nonTerminal(typeDecl, TypeDecl)
+				action({ types = append(types, typeDecl); })
+			)
 		)
 		action({ return types; })
 	) */
@@ -1832,7 +1838,7 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		__token = getToken(0).kind;
 		while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86)) != 0)) {
-			pushCallStack(TYPE_DECLS_1_1);
+			pushCallStack(TYPE_DECLS_1_1_1);
 			typeDecl = parseTypeDecl();
 			popCallStack();
 			types = append(types, typeDecl);
@@ -2343,8 +2349,10 @@ class ParserImplementation extends ParserBaseALL {
 			)
 		)
 		zeroOrOne(
-			terminal(COMMA)
-			action({ trailingComma = true; })
+			sequence(
+				terminal(COMMA)
+				action({ trailingComma = true; })
+			)
 		)
 		zeroOrOne(
 			sequence(
@@ -2479,8 +2487,10 @@ class ParserImplementation extends ParserBaseALL {
 			choice(
 				nonTerminal(ret, NodeListVar)
 				oneOrMore(
-					nonTerminal(member, AnnotationTypeBodyDecl)
-					action({ ret = append(ret, member); })
+					sequence(
+						nonTerminal(member, AnnotationTypeBodyDecl)
+						action({ ret = append(ret, member); })
+					)
 				)
 			)
 		)
@@ -2499,7 +2509,7 @@ class ParserImplementation extends ParserBaseALL {
 			popCallStack();
 		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 86 & ~63) == 0 && (1L << __token - 86 & (1L << TokenType.SEMICOLON - 86 | 1L << TokenType.AT - 86 | 1L << TokenType.NODE_VARIABLE - 86 | 1L << TokenType.IDENTIFIER - 86)) != 0)) {
 			do {
-				pushCallStack(ANNOTATION_TYPE_BODY_2_1_2_1);
+				pushCallStack(ANNOTATION_TYPE_BODY_2_1_2_1_1);
 				member = parseAnnotationTypeBodyDecl();
 				popCallStack();
 				ret = append(ret, member);
@@ -2773,8 +2783,10 @@ class ParserImplementation extends ParserBaseALL {
 			choice(
 				nonTerminal(ret, NodeListVar)
 				oneOrMore(
-					nonTerminal(member, ClassOrInterfaceBodyDecl)
-					action({ ret = append(ret, member); })
+					sequence(
+						nonTerminal(member, ClassOrInterfaceBodyDecl)
+						action({ ret = append(ret, member); })
+					)
 				)
 			)
 		)
@@ -2791,7 +2803,7 @@ class ParserImplementation extends ParserBaseALL {
 			popCallStack();
 		} else if (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.DEFAULT - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.ENUM - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9)) != 0) || ((__token - 82 & ~63) == 0 && (1L << __token - 82 & (1L << TokenType.LBRACE - 82 | 1L << TokenType.SEMICOLON - 82 | 1L << TokenType.AT - 82 | 1L << TokenType.LT - 82 | 1L << TokenType.NODE_VARIABLE - 82 | 1L << TokenType.IDENTIFIER - 82)) != 0)) {
 			do {
-				pushCallStack(CLASS_OR_INTERFACE_BODY_DECLS_1_1_2_1);
+				pushCallStack(CLASS_OR_INTERFACE_BODY_DECLS_1_1_2_1_1);
 				member = parseClassOrInterfaceBodyDecl(typeKind);
 				popCallStack();
 				ret = append(ret, member);
@@ -3093,8 +3105,10 @@ class ParserImplementation extends ParserBaseALL {
 			)
 		)
 		zeroOrOne(
-			terminal(COMMA)
-			action({ trailingComma = true; })
+			sequence(
+				terminal(COMMA)
+				action({ trailingComma = true; })
+			)
 		)
 		terminal(RBRACE)
 		action({ return dress(SArrayInitializerExpr.make(values, trailingComma)); })
@@ -3519,12 +3533,16 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(ret, NodeListVar)
 				sequence(
 					zeroOrOne(
-						nonTerminal(stmt, ExplicitConstructorInvocation)
-						action({ ret = append(ret, stmt); })
+						sequence(
+							nonTerminal(stmt, ExplicitConstructorInvocation)
+							action({ ret = append(ret, stmt); })
+						)
 					)
 					zeroOrMore(
-						nonTerminal(stmt, BlockStatement)
-						action({ ret = append(ret, stmt); })
+						sequence(
+							nonTerminal(stmt, BlockStatement)
+							action({ ret = append(ret, stmt); })
+						)
 					)
 				)
 			)
@@ -3543,14 +3561,14 @@ class ParserImplementation extends ParserBaseALL {
 		} else if (((__token - 0 & ~63) == 0 && (1L << __token - 0 & (1L << TokenType.EOF - 0 | 1L << TokenType.ABSTRACT - 0 | 1L << TokenType.ASSERT - 0 | 1L << TokenType.BOOLEAN - 0 | 1L << TokenType.BREAK - 0 | 1L << TokenType.BYTE - 0 | 1L << TokenType.CHAR - 0 | 1L << TokenType.CLASS - 0 | 1L << TokenType.CONTINUE - 0 | 1L << TokenType.DO - 0 | 1L << TokenType.DOUBLE - 0 | 1L << TokenType.FALSE - 0 | 1L << TokenType.FINAL - 0 | 1L << TokenType.FLOAT - 0 | 1L << TokenType.FOR - 0 | 1L << TokenType.IF - 0 | 1L << TokenType.INT - 0 | 1L << TokenType.INTERFACE - 0 | 1L << TokenType.LONG - 0 | 1L << TokenType.NATIVE - 0 | 1L << TokenType.NEW - 0 | 1L << TokenType.NULL - 0 | 1L << TokenType.PRIVATE - 0 | 1L << TokenType.PROTECTED - 0 | 1L << TokenType.PUBLIC - 0 | 1L << TokenType.RETURN - 0 | 1L << TokenType.SHORT - 0 | 1L << TokenType.STATIC - 0 | 1L << TokenType.STRICTFP - 0 | 1L << TokenType.SUPER - 0 | 1L << TokenType.SWITCH - 0 | 1L << TokenType.SYNCHRONIZED - 0 | 1L << TokenType.THIS - 0 | 1L << TokenType.THROW - 0 | 1L << TokenType.TRANSIENT - 0 | 1L << TokenType.TRUE - 0 | 1L << TokenType.TRY - 0 | 1L << TokenType.VOID - 0 | 1L << TokenType.VOLATILE - 0 | 1L << TokenType.WHILE - 0 | 1L << TokenType.LONG_LITERAL - 0 | 1L << TokenType.INTEGER_LITERAL - 0)) != 0 || (__token - 68 & ~63) == 0 && (1L << __token - 68 & (1L << TokenType.FLOAT_LITERAL - 68 | 1L << TokenType.DOUBLE_LITERAL - 68 | 1L << TokenType.CHARACTER_LITERAL - 68 | 1L << TokenType.STRING_LITERAL - 68 | 1L << TokenType.LPAREN - 68 | 1L << TokenType.LBRACE - 68 | 1L << TokenType.RBRACE - 68 | 1L << TokenType.SEMICOLON - 68 | 1L << TokenType.AT - 68 | 1L << TokenType.LT - 68 | 1L << TokenType.BANG - 68 | 1L << TokenType.TILDE - 68 | 1L << TokenType.INCR - 68 | 1L << TokenType.DECR - 68 | 1L << TokenType.PLUS - 68 | 1L << TokenType.MINUS - 68 | 1L << TokenType.NODE_VARIABLE - 68)) != 0) || ((__token - 132 & ~63) == 0 && (1L << __token - 132 & (1L << TokenType.IDENTIFIER - 132)) != 0)) {
 			__token = getToken(0).kind;
 			if (predict(STATEMENTS_1_1_2_1) == 1) {
-				pushCallStack(STATEMENTS_1_1_2_1_1);
+				pushCallStack(STATEMENTS_1_1_2_1_1_1);
 				stmt = parseExplicitConstructorInvocation();
 				popCallStack();
 				ret = append(ret, stmt);
 			}
 			__token = getToken(0).kind;
 			while (((__token - 9 & ~63) == 0 && (1L << __token - 9 & (1L << TokenType.ABSTRACT - 9 | 1L << TokenType.ASSERT - 9 | 1L << TokenType.BOOLEAN - 9 | 1L << TokenType.BREAK - 9 | 1L << TokenType.BYTE - 9 | 1L << TokenType.CHAR - 9 | 1L << TokenType.CLASS - 9 | 1L << TokenType.CONTINUE - 9 | 1L << TokenType.DO - 9 | 1L << TokenType.DOUBLE - 9 | 1L << TokenType.FALSE - 9 | 1L << TokenType.FINAL - 9 | 1L << TokenType.FLOAT - 9 | 1L << TokenType.FOR - 9 | 1L << TokenType.IF - 9 | 1L << TokenType.INT - 9 | 1L << TokenType.INTERFACE - 9 | 1L << TokenType.LONG - 9 | 1L << TokenType.NATIVE - 9 | 1L << TokenType.NEW - 9 | 1L << TokenType.NULL - 9 | 1L << TokenType.PRIVATE - 9 | 1L << TokenType.PROTECTED - 9 | 1L << TokenType.PUBLIC - 9 | 1L << TokenType.RETURN - 9 | 1L << TokenType.SHORT - 9 | 1L << TokenType.STATIC - 9 | 1L << TokenType.STRICTFP - 9 | 1L << TokenType.SUPER - 9 | 1L << TokenType.SWITCH - 9 | 1L << TokenType.SYNCHRONIZED - 9 | 1L << TokenType.THIS - 9 | 1L << TokenType.THROW - 9 | 1L << TokenType.TRANSIENT - 9 | 1L << TokenType.TRUE - 9 | 1L << TokenType.TRY - 9 | 1L << TokenType.VOID - 9 | 1L << TokenType.VOLATILE - 9 | 1L << TokenType.WHILE - 9 | 1L << TokenType.LONG_LITERAL - 9 | 1L << TokenType.INTEGER_LITERAL - 9 | 1L << TokenType.FLOAT_LITERAL - 9 | 1L << TokenType.DOUBLE_LITERAL - 9)) != 0) || ((__token - 78 & ~63) == 0 && (1L << __token - 78 & (1L << TokenType.CHARACTER_LITERAL - 78 | 1L << TokenType.STRING_LITERAL - 78 | 1L << TokenType.LPAREN - 78 | 1L << TokenType.LBRACE - 78 | 1L << TokenType.SEMICOLON - 78 | 1L << TokenType.AT - 78 | 1L << TokenType.LT - 78 | 1L << TokenType.BANG - 78 | 1L << TokenType.TILDE - 78 | 1L << TokenType.INCR - 78 | 1L << TokenType.DECR - 78 | 1L << TokenType.PLUS - 78 | 1L << TokenType.MINUS - 78 | 1L << TokenType.NODE_VARIABLE - 78 | 1L << TokenType.IDENTIFIER - 78)) != 0)) {
-				pushCallStack(STATEMENTS_1_1_2_2_1);
+				pushCallStack(STATEMENTS_1_1_2_2_1_1);
 				stmt = parseBlockStatement();
 				popCallStack();
 				ret = append(ret, stmt);
@@ -3578,17 +3596,21 @@ class ParserImplementation extends ParserBaseALL {
 			sequence(
 				nonTerminal(primitiveType, PrimitiveType)
 				zeroOrOne(
-					action({ lateRun(); })
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-					action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
+					sequence(
+						action({ lateRun(); })
+						nonTerminal(arrayDims, ArrayDimsMandatory)
+						action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
+					)
 				)
 			)
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					action({ lateRun(); })
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-					action({ type = dress(SArrayType.make(type, arrayDims)); })
+					sequence(
+						action({ lateRun(); })
+						nonTerminal(arrayDims, ArrayDimsMandatory)
+						action({ type = dress(SArrayType.make(type, arrayDims)); })
+					)
 				)
 			)
 		)
@@ -3607,7 +3629,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			if (__token == TokenType.LBRACKET || __token == TokenType.AT) {
 				lateRun();
-				pushCallStack(TYPE_1_1_2_1);
+				pushCallStack(TYPE_1_1_2_1_1);
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
@@ -3619,7 +3641,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			if (predict(TYPE_1_2_2) == 1) {
 				lateRun();
-				pushCallStack(TYPE_1_2_2_1);
+				pushCallStack(TYPE_1_2_2_1_1);
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
 				type = dress(SArrayType.make(type, arrayDims));
@@ -3640,9 +3662,11 @@ class ParserImplementation extends ParserBaseALL {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					action({ lateRun(); })
-					nonTerminal(arrayDims, ArrayDimsMandatory)
-					action({ type = dress(SArrayType.make(type, arrayDims)); })
+					sequence(
+						action({ lateRun(); })
+						nonTerminal(arrayDims, ArrayDimsMandatory)
+						action({ type = dress(SArrayType.make(type, arrayDims)); })
+					)
 				)
 			)
 		)
@@ -3670,7 +3694,7 @@ class ParserImplementation extends ParserBaseALL {
 			__token = getToken(0).kind;
 			if (__token == TokenType.LBRACKET || __token == TokenType.AT) {
 				lateRun();
-				pushCallStack(REFERENCE_TYPE_1_2_2_1);
+				pushCallStack(REFERENCE_TYPE_1_2_2_1_1);
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
 				type = dress(SArrayType.make(type, arrayDims));
@@ -5192,18 +5216,20 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, PrimaryExpression)
 		zeroOrOne(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(INCR)
-					action({ op = UnaryOp.PostIncrement; })
+			sequence(
+				action({ lateRun(); })
+				choice(
+					sequence(
+						terminal(INCR)
+						action({ op = UnaryOp.PostIncrement; })
+					)
+					sequence(
+						terminal(DECR)
+						action({ op = UnaryOp.PostDecrement; })
+					)
 				)
-				sequence(
-					terminal(DECR)
-					action({ op = UnaryOp.PostDecrement; })
-				)
+				action({ ret = dress(SUnaryExpr.make(op, ret)); })
 			)
-			action({ ret = dress(SUnaryExpr.make(op, ret)); })
 		)
 		action({ return ret; })
 	) */
@@ -5298,18 +5324,20 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrOne(
-			action({ types = append(types, type); })
-			action({ lateRun(); })
-			oneOrMore(
-				sequence(
-					terminal(BIT_AND)
-					action({ run(); })
-					nonTerminal(annotations, Annotations)
-					nonTerminal(type, ReferenceType)
-					action({ types = append(types, type); })
+			sequence(
+				action({ types = append(types, type); })
+				action({ lateRun(); })
+				oneOrMore(
+					sequence(
+						terminal(BIT_AND)
+						action({ run(); })
+						nonTerminal(annotations, Annotations)
+						nonTerminal(type, ReferenceType)
+						action({ types = append(types, type); })
+					)
 				)
+				action({ type = dress(SIntersectionType.make(types)); })
 			)
-			action({ type = dress(SIntersectionType.make(types)); })
 		)
 		action({ return type; })
 	) */
@@ -5324,10 +5352,10 @@ class ParserImplementation extends ParserBaseALL {
 			do {
 				consume(TokenType.BIT_AND);
 				run();
-				pushCallStack(REFERENCE_CAST_TYPE_REST_1_1_1_2);
+				pushCallStack(REFERENCE_CAST_TYPE_REST_1_1_1_1_2);
 				annotations = parseAnnotations();
 				popCallStack();
-				pushCallStack(REFERENCE_CAST_TYPE_REST_1_1_1_3);
+				pushCallStack(REFERENCE_CAST_TYPE_REST_1_1_1_1_3);
 				type = parseReferenceType(annotations);
 				popCallStack();
 				types = append(types, type);
@@ -5448,8 +5476,10 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			action({ lateRun(); })
-			nonTerminal(ret, PrimarySuffix)
+			sequence(
+				action({ lateRun(); })
+				nonTerminal(ret, PrimarySuffix)
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5462,7 +5492,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while ((__token - 84 & ~63) == 0 && (1L << __token - 84 & (1L << TokenType.LBRACKET - 84 | 1L << TokenType.DOT - 84 | 1L << TokenType.DOUBLECOLON - 84)) != 0) {
 			lateRun();
-			pushCallStack(PRIMARY_NO_NEW_ARRAY_2_1);
+			pushCallStack(PRIMARY_NO_NEW_ARRAY_2_1_1);
 			ret = parsePrimarySuffix(ret);
 			popCallStack();
 			__token = getToken(0).kind;
@@ -5473,8 +5503,10 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			action({ lateRun(); })
-			nonTerminal(ret, PrimarySuffixWithoutSuper)
+			sequence(
+				action({ lateRun(); })
+				nonTerminal(ret, PrimarySuffixWithoutSuper)
+			)
 		)
 		action({ return ret; })
 	) */
@@ -5487,7 +5519,7 @@ class ParserImplementation extends ParserBaseALL {
 		__token = getToken(0).kind;
 		while (predict(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2) == 1) {
 			lateRun();
-			pushCallStack(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2_1);
+			pushCallStack(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2_1_1);
 			ret = parsePrimarySuffixWithoutSuper(ret);
 			popCallStack();
 			__token = getToken(0).kind;
@@ -6412,8 +6444,10 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(RPAREN)
 		terminal(LBRACE)
 		zeroOrMore(
-			nonTerminal(entry, SwitchEntry)
-			action({ entries = append(entries, entry); })
+			sequence(
+				nonTerminal(entry, SwitchEntry)
+				action({ entries = append(entries, entry); })
+			)
 		)
 		terminal(RBRACE)
 		action({ return dress(SSwitchStmt.make(selector, entries)); })
@@ -6433,7 +6467,7 @@ class ParserImplementation extends ParserBaseALL {
 		consume(TokenType.LBRACE);
 		__token = getToken(0).kind;
 		while (__token == TokenType.CASE || __token == TokenType.DEFAULT) {
-			pushCallStack(SWITCH_STATEMENT_6_1);
+			pushCallStack(SWITCH_STATEMENT_6_1_1);
 			entry = parseSwitchEntry();
 			popCallStack();
 			entries = append(entries, entry);
@@ -6954,8 +6988,10 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		oneOrMore(
-			nonTerminal(catchClause, CatchClause)
-			action({ catchClauses = append(catchClauses, catchClause); })
+			sequence(
+				nonTerminal(catchClause, CatchClause)
+				action({ catchClauses = append(catchClauses, catchClause); })
+			)
 		)
 		action({ return catchClauses; })
 	) */
@@ -6964,7 +7000,7 @@ class ParserImplementation extends ParserBaseALL {
 		BUTree<SCatchClause> catchClause;
 		int __token;
 		do {
-			pushCallStack(CATCH_CLAUSES_1_1);
+			pushCallStack(CATCH_CLAUSES_1_1_1);
 			catchClause = parseCatchClause();
 			popCallStack();
 			catchClauses = append(catchClauses, catchClause);
@@ -7005,15 +7041,17 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(exceptType, QualifiedType)
 		action({ exceptTypes = append(exceptTypes, exceptType); })
 		zeroOrOne(
-			action({ lateRun(); })
-			oneOrMore(
-				sequence(
-					terminal(BIT_OR)
-					nonTerminal(exceptType, AnnotatedQualifiedType)
-					action({ exceptTypes = append(exceptTypes, exceptType); })
+			sequence(
+				action({ lateRun(); })
+				oneOrMore(
+					sequence(
+						terminal(BIT_OR)
+						nonTerminal(exceptType, AnnotatedQualifiedType)
+						action({ exceptTypes = append(exceptTypes, exceptType); })
+					)
 				)
+				action({ exceptType = dress(SUnionType.make(exceptTypes)); })
 			)
-			action({ exceptType = dress(SUnionType.make(exceptTypes)); })
 		)
 		nonTerminal(exceptId, VariableDeclaratorId)
 		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, emptyList(), optionOf(exceptId), false, none())); })
@@ -7037,7 +7075,7 @@ class ParserImplementation extends ParserBaseALL {
 			lateRun();
 			do {
 				consume(TokenType.BIT_OR);
-				pushCallStack(CATCH_FORMAL_PARAMETER_3_1_1_2);
+				pushCallStack(CATCH_FORMAL_PARAMETER_3_1_1_1_2);
 				exceptType = parseAnnotatedQualifiedType();
 				popCallStack();
 				exceptTypes = append(exceptTypes, exceptType);
@@ -7063,8 +7101,10 @@ class ParserImplementation extends ParserBaseALL {
 			)
 		)
 		zeroOrOne(
-			terminal(SEMICOLON)
-			action({ trailingSemiColon.value = true; })
+			sequence(
+				terminal(SEMICOLON)
+				action({ trailingSemiColon.value = true; })
+			)
 		)
 		terminal(RPAREN)
 		action({ return vars; })
@@ -7098,8 +7138,10 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		zeroOrMore(
-			nonTerminal(annotation, Annotation)
-			action({ annotations = append(annotations, annotation); })
+			sequence(
+				nonTerminal(annotation, Annotation)
+				action({ annotations = append(annotations, annotation); })
+			)
 		)
 		action({ return annotations; })
 	) */
@@ -7109,7 +7151,7 @@ class ParserImplementation extends ParserBaseALL {
 		int __token;
 		__token = getToken(0).kind;
 		while (__token == TokenType.AT) {
-			pushCallStack(ANNOTATIONS_1_1);
+			pushCallStack(ANNOTATIONS_1_1_1);
 			annotation = parseAnnotation();
 			popCallStack();
 			annotations = append(annotations, annotation);
@@ -7315,8 +7357,10 @@ class ParserImplementation extends ParserBaseALL {
 			nonTerminal(values, ElementValueList)
 		)
 		zeroOrOne(
-			terminal(COMMA)
-			action({ trailingComma = true; })
+			sequence(
+				terminal(COMMA)
+				action({ trailingComma = true; })
+			)
 		)
 		terminal(RBRACE)
 		action({ return dress(SArrayInitializerExpr.make(ensureNotNull(values), trailingComma)); })
