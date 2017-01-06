@@ -1396,8 +1396,10 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		action({ entryPoint = METHOD_DECL_ENTRY; })
-		action({ run(); })
+		action({
+			entryPoint = METHOD_DECL_ENTRY;
+			run();
+		})
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(ret, MethodDecl)
 		nonTerminal(Epilog)
@@ -1422,8 +1424,10 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		action({ entryPoint = FIELD_DECL_ENTRY; })
-		action({ run(); })
+		action({
+			entryPoint = FIELD_DECL_ENTRY;
+			run();
+		})
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(ret, FieldDecl)
 		nonTerminal(Epilog)
@@ -1448,8 +1452,10 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		action({ entryPoint = ANNOTATION_ELEMENT_DECL_ENTRY; })
-		action({ run(); })
+		action({
+			entryPoint = ANNOTATION_ELEMENT_DECL_ENTRY;
+			run();
+		})
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(ret, AnnotationTypeMemberDecl)
 		nonTerminal(Epilog)
@@ -1588,8 +1594,10 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		action({ entryPoint = TYPE_ENTRY; })
-		action({ run(); })
+		action({
+			entryPoint = TYPE_ENTRY;
+			run();
+		})
 		nonTerminal(annotations, Annotations)
 		nonTerminal(ret, Type)
 		nonTerminal(Epilog)
@@ -3397,8 +3405,10 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(LBRACE)
 		nonTerminal(stmts, Statements)
 		terminal(RBRACE)
-		action({ block = dress(SBlockStmt.make(stmts)); })
-		action({ return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); })
+		action({
+			block = dress(SBlockStmt.make(stmts));
+			return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block));
+		})
 	) */
 	protected BUTree<SConstructorDecl> parseConstructorDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
@@ -4868,14 +4878,18 @@ class ParserImplementation extends ParserBaseALL {
 						terminal(GT)
 						terminal(GT)
 						terminal(GT)
-						action({ popNewWhitespaces(2); })
-						action({ op = BinaryOp.RightUnsignedShift; })
+						action({
+							popNewWhitespaces(2);
+							op = BinaryOp.RightUnsignedShift;
+						})
 					)
 					sequence(
 						terminal(GT)
 						terminal(GT)
-						action({ popNewWhitespaces(1); })
-						action({ op = BinaryOp.RightSignedShift; })
+						action({
+							popNewWhitespaces(1);
+							op = BinaryOp.RightSignedShift;
+						})
 					)
 				)
 				nonTerminal(right, AdditiveExpression)
@@ -5293,8 +5307,10 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		zeroOrOne(
 			sequence(
-				action({ types = append(types, type); })
-				action({ lateRun(); })
+				action({
+					types = append(types, type);
+					lateRun();
+				})
 				oneOrMore(
 					sequence(
 						terminal(BIT_AND)
@@ -5856,8 +5872,10 @@ class ParserImplementation extends ParserBaseALL {
 				action({ name = SName.make("new"); })
 			)
 		)
-		action({ ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); })
-		action({ return ret; })
+		action({
+			ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
+			return ret;
+		})
 	) */
 	protected BUTree<? extends SExpr> parseMethodReferenceSuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SNodeList> typeArgs = null;
@@ -6285,8 +6303,10 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		choice(
 			sequence(
-				action({ run(); })
-				action({ run(); })
+				action({
+					run();
+					run();
+				})
 				nonTerminal(modifiers, ModifiersNoDefault)
 				nonTerminal(typeDecl, ClassOrInterfaceDecl)
 				action({ ret = dress(STypeDeclarationStmt.make(typeDecl)); })
@@ -6339,8 +6359,10 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		action({ run(); })
-		action({ run(); })
+		action({
+			run();
+			run();
+		})
 		nonTerminal(modifiers, ModifiersNoDefault)
 		nonTerminal(variableDecl, VariableDecl)
 		action({ return dress(SVariableDeclarationExpr.make(variableDecl)); })
