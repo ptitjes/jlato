@@ -1321,7 +1321,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		action({ entryPoint = MEMBER_DECL_ENTRY; })
-		nonTerminal(ret, ClassOrInterfaceBodyDecl)
+		nonTerminal(ret, ClassOrInterfaceBodyDecl, { typeKind })
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
@@ -1401,7 +1401,7 @@ class ParserImplementation extends ParserBaseALL {
 			run();
 		})
 		nonTerminal(modifiers, Modifiers)
-		nonTerminal(ret, MethodDecl)
+		nonTerminal(ret, MethodDecl, { modifiers })
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
@@ -1429,7 +1429,7 @@ class ParserImplementation extends ParserBaseALL {
 			run();
 		})
 		nonTerminal(modifiers, Modifiers)
-		nonTerminal(ret, FieldDecl)
+		nonTerminal(ret, FieldDecl, { modifiers })
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
@@ -1457,7 +1457,7 @@ class ParserImplementation extends ParserBaseALL {
 			run();
 		})
 		nonTerminal(modifiers, Modifiers)
-		nonTerminal(ret, AnnotationTypeMemberDecl)
+		nonTerminal(ret, AnnotationTypeMemberDecl, { modifiers })
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
@@ -1599,7 +1599,7 @@ class ParserImplementation extends ParserBaseALL {
 			run();
 		})
 		nonTerminal(annotations, Annotations)
-		nonTerminal(ret, Type)
+		nonTerminal(ret, Type, { annotations })
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(ret); })
 	) */
@@ -2074,9 +2074,9 @@ class ParserImplementation extends ParserBaseALL {
 			sequence(
 				nonTerminal(modifiers, Modifiers)
 				choice(
-					nonTerminal(ret, ClassOrInterfaceDecl)
-					nonTerminal(ret, EnumDecl)
-					nonTerminal(ret, AnnotationTypeDecl)
+					nonTerminal(ret, ClassOrInterfaceDecl, { }, { modifiers })
+					nonTerminal(ret, EnumDecl, { }, { modifiers })
+					nonTerminal(ret, AnnotationTypeDecl, { }, { modifiers })
 				)
 			)
 		)
@@ -2131,7 +2131,7 @@ class ParserImplementation extends ParserBaseALL {
 					)
 				)
 				zeroOrOne(
-					nonTerminal(implementsClause, ImplementsList)
+					nonTerminal(implementsClause, ImplementsList, { }, { typeKind, problem })
 				)
 			)
 			sequence(
@@ -2146,7 +2146,7 @@ class ParserImplementation extends ParserBaseALL {
 				)
 			)
 		)
-		nonTerminal(members, ClassOrInterfaceBody)
+		nonTerminal(members, ClassOrInterfaceBody, { }, { typeKind })
 		action({
 			if (typeKind == TypeKind.Interface)
 				return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members)).withProblem(problem.value);
@@ -2325,7 +2325,7 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(ENUM)
 		nonTerminal(name, Name)
 		zeroOrOne(
-			nonTerminal(implementsClause, ImplementsList)
+			nonTerminal(implementsClause, ImplementsList, { }, { TypeKind.Enum, problem })
 		)
 		terminal(LBRACE)
 		zeroOrOne(
@@ -2353,7 +2353,7 @@ class ParserImplementation extends ParserBaseALL {
 		zeroOrOne(
 			sequence(
 				terminal(SEMICOLON)
-				nonTerminal(members, ClassOrInterfaceBodyDecls)
+				nonTerminal(members, ClassOrInterfaceBodyDecls, { }, { TypeKind.Enum })
 			)
 		)
 		terminal(RBRACE)
@@ -2423,7 +2423,7 @@ class ParserImplementation extends ParserBaseALL {
 			nonTerminal(args, Arguments)
 		)
 		zeroOrOne(
-			nonTerminal(classBody, ClassOrInterfaceBody)
+			nonTerminal(classBody, ClassOrInterfaceBody, { }, { TypeKind.Class })
 		)
 		action({ return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); })
 	) */
@@ -2526,11 +2526,11 @@ class ParserImplementation extends ParserBaseALL {
 			sequence(
 				nonTerminal(modifiers, Modifiers)
 				choice(
-					nonTerminal(ret, AnnotationTypeMemberDecl)
-					nonTerminal(ret, ClassOrInterfaceDecl)
-					nonTerminal(ret, EnumDecl)
-					nonTerminal(ret, AnnotationTypeDecl)
-					nonTerminal(ret, FieldDecl)
+					nonTerminal(ret, AnnotationTypeMemberDecl, { }, { modifiers })
+					nonTerminal(ret, ClassOrInterfaceDecl, { }, { modifiers })
+					nonTerminal(ret, EnumDecl, { }, { modifiers })
+					nonTerminal(ret, AnnotationTypeDecl, { }, { modifiers })
+					nonTerminal(ret, FieldDecl, { }, { modifiers })
 				)
 			)
 		)
@@ -2584,7 +2584,7 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		nonTerminal(type, Type)
+		nonTerminal(type, Type, { }, { null })
 		nonTerminal(name, Name)
 		terminal(LPAREN)
 		terminal(RPAREN)
@@ -2758,7 +2758,7 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		terminal(LBRACE)
-		nonTerminal(ret, ClassOrInterfaceBodyDecls)
+		nonTerminal(ret, ClassOrInterfaceBodyDecls, { }, { typeKind })
 		terminal(RBRACE)
 		action({ return ret; })
 	) */
@@ -2780,7 +2780,7 @@ class ParserImplementation extends ParserBaseALL {
 				nonTerminal(ret, NodeListVar)
 				oneOrMore(
 					sequence(
-						nonTerminal(member, ClassOrInterfaceBodyDecl)
+						nonTerminal(member, ClassOrInterfaceBodyDecl, { }, { typeKind })
 						action({ ret = append(ret, member); })
 					)
 				)
@@ -2823,24 +2823,24 @@ class ParserImplementation extends ParserBaseALL {
 				})
 				choice(
 					sequence(
-						nonTerminal(ret, InitializerDecl)
+						nonTerminal(ret, InitializerDecl, { }, { modifiers })
 						action({
 							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 						})
 					)
-					nonTerminal(ret, ClassOrInterfaceDecl)
-					nonTerminal(ret, EnumDecl)
-					nonTerminal(ret, AnnotationTypeDecl)
+					nonTerminal(ret, ClassOrInterfaceDecl, { }, { modifiers })
+					nonTerminal(ret, EnumDecl, { }, { modifiers })
+					nonTerminal(ret, AnnotationTypeDecl, { }, { modifiers })
 					sequence(
-						nonTerminal(ret, ConstructorDecl)
+						nonTerminal(ret, ConstructorDecl, { }, { modifiers })
 						action({
 							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 						})
 					)
 					sequence(
-						nonTerminal(ret, FieldDecl)
+						nonTerminal(ret, FieldDecl, { }, { modifiers })
 					)
-					nonTerminal(ret, MethodDecl)
+					nonTerminal(ret, MethodDecl, { }, { modifiers })
 				)
 			)
 		)
@@ -2908,7 +2908,7 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		nonTerminal(type, Type)
+		nonTerminal(type, Type, { }, { null })
 		nonTerminal(variables, VariableDeclarators)
 		terminal(SEMICOLON)
 		action({ return dress(SFieldDecl.make(modifiers, type, variables)); })
@@ -2929,7 +2929,7 @@ class ParserImplementation extends ParserBaseALL {
 	}
 
 	/* sequence(
-		nonTerminal(type, Type)
+		nonTerminal(type, Type, { }, { null })
 		nonTerminal(variables, VariableDeclarators)
 		action({ return dress(SLocalVariableDecl.make(modifiers, type, variables)); })
 	) */
@@ -3288,7 +3288,7 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		action({ run(); })
 		nonTerminal(modifiers, Modifiers)
-		nonTerminal(type, Type)
+		nonTerminal(type, Type, { }, { null })
 		zeroOrOne(
 			sequence(
 				nonTerminal(ellipsisAnnotations, Annotations)
@@ -3591,8 +3591,8 @@ class ParserImplementation extends ParserBaseALL {
 
 	/* sequence(
 		choice(
-			nonTerminal(type, PrimitiveType)
-			nonTerminal(type, QualifiedType)
+			nonTerminal(type, PrimitiveType, { }, { annotations })
+			nonTerminal(type, QualifiedType, { }, { annotations })
 		)
 		zeroOrOne(
 			sequence(
@@ -3632,13 +3632,13 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		choice(
 			sequence(
-				nonTerminal(primitiveType, PrimitiveType)
+				nonTerminal(primitiveType, PrimitiveType, { }, { annotations })
 				action({ lateRun(); })
 				nonTerminal(arrayDims, ArrayDimsMandatory)
 				action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
 			)
 			sequence(
-				nonTerminal(type, QualifiedType)
+				nonTerminal(type, QualifiedType, { }, { annotations })
 				zeroOrOne(
 					sequence(
 						action({ lateRun(); })
@@ -3844,8 +3844,8 @@ class ParserImplementation extends ParserBaseALL {
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
 		choice(
-			nonTerminal(ret, ReferenceType)
-			nonTerminal(ret, Wildcard)
+			nonTerminal(ret, ReferenceType, { }, { annotations })
+			nonTerminal(ret, Wildcard, { }, { annotations })
 		)
 		action({ return ret; })
 	) */
@@ -3885,13 +3885,13 @@ class ParserImplementation extends ParserBaseALL {
 					terminal(EXTENDS)
 					action({ run(); })
 					nonTerminal(boundAnnotations, Annotations)
-					nonTerminal(ext, ReferenceType)
+					nonTerminal(ext, ReferenceType, { }, { boundAnnotations })
 				)
 				sequence(
 					terminal(SUPER)
 					action({ run(); })
 					nonTerminal(boundAnnotations, Annotations)
-					nonTerminal(sup, ReferenceType)
+					nonTerminal(sup, ReferenceType, { }, { boundAnnotations })
 				)
 			)
 		)
@@ -4017,7 +4017,7 @@ class ParserImplementation extends ParserBaseALL {
 				terminal(VOID)
 				action({ ret = dress(SVoidType.make()); })
 			)
-			nonTerminal(ret, Type)
+			nonTerminal(ret, Type, { }, { null })
 		)
 		action({ return ret; })
 	) */
@@ -4041,7 +4041,7 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
-		nonTerminal(ret, QualifiedType)
+		nonTerminal(ret, QualifiedType, { }, { annotations })
 		action({ return ret; })
 	) */
 	protected BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
@@ -4194,8 +4194,8 @@ class ParserImplementation extends ParserBaseALL {
 				terminal(LPAREN)
 				action({ run(); })
 				nonTerminal(annotations, Annotations)
-				nonTerminal(type, ReferenceType)
-				nonTerminal(type, ReferenceCastTypeRest)
+				nonTerminal(type, ReferenceType, { }, { annotations })
+				nonTerminal(type, ReferenceCastTypeRest, { }, { type })
 				terminal(RPAREN)
 				nonTerminal(ret, LambdaExpression)
 				action({ ret = dress(SCastExpr.make(type, ret)); })
@@ -4246,27 +4246,27 @@ class ParserImplementation extends ParserBaseALL {
 			sequence(
 				nonTerminal(name, Name)
 				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
+				nonTerminal(ret, LambdaBody, { }, { singletonList(makeFormalParameter(name)), false })
 			)
 			sequence(
 				terminal(LPAREN)
 				terminal(RPAREN)
 				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
+				nonTerminal(ret, LambdaBody, { }, { emptyList(), true })
 			)
 			sequence(
 				terminal(LPAREN)
 				nonTerminal(params, InferredFormalParameterList)
 				terminal(RPAREN)
 				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
+				nonTerminal(ret, LambdaBody, { }, { params, true })
 			)
 			sequence(
 				terminal(LPAREN)
 				nonTerminal(params, FormalParameterList)
 				terminal(RPAREN)
 				terminal(ARROW)
-				nonTerminal(ret, LambdaBody)
+				nonTerminal(ret, LambdaBody, { }, { params, true })
 			)
 		)
 		action({ return ret; })
@@ -4770,7 +4770,7 @@ class ParserImplementation extends ParserBaseALL {
 				terminal(INSTANCEOF)
 				action({ run(); })
 				nonTerminal(annotations, Annotations)
-				nonTerminal(type, Type)
+				nonTerminal(type, Type, { }, { annotations })
 				action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
 			)
 		)
@@ -5246,14 +5246,14 @@ class ParserImplementation extends ParserBaseALL {
 		nonTerminal(annotations, Annotations)
 		choice(
 			sequence(
-				nonTerminal(primitiveType, PrimitiveType)
+				nonTerminal(primitiveType, PrimitiveType, { }, { annotations })
 				terminal(RPAREN)
 				nonTerminal(ret, UnaryExpression)
 				action({ ret = dress(SCastExpr.make(primitiveType, ret)); })
 			)
 			sequence(
-				nonTerminal(type, ReferenceType)
-				nonTerminal(type, ReferenceCastTypeRest)
+				nonTerminal(type, ReferenceType, { }, { annotations })
+				nonTerminal(type, ReferenceCastTypeRest, { }, { type })
 				terminal(RPAREN)
 				nonTerminal(ret, UnaryExpressionNotPlusMinus)
 				action({ ret = dress(SCastExpr.make(type, ret)); })
@@ -5316,7 +5316,7 @@ class ParserImplementation extends ParserBaseALL {
 						terminal(BIT_AND)
 						action({ run(); })
 						nonTerminal(annotations, Annotations)
-						nonTerminal(type, ReferenceType)
+						nonTerminal(type, ReferenceType, { }, { annotations })
 						action({ types = append(types, type); })
 					)
 				)
@@ -5433,7 +5433,7 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		choice(
 			nonTerminal(ret, PrimaryNoNewArray)
-			nonTerminal(ret, ArrayCreationExpr)
+			nonTerminal(ret, ArrayCreationExpr, { }, { null })
 		)
 		action({ return ret; })
 	) */
@@ -5462,7 +5462,7 @@ class ParserImplementation extends ParserBaseALL {
 		zeroOrMore(
 			sequence(
 				action({ lateRun(); })
-				nonTerminal(ret, PrimarySuffix)
+				nonTerminal(ret, PrimarySuffix, { }, { ret })
 			)
 		)
 		action({ return ret; })
@@ -5489,7 +5489,7 @@ class ParserImplementation extends ParserBaseALL {
 		zeroOrMore(
 			sequence(
 				action({ lateRun(); })
-				nonTerminal(ret, PrimarySuffixWithoutSuper)
+				nonTerminal(ret, PrimarySuffixWithoutSuper, { }, { ret })
 			)
 		)
 		action({ return ret; })
@@ -5528,17 +5528,17 @@ class ParserImplementation extends ParserBaseALL {
 						action({ lateRun(); })
 						terminal(DOT)
 						choice(
-							nonTerminal(ret, MethodInvocation)
-							nonTerminal(ret, FieldAccess)
+							nonTerminal(ret, MethodInvocation, { }, { ret })
+							nonTerminal(ret, FieldAccess, { }, { ret })
 						)
 					)
 					sequence(
 						action({ lateRun(); })
-						nonTerminal(ret, MethodReferenceSuffix)
+						nonTerminal(ret, MethodReferenceSuffix, { }, { ret })
 					)
 				)
 			)
-			nonTerminal(ret, ClassCreationExpr)
+			nonTerminal(ret, ClassCreationExpr, { }, { null })
 			sequence(
 				action({ run(); })
 				nonTerminal(type, ResultType)
@@ -5550,11 +5550,11 @@ class ParserImplementation extends ParserBaseALL {
 				action({ run(); })
 				nonTerminal(type, ResultType)
 				action({ ret = STypeExpr.make(type); })
-				nonTerminal(ret, MethodReferenceSuffix)
+				nonTerminal(ret, MethodReferenceSuffix, { }, { ret })
 			)
 			sequence(
 				action({ run(); })
-				nonTerminal(ret, MethodInvocation)
+				nonTerminal(ret, MethodInvocation, { }, { null })
 			)
 			nonTerminal(ret, Name)
 			sequence(
@@ -5667,14 +5667,14 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		choice(
 			sequence(
-				nonTerminal(ret, PrimarySuffixWithoutSuper)
+				nonTerminal(ret, PrimarySuffixWithoutSuper, { }, { scope })
 			)
 			sequence(
 				terminal(DOT)
 				terminal(SUPER)
 				action({ ret = dress(SSuperExpr.make(optionOf(scope))); })
 			)
-			nonTerminal(ret, MethodReferenceSuffix)
+			nonTerminal(ret, MethodReferenceSuffix, { }, { scope })
 		)
 		action({ return ret; })
 	) */
@@ -5712,9 +5712,9 @@ class ParserImplementation extends ParserBaseALL {
 						terminal(THIS)
 						action({ ret = dress(SThisExpr.make(optionOf(scope))); })
 					)
-					nonTerminal(ret, ClassCreationExpr)
-					nonTerminal(ret, MethodInvocation)
-					nonTerminal(ret, FieldAccess)
+					nonTerminal(ret, ClassCreationExpr, { }, { scope })
+					nonTerminal(ret, MethodInvocation, { }, { scope })
+					nonTerminal(ret, FieldAccess, { }, { scope })
 				)
 			)
 			sequence(
@@ -5913,10 +5913,10 @@ class ParserImplementation extends ParserBaseALL {
 		)
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
-		nonTerminal(type, QualifiedType)
+		nonTerminal(type, QualifiedType, { }, { annotations })
 		nonTerminal(args, Arguments)
 		zeroOrOne(
-			nonTerminal(anonymousBody, ClassOrInterfaceBody)
+			nonTerminal(anonymousBody, ClassOrInterfaceBody, { }, { TypeKind.Class })
 		)
 		action({ return dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
 	) */
@@ -5966,10 +5966,10 @@ class ParserImplementation extends ParserBaseALL {
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
 		choice(
-			nonTerminal(type, PrimitiveType)
-			nonTerminal(type, QualifiedType)
+			nonTerminal(type, PrimitiveType, { }, { annotations })
+			nonTerminal(type, QualifiedType, { }, { annotations })
 		)
-		nonTerminal(ret, ArrayCreationExprRest)
+		nonTerminal(ret, ArrayCreationExprRest, { }, { type })
 		action({ return ret; })
 	) */
 	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SExpr> scope) throws ParseException {
@@ -6308,7 +6308,7 @@ class ParserImplementation extends ParserBaseALL {
 					run();
 				})
 				nonTerminal(modifiers, ModifiersNoDefault)
-				nonTerminal(typeDecl, ClassOrInterfaceDecl)
+				nonTerminal(typeDecl, ClassOrInterfaceDecl, { }, { modifiers })
 				action({ ret = dress(STypeDeclarationStmt.make(typeDecl)); })
 			)
 			sequence(
@@ -6364,7 +6364,7 @@ class ParserImplementation extends ParserBaseALL {
 			run();
 		})
 		nonTerminal(modifiers, ModifiersNoDefault)
-		nonTerminal(variableDecl, VariableDecl)
+		nonTerminal(variableDecl, VariableDecl, { }, { modifiers })
 		action({ return dress(SVariableDeclarationExpr.make(variableDecl)); })
 	) */
 	protected BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
@@ -6885,7 +6885,7 @@ class ParserImplementation extends ParserBaseALL {
 		terminal(TRY)
 		choice(
 			sequence(
-				nonTerminal(resources, ResourceSpecification)
+				nonTerminal(resources, ResourceSpecification, { }, { trailingSemiColon })
 				nonTerminal(tryBlock, Block)
 				zeroOrOne(
 					nonTerminal(catchClauses, CatchClauses)
@@ -7028,7 +7028,7 @@ class ParserImplementation extends ParserBaseALL {
 	/* sequence(
 		action({ run(); })
 		nonTerminal(modifiers, Modifiers)
-		nonTerminal(exceptType, QualifiedType)
+		nonTerminal(exceptType, QualifiedType, { }, { null })
 		action({ exceptTypes = append(exceptTypes, exceptType); })
 		zeroOrOne(
 			sequence(
