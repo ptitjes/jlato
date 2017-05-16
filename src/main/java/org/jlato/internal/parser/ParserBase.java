@@ -172,6 +172,15 @@ public abstract class ParserBase implements ParserInterface {
 		return lookaheadCells.get(index).token;
 	}
 
+	protected Token[] getLookaheadTokens() {
+		int size = lookaheadCells.size();
+		Token[] tokens = new Token[size];
+		for (int i = 0; i < size; i++) {
+			tokens[i] = getToken(i);
+		}
+		return tokens;
+	}
+
 	protected WTokenRun getWhitespace(int index) {
 		advance(index);
 		return lookaheadCells.get(index).whitespace;
@@ -261,7 +270,7 @@ public abstract class ParserBase implements ParserInterface {
 	}
 
 	private <S extends STree> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
-	                                            IndexedList<WTokenRun> tokens) {
+												IndexedList<WTokenRun> tokens) {
 
 		final Iterator<WTokenRun> tokenIterator = tokens.iterator();
 		final BUTree<S> newTree;
